@@ -1,0 +1,88 @@
+<mat-card class="mat-card-fieldset">
+    <mat-card-header>
+        <div class="mat-card-title-wrapper">
+            <mat-card-title class="custom-title">Controle de Usuários</mat-card-title>
+        </div>
+    </mat-card-header>
+
+    <mat-card-content>
+        <mat-card class="mat-card-fieldset">
+            <form class="form">
+                <div class="d-flex flex-wrap justify-content-center">
+                    <mat-form-field color="warn" class="mat-form-field">
+                        <mat-label>Nome</mat-label>
+                        <input matInput placeholder="Ex. Pesquisar por nome">
+                    </mat-form-field>
+                    <mat-form-field color="warn" class="mat-form-field">
+                        <mat-label>CPF</mat-label>
+                        <input matInput placeholder="Ex. Pesquisar por CPF">
+                    </mat-form-field>
+                    <mat-form-field color="warn" class="mat-form-field">
+                        <mat-label>Telefone</mat-label>
+                        <input matInput placeholder="Ex. Pesquisar por telefone">
+                    </mat-form-field>
+                    <mat-form-field color="warn" class="mat-form-field">
+                        <mat-label>Ativo</mat-label>
+                        <input matInput placeholder="Ex. Pesquisar por ativo">
+                    </mat-form-field>
+                </div>
+            </form>
+
+            <mat-card-content class="mat-card-content d-flex flex-sm-column">
+                <div class="d-flex flex-wrap justify-content-center justify-content-sm-start">
+                    <button class="button mb-2" mat-raised-button color="warn">Pesquisar</button>
+                    <button class="button mb-2" mat-raised-button color="warn" (click)="createUser(null)">Novo</button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <div class="container mat-table-responsive">
+            <div class="table-wrapper">
+                <table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8">
+
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef> Nome </th>
+                        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef> Ativo </th>
+                        <td mat-cell *matCellDef="let element"> {{element.status ? 'Ativo' : 'Inativo'}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="username">
+                        <th mat-header-cell *matHeaderCellDef> Usuário </th>
+                        <td mat-cell *matCellDef="let element"> {{element.username}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="roleList">
+                        <th mat-header-cell *matHeaderCellDef> Função </th>
+                        <td mat-cell *matCellDef="let element"> 
+                            <span *ngFor="let role of element.roleList">{{ role.roleName }}<br></span>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="acao">
+                        <th mat-header-cell *matHeaderCellDef> Ações </th>
+                        <td mat-cell *matCellDef="let element">
+                            <button style="margin: 2px" mat-mini-fab matTooltip="Editar" color="warn"
+                                routerLink="update/{{ element.id }}">
+                                <i class="fa fa-solid fa-pen"></i>
+                            </button>
+                            <button mat-mini-fab matTooltip="Deletar" color="primary" routerLink="delete/{{ element.id }}">
+                                <i class="fa fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row (click)="clickedRows.add(row)" [class.demo-row-is-clicked]="clickedRows.has(row)"
+                        *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </div>
+            <mat-paginator color="warn" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons
+                aria-label="Select page of periodic elements">
+            </mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>

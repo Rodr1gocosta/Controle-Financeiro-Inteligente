@@ -1,0 +1,38 @@
+<mat-toolbar class="header mat-elevation-z8">
+    <div class="mat-toolbar-row">
+      <a (click)="homeRoute()">Logo</a>
+      <span class="flex-spacer"></span> <!-- Adicione essa linha para criar um espaço flexível -->
+      
+      <button mat-button [matMenuTriggerFor]="menu">
+        <i style="font-size: 20px;" class="fal fa-user"></i>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="controlUserRoute()">
+          Controle de Usuário
+        </button>
+      </mat-menu>
+  
+      <!-- <button mat-button [matMenuTriggerFor]="menu">
+        <i style="font-size: 20px;" class="fal fa-calendar"></i>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item>
+          Calendário
+        </button>
+      </mat-menu> -->
+  
+      <!-- <button mat-button [matMenuTriggerFor]="menu">
+        <i style="font-size: 20px;" class="fal fa-bell"></i>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item>
+          Notificação
+        </button>
+      </mat-menu> -->
+  
+      <button mat-button>
+          <i style="font-size: 20px;" class="fal fa-share-square" (click)="logout()"></i>
+      </button>
+  
+    </div>
+  </mat-toolbar>

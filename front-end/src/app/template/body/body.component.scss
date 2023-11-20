@@ -1,0 +1,17 @@
+.body {
+    border-radius: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 7rem;
+    z-index: 0;
+    position: relative;
+    transition: all .5s ease;
+    background: #f4f4f9;
+    padding: 3rem;
+    min-height: 100vh;
+}
+
+.body-trimmed {
+    width: calc(100% - 24.5625rem);
+    margin-left: 18.5625rem;
+}

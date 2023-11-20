@@ -1,0 +1,35 @@
+<mat-card class="telaLogin">
+    <mat-card-content class="container">
+        <form class="form" [formGroup]="loginForm">
+            <div class="full-width">
+                <mat-card-title style="color: aliceblue; margin-top: 40px; margin-bottom: 100px;">LOGO MARCA</mat-card-title>
+
+                <mat-form-field class="mat-form-field" appearance="fill">
+                    <mat-label>Email</mat-label>
+                    <input matInput type="email" name="username" formControlName="username" placeholder="Email de usuário">
+                    <span matTextSuffix><i style="font-size: 20px;" class="fa fa-user"></i></span>
+                        
+                    <mat-error>{{ errorValidUsername() }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="mat-form-field">
+                    <mat-label>Senha</mat-label>
+                    <input matInput type="password" name="password" formControlName="password" placeholder="Insira a senha" [type]="hide ? 'password' : 'text'">
+                    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                        <i style="font-size: 20px;" class="fa fa-eye-slash"></i>
+                    </button>
+                    <mat-error>{{ errorValidPassword() }}</mat-error>
+                </mat-form-field>
+
+
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <mat-checkbox [color]="'warn'"><p style="color: white; margin: 5px;">Lembre de Mim</p></mat-checkbox>
+                    <p style="color: white; margin: 5px; margin-left: 60px;">Esqueceu sua Senha?</p>
+                </div>
+
+                <button mat-raised-button [ngStyle]="loginForm.invalid ? { 'color': '#999999', 'background-color': '#e15349' } : { 'color': 'white', 'background-color': '#F44336' }" type="submit" [disabled]="loginForm.invalid" (click)="onSubmit()">Entrar</button>
+
+            </div>
+        </form>
+    </mat-card-content>
+</mat-card>

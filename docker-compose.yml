@@ -1,0 +1,7 @@
+version: '3.8'
+services:
+  postgresql-db-user:
+    extends:
+      file: seguranca/src/main/docker/postgresql.yml
+      service: postgres
+    container_name: db-user

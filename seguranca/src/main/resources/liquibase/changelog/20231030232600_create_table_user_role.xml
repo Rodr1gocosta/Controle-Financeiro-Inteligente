@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+
+    <changeSet id="20231030232600-1" author="rodrigo.costa">
+        <createTable tableName="tb_users_roles">
+            <column name="role_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="tb_users_roles" constraintName="fk_tbuserol_on_role" referencedColumnNames="id" referencedTableName="tb_role"/>
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="tb_users_roles" constraintName="fk_tbuserol_on_user" referencedColumnNames="id" referencedTableName="tb_user"/>
+    </changeSet>
+
+</databaseChangeLog>

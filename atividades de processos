@@ -1,0 +1,42 @@
+1 - criar a tela de login - ok
+
+2 - pagina home - ok
+
+3 - liberar acesso
+
+4 - mudar a porta do microsserviço segurança para 8081 - ok
+
+5 - mudar o login username para ser email no frontend - ok
+
+6 - retornar mensagem do userRecord com as validações ok
+
+7 - continuar o curso da micheli em 1:21 minutos, onde ensina adicionar os Rules de administrador e usuário. - ok
+
+8 - pesquisar para adicionar senha com caracteres, letras e números
+
+9 - transformar meu service-registry em imagem docker para facilitar no desenvolvimento
+
+10 - Salva a senha criptografada ok
+
+11 - terminar o body no frontend ok
+
+12 - criar a tela de adm no frontend ok
+
+13 - implementar atributos de usuarios
+
+14 - implementar bean no mapperstruct
+
+
+
+INFORMÕES ADICIONAIS:
+
+https://github.com/Ricardo-Tonietti?tab=repositories
+https://github.com/mineda/spring-rest-security/tree/master
+
+https://github.com/acenelio/ms-course/tree/main
+
+https://github.com/gostavok/EAD/tree/main
+https://github.com/cursodsousa/curso-spring-boot-especialista/tree/master
+
+
+

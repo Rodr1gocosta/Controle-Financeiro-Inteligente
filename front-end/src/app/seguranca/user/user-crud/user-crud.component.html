@@ -1,0 +1,41 @@
+<mat-card class="mat-card-fieldset">
+
+  <h1 mat-dialog-title>Novo Cadastro</h1>
+
+  <form [formGroup]="form">
+
+    <div mat-dialog-content>
+      <mat-form-field color="warn" style="display: block;">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="name" name="name" placeholder="Ex. Coloque o seu nome">
+        <mat-error>{{ errorRequiredField('name') }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field color="warn" style="display: block;">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="username" name="username" placeholder="Ex. Email do usuário">
+        <mat-error>{{ errorValidUsername() }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field color="warn" style="display: block;">
+        <mat-label>CPF</mat-label>
+        <input matInput [mask]="'000.000.000-00'" type="text" formControlName="cpf" name="cpf" placeholder="Ex. CPF do usuário">
+        <mat-error>{{ errorRequiredField('cpf') }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field color="warn" style="display: block;">
+        <mat-label>Telefone</mat-label>
+        <input matInput [mask]="'(00) 00000-0000'" type="text" formControlName="phoneNumber" name="phoneNumber" placeholder="Ex. Telefone do usuário">
+        <mat-error>{{ errorRequiredField('phoneNumber') }}</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div mat-dialog-actions>
+      <button class="cancel mb-2" color="warn" mat-raised-button (click)="onCancel()">Cancelar</button>
+      <button class="save mb-2"
+        [ngStyle]="form.invalid ? { 'color': '#999999' } : { 'color': 'white', 'background-color': '#008000' }"
+        mat-raised-button (click)="onSubmit()" [disabled]="form.invalid">Salvar</button>
+    </div>
+
+  </form>
+</mat-card>
