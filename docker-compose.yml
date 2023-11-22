@@ -5,7 +5,7 @@ services:
       file: financeiro/src/main/docker/postgresql.yml
       service: financeiro-db
     container_name: financeiro-db
-  seguranca-db:
+  postgresql-seguranca:
     extends:
       file: seguranca/src/main/docker/postgresql.yml
       service: seguranca-db
