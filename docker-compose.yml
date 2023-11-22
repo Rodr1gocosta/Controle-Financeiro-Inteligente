@@ -1,7 +1,12 @@
 version: '3.8'
 services:
-  postgresql-db-user:
+  postgresql-financeiro:
+    extends:
+      file: financeiro/src/main/docker/postgresql.yml
+      service: financeiro-db
+    container_name: financeiro-db
+  seguranca-db:
     extends:
       file: seguranca/src/main/docker/postgresql.yml
-      service: postgres
-    container_name: db-user
+      service: seguranca-db
+    container_name: seguranca-db

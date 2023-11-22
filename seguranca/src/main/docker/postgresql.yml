@@ -1,13 +1,13 @@
 version: '3'
 services:
-  postgres:
-    image: postgres:latest
-    container_name: db-user
+  seguranca-db:
+    image: postgres:14
+    container_name: seguranca-db
     environment:
+      POSTGRES_DB: seguranca-db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
-      POSTGRES_DB: db-user
     ports:
       - "5432:5432"
     volumes:
-      - ~/.volume/postgresql:/var/lib/postgresql/data
+      - ~/.volume/postgresql/seguranca:/var/lib/postgresql/data

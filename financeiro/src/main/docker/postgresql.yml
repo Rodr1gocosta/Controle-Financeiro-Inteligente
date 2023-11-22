@@ -1,0 +1,13 @@
+version: '3'
+services:
+  financeiro-db:
+    image: postgres:14
+    container_name: financeiro-db
+    environment:
+      POSTGRES_DB: financeiro-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5433:5432"
+    volumes:
+      - ~/.volume/postgresql/financeiro:/var/lib/postgresql/data
