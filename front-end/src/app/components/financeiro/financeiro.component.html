@@ -1,0 +1,60 @@
+<mat-card class="mat-card-fieldset">
+    <mat-card-header>
+        <div class="mat-card-title-wrapper">
+            <mat-card-title class="custom-title">Novo Planejamento</mat-card-title>
+        </div>
+    </mat-card-header>
+
+    <button mat-raised-button (click)="isLinear = !isLinear" id="toggle-linear">
+        {{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}
+    </button>
+    <mat-stepper [linear]="isLinear" #stepper>
+        <mat-step [stepControl]="firstFormGroup">
+            <form [formGroup]="firstFormGroup">
+                <ng-template matStepLabel>Salário líquido</ng-template>
+                <mat-form-field floatLabel="always">
+                    <mat-label>Valor</mat-label>
+                    <input matInput type="number" class="example-right-align" placeholder="0">
+                    <span matTextPrefix>$&nbsp;</span>
+                    <span matTextSuffix>.00</span>
+                </mat-form-field>
+                <div>
+                    <button mat-button matStepperNext>Próximo</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step [stepControl]="secondFormGroup" label="Despesas essenciais">
+            <form [formGroup]="secondFormGroup">
+                <mat-form-field>
+                    <mat-label>Address</mat-label>
+                    <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY" required>
+                </mat-form-field>
+                <div>
+                    <button mat-button matStepperPrevious>Voltar</button>
+                    <button mat-button matStepperNext>Próximo</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step [stepControl]="secondFormGroup" label="Despesas não essenciais">
+            <form [formGroup]="secondFormGroup">
+                <mat-form-field>
+                    <mat-label>Address</mat-label>
+                    <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY" required>
+                </mat-form-field>
+                <div>
+                    <button mat-button matStepperPrevious>Voltar</button>
+                    <button mat-button matStepperNext>Próximo</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step>
+            <ng-template matStepLabel>Resumo</ng-template>
+            <p>You are now done.</p>
+            <div>
+                <button mat-button matStepperPrevious>Voltar</button>
+                <button mat-button (click)="stepper.reset()">Reiniciar</button>
+            </div>
+        </mat-step>
+    </mat-stepper>
+
+</mat-card>

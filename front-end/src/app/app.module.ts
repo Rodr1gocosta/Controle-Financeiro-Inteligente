@@ -24,6 +24,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatStepperModule} from '@angular/material/stepper';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './seguranca/login/login.component';
@@ -36,6 +37,9 @@ import { BodyComponent } from './template/body/body.component';
 
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { AuthInterceptor } from './seguranca/interceptor/auth.interceptor';
+import { FinanceiroComponent } from './components/financeiro/financeiro.component';
+import { InvestimentoComponent } from './components/investimento/investimento.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +51,9 @@ import { AuthInterceptor } from './seguranca/interceptor/auth.interceptor';
     FooterComponent,
     SidenavComponent,
     SublevelMenuComponent,
+    FinanceiroComponent,
+    InvestimentoComponent,
+    DashboardComponent,
   ],
   imports: [
     BrowserModule,
@@ -78,6 +85,7 @@ import { AuthInterceptor } from './seguranca/interceptor/auth.interceptor';
     MatMenuModule,
     MatProgressBarModule,
     MatCheckboxModule,
+    MatStepperModule,
   ],
   providers: [ provideNgxMask(),
     {

@@ -7,17 +7,17 @@ export const navbarData: INavbarData[] = [
         label: 'Home'
     },
     {
-        routeLink: 'products',
+        routeLink: 'dashboard',
         icon: 'fad fa-analytics',
         label: 'Dashboard'
     },
     {
-        routeLink: 'tecnicos/list',
+        routeLink: 'financeiro',
         icon: 'fad fa-money-check-edit-alt',
         label: 'Financeiro'
     },
     {
-        routeLink: 'statistics',
+        routeLink: 'investimento',
         icon: 'fad fa-chart-line',
         label: 'Investimento'
     },
