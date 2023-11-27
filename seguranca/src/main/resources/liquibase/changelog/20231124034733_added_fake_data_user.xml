@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+
+    <changeSet id="20231124034733-1-data" author="rodrigo.costa" context="faker">
+        <loadData
+                file="liquibase/fake-data/user.csv"
+                separator=";"
+                tableName="tb_user"
+                usePreparedStatements="true">
+            <column name="id" type="UUID"/>
+            <column name="username" type="VARCHAR(255)"/>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="status" type="BOOLEAN"/>
+            <column name="phone_number" type="VARCHAR(20)"/>
+            <column name="cpf" type="VARCHAR(20)"/>
+            <column name="creation_date" type="VARCHAR(55)"/>
+            <column name="last_update_date" type="VARCHAR(55)"/>
+        </loadData>
+    </changeSet>
+
+</databaseChangeLog>
