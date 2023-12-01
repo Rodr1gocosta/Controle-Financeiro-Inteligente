@@ -1,7 +1,10 @@
 package br.com.financeiro.seguranca.service;
 
+import br.com.financeiro.seguranca.broker.publisher.UserEventPublisher;
+import br.com.financeiro.seguranca.broker.record.UserEventRecord;
 import br.com.financeiro.seguranca.domain.Role;
 import br.com.financeiro.seguranca.domain.User;
+import br.com.financeiro.seguranca.domain.enums.ActionType;
 import br.com.financeiro.seguranca.record.UserRecord;
 import br.com.financeiro.seguranca.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +28,8 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
+
+    private final UserEventPublisher userEventPublisher;
 
     /**
      * Save a User.
@@ -82,7 +87,12 @@ public class UserService {
 
         user.getRoleList().add(role);
 
-        return save(user);
+        User result = save(user);
+
+        UserEventRecord userEventRecord = new UserEventRecord(result.getId(), result.getName(), result.isStatus(), result.getCpf(), result.getPhoneNumber(), ActionType.CREATE);
+        userEventPublisher.publishUserEvent(userEventRecord);
+
+        return result;
     }
 
 }

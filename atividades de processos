@@ -22,21 +22,24 @@
 
 12 - criar a tela de adm no frontend ok
 
-13 - implementar atributos de usuarios
+13 - implementar atributos de usuarios em seguranca ok
 
-14 - implementar bean no mapperstruct
+14 - implementar bean no mapperstruct ok
+
+15 - implementar seguranca no microsservico financeiro
+
+16 - criar entidade usuário no microsservico financeiro ok
+
+17 - Quando criar/atualizar/deletar um novo usuário, o microsservico segurança enviar via RABBITMQ para microsservico financeiro o usuário. ok
 
 
 
 INFORMÕES ADICIONAIS:
 
-https://github.com/Ricardo-Tonietti?tab=repositories
-https://github.com/mineda/spring-rest-security/tree/master
-
 https://github.com/acenelio/ms-course/tree/main
 
 https://github.com/gostavok/EAD/tree/main
-https://github.com/cursodsousa/curso-spring-boot-especialista/tree/master
+https://github.com/Java-Techie-jt/jwt-apigateway-security
 
 
 

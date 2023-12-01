@@ -29,8 +29,11 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> {
                     request.requestMatchers(HttpMethod.POST, "/api/security/authenticate").permitAll();
+
                     request.requestMatchers(HttpMethod.GET, "/api/security/user/**").hasAnyRole("ADMIN");
+
                     request.requestMatchers(HttpMethod.POST, "/api/security/user/**").hasAnyRole("ADMIN");
+
                     request.anyRequest().authenticated();
                 })
                 .addFilterBefore(authenticationJwtFilter(), UsernamePasswordAuthenticationFilter.class)

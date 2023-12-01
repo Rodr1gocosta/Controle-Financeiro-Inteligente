@@ -3,6 +3,7 @@ server:
 spring:
     application:
         name: seguranca
+
     datasource:
         url: jdbc:postgresql://localhost:5432/seguranca-db
         username: postgres
@@ -13,10 +14,19 @@ spring:
     liquibase:
         change-log: liquibase/master.xml
 
+    rabbitmq:
+        addresses: amqps://zqlkokyg:LjRJD3AV8OwPdDVAK8o7QGNSJDCjoG5b@chimpanzee.rmq.cloudamqp.com/zqlkokyg
+
+broker:
+    queue:
+        financeiro:
+            name: default.user
+
 api:
     securty:
         token:
             secret: 123456
+
 eureka:
     client:
         serviceUrl:
