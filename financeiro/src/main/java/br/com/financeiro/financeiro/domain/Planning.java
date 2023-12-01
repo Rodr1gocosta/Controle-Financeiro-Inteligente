@@ -7,6 +7,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -41,5 +44,11 @@ public class Planning implements Serializable {
 
     @OneToMany(mappedBy = "planning", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Categories> categories;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "TB_PLANNINGS_USERS",
+            joinColumns = @JoinColumn(name = "planning_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<User> userList;
 
 }

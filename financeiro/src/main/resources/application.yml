@@ -4,6 +4,7 @@ server:
 spring:
   application:
     name: financeiro
+
   datasource:
     url: jdbc:postgresql://localhost:5433/financeiro-db
     username: postgres
@@ -11,6 +12,14 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+
+  rabbitmq:
+    addresses: amqps://zqlkokyg:LjRJD3AV8OwPdDVAK8o7QGNSJDCjoG5b@chimpanzee.rmq.cloudamqp.com/zqlkokyg
+
+broker:
+  queue:
+    financeiro:
+      name: default.user
 
 eureka:
   client:

@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Service Implementation for managing {@link Planning}.
  */
 @Service
-@Transactional
 public class PlanningServiceImpl implements PlanningService {
 
     @Autowired
@@ -27,23 +26,11 @@ public class PlanningServiceImpl implements PlanningService {
     PlanningMapper planningMapper;
 
 
-    /**
-     * Save a Planning.
-     *
-     * @param planning the entity to save.
-     * @return the persisted entity.
-     */
     @Override
     @Transactional
     public Planning save(Planning planning) { return planningRepository.save(planning); }
 
 
-    /**
-     * Save a Planning.
-     *
-     * @param planningRecord the entity to save.
-     * @return the persisted record.
-     */
     @Override
     @Transactional
     public PlanningRecord savePlanning(PlanningRecord planningRecord) {
