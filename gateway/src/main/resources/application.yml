@@ -14,6 +14,14 @@ spring:
               filters:
                 - TokenValidationFilter
 
+
+            - id: financeiro
+              uri: lb://financeiro
+              predicates:
+                - Path=/api/financas/**
+              filters:
+                - TokenValidationFilter
+
 eureka:
     client:
         serviceUrl:

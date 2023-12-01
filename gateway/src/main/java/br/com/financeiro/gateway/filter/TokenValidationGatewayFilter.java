@@ -3,6 +3,7 @@ package br.com.financeiro.gateway.filter;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
@@ -33,7 +34,13 @@ public class TokenValidationGatewayFilter implements GatewayFilter {
 
     private Mono<Void> handleValidToken(String jwt, ServerWebExchange exchange, GatewayFilterChain chain) {
         if (jwtUtil.validateJwt(jwt)) {
-            return chain.filter(exchange);
+//          ENVIA O USUARIO PARA OS OUTROS MICROSSERVICOS
+            ServerHttpRequest request = exchange.getRequest()
+                    .mutate()
+                    .header("laggedInUser", "teste")
+                    .build();
+
+            return chain.filter(exchange.mutate().request(request).build());
         } else {
             return setUnauthorizedStatus(exchange);
         }
@@ -57,7 +64,7 @@ public class TokenValidationGatewayFilter implements GatewayFilter {
     }
 
     private Mono<Void> setUnauthorizedStatus(ServerWebExchange exchange) {
-        exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
+        exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
         return exchange.getResponse().setComplete();
     }
 
