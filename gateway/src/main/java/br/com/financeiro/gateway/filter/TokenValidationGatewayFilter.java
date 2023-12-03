@@ -34,10 +34,12 @@ public class TokenValidationGatewayFilter implements GatewayFilter {
 
     private Mono<Void> handleValidToken(String jwt, ServerWebExchange exchange, GatewayFilterChain chain) {
         if (jwtUtil.validateJwt(jwt)) {
-//          ENVIA O USUARIO PARA OS OUTROS MICROSSERVICOS
+
+//          ENVIA O ID DO USUARIO PARA OS OUTROS MICROSSERVICOS
+            String userIdFromJwt = jwtUtil.getUserIdFromJwt(jwt);
             ServerHttpRequest request = exchange.getRequest()
                     .mutate()
-                    .header("laggedInUser", "teste")
+                    .header("laggedInUser", userIdFromJwt)
                     .build();
 
             return chain.filter(exchange.mutate().request(request).build());

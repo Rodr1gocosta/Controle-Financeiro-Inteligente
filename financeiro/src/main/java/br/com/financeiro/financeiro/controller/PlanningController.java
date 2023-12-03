@@ -9,11 +9,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * REST controller for managing {@link br.com.financeiro.financeiro.controller.PlanningController}.
@@ -33,15 +38,25 @@ public class PlanningController {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new Planning, or with status {@code 400 (Bad Request)} if the Planning has already an ID.
      */
     @PostMapping("/planning")
-    public ResponseEntity<Object> createPlanning(@RequestBody @Valid PlanningRecord planningRecord, @RequestHeader("laggedInUser") String user) {
+    public ResponseEntity<Object> createPlanning(@RequestBody @Valid PlanningRecord planningRecord, @RequestHeader("laggedInUser") UUID userId) {
         log.debug("REST request to save planning : {}", planningRecord);
-
-        System.out.println(user);
 
         if (planningRecord.id() != null) {
             throw new BadRequestException("Um novo planejamento não pode ter um ID");
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(planningService.savePlanning(planningRecord));
+        return ResponseEntity.status(HttpStatus.CREATED).body(planningService.savePlanning(planningRecord, userId));
+    }
+
+    @GetMapping("/planning/{id}")
+    public ResponseEntity<Object> getOnePlanning(@PathVariable(value = "id")UUID id) {
+        log.debug("REST request to get Planning : {}", id);
+        Optional<PlanningRecord> result = planningService.findOne(id);
+
+        if(result.isPresent()){
+            return ResponseEntity.status(HttpStatus.OK).body(result.get());
+        } else {
+            throw new BadRequestException("Planning não encontrado!");
+        }
     }
 }

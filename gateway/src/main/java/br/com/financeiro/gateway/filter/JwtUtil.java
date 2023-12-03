@@ -1,5 +1,6 @@
 package br.com.financeiro.gateway.filter;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -17,6 +18,21 @@ public class JwtUtil {
 
     @Value(value = "${api.securty.token.secret}")
     private String secret;
+
+    public String getUserIdFromJwt(String jwt) {
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(secret)
+                    .parseClaimsJws(jwt)
+                    .getBody();
+
+            return claims.get("sub", String.class);
+        } catch (Exception e) {
+            log.error("Invalid JWT signature: {}", e.getMessage());
+            return null;
+        }
+    }
+
 
     public boolean validateJwt(String authToken) {
         try {
