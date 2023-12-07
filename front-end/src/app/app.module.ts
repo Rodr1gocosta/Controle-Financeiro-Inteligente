@@ -25,6 +25,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatStepperModule} from '@angular/material/stepper';
+import {MatGridListModule} from '@angular/material/grid-list';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './seguranca/login/login.component';
@@ -86,6 +87,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     MatProgressBarModule,
     MatCheckboxModule,
     MatStepperModule,
+    MatGridListModule,
   ],
   providers: [ provideNgxMask(),
     {

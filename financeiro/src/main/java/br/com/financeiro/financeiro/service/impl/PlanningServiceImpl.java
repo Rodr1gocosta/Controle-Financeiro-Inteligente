@@ -40,9 +40,7 @@ public class PlanningServiceImpl implements PlanningService {
     public Planning save(Planning planning) { return planningRepository.save(planning); }
 
     @Override
-    public Optional<PlanningRecord> findOne(UUID id) {
-        return planningRepository.findById(id).map(planningMapper::toDto);
-    }
+    public Optional<PlanningRecord> findOne(UUID id) { return planningRepository.findById(id).map(planningMapper::toDto); }
 
 
     @Override
@@ -72,5 +70,14 @@ public class PlanningServiceImpl implements PlanningService {
 
         Planning result = save(planning);
         return planningMapper.toDto(result);
+    }
+
+    @Override
+    @Transactional
+    public Optional<PlanningRecord> findOnePlanningByMonthAndYear(Integer month, Integer year, UUID userId) {
+
+        Optional<Planning> byMonthAndYearAndUserListId = planningRepository.findByMonthAndYearAndUserList_Id(month, year, userId);
+
+        return byMonthAndYearAndUserListId.map(planningMapper::toDto);
     }
 }

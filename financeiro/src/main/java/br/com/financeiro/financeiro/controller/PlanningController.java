@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,15 +49,24 @@ public class PlanningController {
         return ResponseEntity.status(HttpStatus.CREATED).body(planningService.savePlanning(planningRecord, userId));
     }
 
-    @GetMapping("/planning/{id}")
-    public ResponseEntity<Object> getOnePlanning(@PathVariable(value = "id")UUID id) {
-        log.debug("REST request to get Planning : {}", id);
-        Optional<PlanningRecord> result = planningService.findOne(id);
+    /**
+     * {@code GET  /planning/:id} : get the "id" planning.
+     *
+     * @param month the month of the planningRecord to retrieve.
+     * @param year the year of the planningRecord to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the planningRecord, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/planning/{month}/{year}")
+    public ResponseEntity<Object> getOnePlanning(@PathVariable(value = "month")Integer month, @PathVariable(value = "year")Integer year, @RequestHeader("laggedInUser") UUID userId) {
+        log.debug("REST request to get Planning : {} {}", month, year);
 
+        Optional<PlanningRecord> result = planningService.findOnePlanningByMonthAndYear(month, year, userId);
         if(result.isPresent()){
             return ResponseEntity.status(HttpStatus.OK).body(result.get());
         } else {
-            throw new BadRequestException("Planning não encontrado!");
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Warn-Message", "NÃO EXISTE PLANEJAMENTO NESSA DATA");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).headers(headers).build();
         }
     }
 }

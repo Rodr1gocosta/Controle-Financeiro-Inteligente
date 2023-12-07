@@ -35,4 +35,14 @@ public interface PlanningService {
      * @return the persisted record.
      */
     PlanningRecord savePlanning(PlanningRecord planningRecord, UUID userId);
+
+    /**
+     * Get the "planning" by month and year.
+     *
+     * @param userId, the id of the user.
+     * @param month, the month of the entity.
+     * @param year, the year of the entity.
+     * @return the entity.
+     */
+    Optional<PlanningRecord> findOnePlanningByMonthAndYear(Integer month, Integer year, UUID userId);
 }

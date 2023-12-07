@@ -1,63 +1,103 @@
-<div class="calendario">
-    <button mat-icon-button color="warn" class="hover-shadow" (click)="decreasesYear()">
-        <mat-icon>chevron_left</mat-icon>
-    </button>
-    <button mat-fab extended color="warn" (click)="toggleCalendar()" *ngIf="!isCalendarOpen">
-        {{ currentMonth }} {{ currentYear }}
-    </button>
-    <button mat-stroked-button color="warn" (click)="message()" *ngIf="isCalendarOpen"
-        style="font-size: 20px; border-radius: 15px;">
-        <b>{{ currentYear }}</b>
-    </button>
-    <button mat-icon-button color="warn" class="hover-shadow" (click)="incrementYear()">
-        <mat-icon>chevron_right</mat-icon>
-    </button>
-</div>
+<mat-card class="mat-card-fieldset">
+    <mat-card-header>
+        <div class="mat-card-title-wrapper">
+            <mat-card-title class="custom-title">Planejamento</mat-card-title>
+        </div>
+    </mat-card-header>
 
-<div *ngIf="isCalendarOpen" class="mesesCalendario">
-    <button class="botoesMeses" mat-fab extended *ngFor="let month of months" (click)="selectMonth(month)">
-        {{ month }}
-    </button>
-</div>
-<br><br>
+    <div class="details">
+        <div class="cardTable">
+            <mat-card class="mat-card-fieldset">
+                <div class="calendario">
+                    <button mat-icon-button color="warn" class="hover-shadow" (click)="decreasesYear()">
+                        <mat-icon>chevron_left</mat-icon>
+                    </button>
+                    <button mat-fab extended color="warn" (click)="toggleCalendar()" *ngIf="!isCalendarOpen">
+                        {{ month }} {{ year }}
+                    </button>
+                    <button mat-stroked-button color="warn" (click)="message()" *ngIf="isCalendarOpen"
+                        style="font-size: 20px; border-radius: 15px;">
+                        <b>{{ year }}</b>
+                    </button>
+                    <button mat-icon-button color="warn" class="hover-shadow" (click)="incrementYear()">
+                        <mat-icon>chevron_right</mat-icon>
+                    </button>
+                </div>
 
-<mat-card class="container mat-table-responsive">
-    <div class="table-wrapper">
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                <div *ngIf="isCalendarOpen" class="mesesCalendario">
+                    <button class="botoesMeses" mat-fab extended *ngFor="let month of months"
+                        (click)="selectMonth(month)">
+                        {{ month }}
+                    </button>
+                </div>
 
-            <ng-container matColumnDef="position">
-                <th mat-header-cell *matHeaderCellDef> Categoria </th>
-                <td mat-cell *matCellDef="let element"> {{element.position}} </td>
-            </ng-container>
+                <div *ngIf="showTable; else noPlanningMessage">
+                    <table style="margin-top: 80px;" mat-table #table [dataSource]="dataSource">
+                        
+                        <ng-container matColumnDef="category">
+                            <th mat-header-cell *matHeaderCellDef> Categoria </th>
+                            <td mat-cell *matCellDef="let element"> {{element.categoryRecord.name}} </td>
+                        </ng-container>
+    
+                        <ng-container matColumnDef="planned">
+                            <th mat-header-cell *matHeaderCellDef> Valor </th>
+                            <td mat-cell *matCellDef="let element"> {{element.planned}} </td>
+                        </ng-container>
+    
+                        <ng-container matColumnDef="pagos">
+                            <th mat-header-cell *matHeaderCellDef> Pagos </th>
+                            <td mat-cell *matCellDef="let element"> {{element.planned}} </td>
+                        </ng-container>
+    
+                        <ng-container matColumnDef="status">
+                            <th mat-header-cell *matHeaderCellDef> Status </th>
+                            <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+                        </ng-container>
+    
+                        <ng-container matColumnDef="descricao">
+                            <th mat-header-cell *matHeaderCellDef> Descricão </th>
+                            <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+                        </ng-container>
+    
+                        <ng-container matColumnDef="acao">
+                            <th mat-header-cell *matHeaderCellDef> Ação </th>
+                            <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+                        </ng-container>
+    
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+    
+                    <mat-paginator color="warn" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons
+                        aria-label="Select page of periodic elements">
+                    </mat-paginator>
+                </div>
 
-            <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef> Valor </th>
-                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-            </ng-container>
+                <ng-template #noPlanningMessage>
+                    <div class="no-planning-message">
+                        <mat-card class="mat-card-fieldset">
+                          <mat-card-content>
+                            <mat-icon class="icon">sentiment_very_dissatisfied</mat-icon>
+                            <h2>Sem Planejamento</h2>
+                            <p>Não há planejamento disponível para o mês e ano selecionados.</p>
+                          </mat-card-content>
+                        </mat-card>
+                      </div>
+                </ng-template>
+            </mat-card>
+        </div>
 
-            <ng-container matColumnDef="weight">
-                <th mat-header-cell *matHeaderCellDef> Status </th>
-                <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
-            </ng-container>
+        <div class="adicionais">
+            <mat-card class="mat-card-fieldset">
+                <div class="cardHeader">
+                    <h2>Detalhe</h2>
+                    <a href="#" class="btn">Botão</a>
+                </div>
+            </mat-card>
+        </div>
 
-            <ng-container matColumnDef="symbol">
-                <th mat-header-cell *matHeaderCellDef> Ação </th>
-                <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-        <mat-paginator color="warn" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons
-            aria-label="Select page of periodic elements">
-        </mat-paginator>
     </div>
 </mat-card>
-<br><br>
-
-
-
-
 
 
 
