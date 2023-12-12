@@ -36,6 +36,22 @@ export class UserComponent implements OnInit {
         this.dataSource = new MatTableDataSource<User>(this.users);
         this.dataSource.paginator = this.paginator;
       }
+    }, error => {
+      let errorMessage = 'Ocorreu um erro na operação. Por favor, tente novamente mais tarde.';
+
+      switch (error.status) {
+        case 401: {
+          errorMessage = 'Credenciais inválidas';
+        } break;
+        case 403: {
+          errorMessage = 'Acesso negado. Você não tem permissão para acessar este recurso.';
+        } break;
+        case 409: {
+          errorMessage = 'O endereço de e-mail já está em uso. Não é possível criar uma nova conta com este e-mail.';
+        } break;
+      }
+
+      this.userService.message(errorMessage);
     })
   }
 
