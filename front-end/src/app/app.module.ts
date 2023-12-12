@@ -4,6 +4,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { NgxCurrencyDirective } from 'ngx-currency';
 
 import {MatInputModule} from '@angular/material/input';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -26,6 +28,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatGridListModule} from '@angular/material/grid-list';
+import {MatRadioModule} from '@angular/material/radio';
+
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './seguranca/login/login.component';
@@ -36,11 +40,16 @@ import { SidenavComponent } from './template/sidenav/sidenav.component';
 import { SublevelMenuComponent } from './template/sidenav/sublevel-menu.component';
 import { BodyComponent } from './template/body/body.component';
 
-import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { RealPipe } from './shared/pipe/RealPipe';
+
 import { AuthInterceptor } from './seguranca/interceptor/auth.interceptor';
+
 import { FinanceiroComponent } from './components/financeiro/financeiro.component';
 import { InvestimentoComponent } from './components/investimento/investimento.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { FinanceiroCrudComponent } from './components/financeiro/financeiro-crud/financeiro-crud.component';
+import { CategoryDefaultComponent } from './seguranca/admin/category-default/category-default.component';
+import { CrudCategoryDefaultComponent } from './seguranca/admin/category-default/crud-category-default/crud-category-default.component';
 
 @NgModule({
   declarations: [
@@ -53,8 +62,12 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     SidenavComponent,
     SublevelMenuComponent,
     FinanceiroComponent,
+    FinanceiroCrudComponent,
     InvestimentoComponent,
     DashboardComponent,
+    RealPipe,
+    CategoryDefaultComponent,
+    CrudCategoryDefaultComponent
   ],
   imports: [
     BrowserModule,
@@ -66,6 +79,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 
     NgxMaskDirective, 
     NgxMaskPipe,
+    NgxCurrencyDirective,
 
     MatToolbarModule,
     MatSidenavModule,
@@ -88,6 +102,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     MatCheckboxModule,
     MatStepperModule,
     MatGridListModule,
+    MatRadioModule
   ],
   providers: [ provideNgxMask(),
     {

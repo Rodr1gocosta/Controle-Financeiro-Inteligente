@@ -20,6 +20,10 @@ export class HeaderComponent {
     this.router.navigate(['/usuario/lista']);
   }
 
+  controlCategoryDefaultRoute() {
+    this.router.navigate(['/categoria-padrao']);
+  }
+
   logout() {
     this.authService.logout();
   }

@@ -1,0 +1,36 @@
+<mat-card class="mat-card-fieldset">
+    <mat-card-header>
+        <div class="mat-card-title-wrapper">
+            <mat-card-title class="custom-title">Nova Categoria</mat-card-title>
+        </div>
+        <span class="flex-spacer"></span>
+        <button mat-icon-button (click)="onCancel()">
+            <mat-icon aria-label="Fechar diálogo">close</mat-icon>
+        </button>
+    </mat-card-header>
+
+
+    <mat-dialog-content>
+        <form class="category" [formGroup]="form">
+            <mat-form-field color="warn">
+                <mat-label>Nome</mat-label>
+                <input matInput formControlName="name" placeholder="Ex. Coloque o nome da categoria">
+            </mat-form-field>
+
+            <label>Tipo: </label>
+            <mat-radio-group aria-label="Selecione" formControlName="typeCategory">
+                <mat-radio-button [value]="essencial">Essencial</mat-radio-button>
+                <mat-radio-button [value]="naoEssencial">Não essencial</mat-radio-button>
+            </mat-radio-group>
+        </form>
+    </mat-dialog-content>
+
+    <mat-dialog-actions class="button" align="end">
+        <button color="warn" mat-raised-button (click)="onCancel()">Cancelar</button>
+        <button class="save"
+            [ngStyle]="form.invalid ? { 'color': '#999999' } : { 'color': 'white', 'background-color': '#008000' }"
+            mat-raised-button [disabled]="form.invalid" (click)="createCategory()">
+            Salvar
+        </button>
+    </mat-dialog-actions>
+</mat-card>

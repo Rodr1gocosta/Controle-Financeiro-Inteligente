@@ -10,6 +10,9 @@
         <button mat-menu-item (click)="controlUserRoute()">
           Controle de Usuário
         </button>
+        <button mat-menu-item (click)="controlCategoryDefaultRoute()">
+          Controle de Categorias 
+        </button>
       </mat-menu>
   
       <!-- <button mat-button [matMenuTriggerFor]="menu">
@@ -30,8 +33,8 @@
         </button>
       </mat-menu> -->
   
-      <button mat-button>
-          <i style="font-size: 20px;" class="fal fa-share-square" (click)="logout()"></i>
+      <button mat-button (click)="logout()">
+          <i style="font-size: 20px;" class="fal fa-share-square"></i>
       </button>
   
     </div>
