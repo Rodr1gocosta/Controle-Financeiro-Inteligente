@@ -1,0 +1,123 @@
+.mat-card-fieldset {
+    box-shadow: 0px 0px 2px #000000;
+    margin: 20px;
+
+    overflow-y: auto;
+
+    mat-card-header div {
+        margin-bottom: 30px;
+    }
+
+    mat-card-header div .custom-title {
+        color: white;
+    }
+
+    mat-card-header .flex-spacer {
+        flex: 1 1 auto;
+    }
+}
+
+.stepper {
+    margin: 20px;
+
+
+    form {
+        margin-top: 50px;
+    }
+
+    mat-card {
+        margin-bottom: 50px;
+        width: 100%;
+        color: white;
+        box-shadow: 0 4px 8px #FF5252;
+    }
+
+    mat-card mat-icon {
+        font-size: 48px;
+        color: #FF5252;
+    }
+
+    mat-card h2 {
+        margin-top: 20px;
+    }
+
+    mat-card p {
+        color: #8b8a8a;
+    }
+
+    .formPlanning mat-form-field {
+        width: 300px;
+        height: 90px;
+    }
+
+    .formPlanning mat-form-field mat-label {
+        font-size: 25px;
+    }
+
+    .formPlanning mat-form-field input {
+        font-size: 35px;
+    }
+
+    .despesas .addCategory {
+        box-shadow: 0px 0px 2px #000000;
+        padding: 20px;
+    }
+
+    .despesas .addCategory mat-form-field {
+        margin-top: 30px;
+        margin-right: 10px;
+        width: 100%;
+        max-width: 400px;
+        height: 75px;
+    }
+
+    .despesas .addCategory .planned {
+        margin-right: 30px;
+    }
+
+    .despesas .addCategory button {
+        width: 100%;
+        max-width: 150px;
+        height: 50px;
+        margin-bottom: 13px;
+    }
+
+    .despesas .table-wrapper {
+        overflow-x: auto;
+        max-width: 100%;
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
+
+    .despesas .table-wrapper .mat-column-acao {
+        width: 128px;
+        text-align: center;
+    }
+
+    .despesas .button {
+        display: flex;
+        margin-top: 40px;
+    }
+
+    .despesas .button span {
+        flex: 1 1 auto;
+    }
+
+    .despesas .duvida{
+        cursor: pointer; 
+        margin-bottom: 20px; 
+        color: #f3f0f0fa;
+    }
+}
+
+.expandir {
+    height: auto;
+    max-height: 400px;
+    transition: max-height 0.3s ease-out;
+}
+
+.recolher {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in;
+}

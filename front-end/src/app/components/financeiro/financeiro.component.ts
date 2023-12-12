@@ -1,10 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
 import { FinanceiroService } from '../service/financeiro.service';
 import { Planning } from 'src/app/shared/model/planning';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Categories } from 'src/app/shared/model/categories';
+import { MatDialog } from '@angular/material/dialog';
+import { FinanceiroCrudComponent } from './financeiro-crud/financeiro-crud.component';
 
 @Component({
   selector: 'app-financeiro',
@@ -27,23 +28,22 @@ export class FinanceiroComponent {
     'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
   ];
 
-  firstFormGroup = this._formBuilder.group({
-    firstCtrl: ['', Validators.required],
-  });
-  secondFormGroup = this._formBuilder.group({
-    secondCtrl: ['', Validators.required],
-  });
-  isLinear = false;
-
   planning!: Planning;
   categories: Categories[] = [];
 
 
-  constructor(private _formBuilder: FormBuilder,
-    private financeiroService: FinanceiroService) { }
+  constructor(private financeiroService: FinanceiroService,
+              public dialog: MatDialog) { }
 
   ngOnInit() {
     this.findPlanningByDateCurrent();
+  }
+
+  createPlanning(element: Planning | null) {
+    const dialogRef = this.dialog.open(FinanceiroCrudComponent, {
+      width: '100%',
+      maxHeight: '78vh',
+    });
   }
 
   decreasesYear() {
@@ -100,7 +100,7 @@ export class FinanceiroComponent {
     const currentMonth = currentDate.getMonth() + 1;
     const currentYear = currentDate.getFullYear();
 
-    //Adicionar o mes e ano atual no customCalendar
+    //Adicionar o mes e ano atual no calendario
     this.month = this.months[currentDate.getMonth()];
     this.year = currentDate.getFullYear();
 
@@ -116,16 +116,30 @@ export class FinanceiroComponent {
           this.categories = response.categoriesRecords as Categories[];
           this.dataSource = new MatTableDataSource<Categories>(this.categories);
           this.dataSource.paginator = this.paginator;
-          
-          this.showTable = true; 
+
+          this.showTable = true;
         }
       } else {
         this.categories = [];
         this.dataSource = new MatTableDataSource<Categories>(this.categories);
         this.dataSource.paginator = this.paginator;
-        
-        this.showTable = false; 
+
+        this.showTable = false;
       }
+    }, error => {
+      let errorMessage = 'Ocorreu um erro na operação. Por favor, tente novamente mais tarde.';
+
+      switch (error.status) {
+        case 401: {
+          errorMessage = 'Credenciais inválidas';
+        } break;
+        case 403: {
+          errorMessage = 'Acesso negado. Você não tem permissão para acessar este recurso.';
+        } break;
+
+      }
+
+      this.financeiroService.message(errorMessage);
     });
   }
 
