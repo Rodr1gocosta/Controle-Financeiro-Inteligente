@@ -25,16 +25,27 @@
         margin-top: 50px;
     }
 
+    .expansion {
+        box-shadow: 0 4px 8px #FF5252; 
+        margin-bottom: 20px;
+
+        p {
+            margin-left: 10px; 
+            margin-top: 15px;
+        }
+    }
+
+
+    mat-icon {
+        font-size: 48px;
+        color: #FF5252;
+    }
+
     mat-card {
         margin-bottom: 50px;
         width: 100%;
         color: white;
         box-shadow: 0 4px 8px #FF5252;
-    }
-
-    mat-card mat-icon {
-        font-size: 48px;
-        color: #FF5252;
     }
 
     mat-card h2 {
@@ -63,12 +74,22 @@
         padding: 20px;
     }
 
+    .despesas .addCategory .label {
+        color: white;
+        margin-top: 10px;
+    }
+
     .despesas .addCategory mat-form-field {
-        margin-top: 30px;
+        margin-top: 10px;
         margin-right: 10px;
         width: 100%;
-        max-width: 400px;
+        max-width: 375px;
         height: 75px;
+    }
+
+    .despesas .addCategory .categorias {
+        width: 100%;
+        max-width: 760px;
     }
 
     .despesas .addCategory .planned {
@@ -76,9 +97,8 @@
     }
 
     .despesas .addCategory button {
-        width: 100%;
-        max-width: 150px;
-        height: 50px;
+        width: 100px;
+        max-width: 100px;
         margin-bottom: 13px;
     }
 
@@ -120,4 +140,21 @@
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease-in;
+}
+
+
+.mat-mdc-table-sticky {
+    border-top: 1px solid #e0e0e0;
+}
+
+.despesas-essenciais {
+    background-color: #AED581; 
+}
+  
+.despesas-nao-essenciais {
+    background-color: #FF8A65;
+}
+  
+.total-despesas {
+    background-color: #90A4AE;
 }

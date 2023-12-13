@@ -41,38 +41,72 @@
             </form>
         </mat-step>
 
-        <mat-step [completed]="hasDataInTableEtapa2()" label="Despesas essenciais">
+        <mat-step [completed]="hasDataInTableEtapa2()" label="Despesas">
             <form class="despesas" [formGroup]="despesasEssenciais">
 
-                <div class="duvida" (click)="exibirInstrucoesEtapa2 = !exibirInstrucoesEtapa2">
-                    <strong>Por que precisamos disso? (Clique aqui)</strong>
-                </div>
-                <div [ngClass]="{'expandir': exibirInstrucoesEtapa2, 'recolher': !exibirInstrucoesEtapa2}">
-                    <mat-card>
-                        <mat-card-content>
-                            <mat-icon class="icon">sentiment_very_dissatisfied</mat-icon>
-                            <h2>Bem-vindo à segunda etapa do seu planejamento financeiro!</h2>
-                            <p>Por favor, siga as instruções abaixo para inserir as despesas essenciais:</p>
-                            <p>1. Selecione a categoria correspondente à despesa essencial que você deseja adicionar.
-                            </p>
-                            <p>2. Forneça uma descrição clara e concisa da despesa essencial.</p>
-                            <p>3. Insira o valor correspondente à despesa essencial.</p>
-                            <p>Nesta etapa, é fundamental focar apenas em despesas essenciais, ou seja,
-                                aquelas que são indispensáveis para o seu sustento e bem-estar.
-                                Evite incluir gastos supérfluos ou itens não essenciais, pois isso pode comprometer
-                                a precisão do seu planejamento financeiro.
-                            </p>
-                            <p>Vamos começar!</p>
-                        </mat-card-content>
-                    </mat-card>
-                </div>
+                <mat-accordion>
+                    <mat-expansion-panel class="expansion" (opened)="panelOpenState = true"
+                        (closed)="panelOpenState = false">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <mat-icon class="icon">sentiment_very_dissatisfied</mat-icon>
+                                <p>{{panelOpenState ? '' : 'Instruções'}}
+                                </p>
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                Atualmente estou {{panelOpenState ? 'aberto' : 'fechado'}}
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <h2>Bem-vindo à segunda etapa do seu planejamento financeiro!</h2>
+                        <p>Por favor, siga as instruções abaixo para inserir as despesas essenciais:</p>
+                        <p>1. Selecione a categoria correspondente à despesa essencial que você deseja adicionar.
+                        </p>
+                        <p>2. Forneça uma descrição clara e concisa da despesa essencial.</p>
+                        <p>3. Insira o valor correspondente à despesa essencial.</p>
+                        <p>Nesta etapa, é fundamental focar apenas em despesas essenciais, ou seja,
+                            aquelas que são indispensáveis para o seu sustento e bem-estar.
+                            Evite incluir gastos supérfluos ou itens não essenciais, pois isso pode comprometer
+                            a precisão do seu planejamento financeiro.
+                        </p>
+                        <p>Vamos começar!</p>
+                    </mat-expansion-panel>
+                </mat-accordion>
 
                 <div class="addCategory">
-                    <div formGroupName="category">
-                        <mat-form-field color="warn">
+                    <div align="end" style="margin-top: 20px;">
+                        <span
+                            [ngStyle]="{'background-color': calculationOfValues < 0 ? 'rgba(255, 0, 0, 0.61)' : 'green', 'font-size': '20px', 'color': 'white', 'padding': '20px'}">
+                            Total Planejado: {{ calculationOfValues | currency:'BRL':'symbol':'1.2-2' }}
+                        </span>
+                    </div>
+
+                    <div class="label">
+                        <label>Selecione o tipe de despesas:</label>
+                    </div>
+                    <div class="radioButton">
+                        <mat-radio-group (change)="onTipoDespesaChange($event)">
+                            <mat-radio-button [value]="1">Essencial</mat-radio-button>
+                            <mat-radio-button [value]="2">Não essencial</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+
+
+                    <div *ngIf="tipoDespesa == 1">
+                        <mat-form-field class="categorias" color="warn" formGroupName="category">
                             <mat-label>Categorias Essenciais</mat-label>
                             <mat-select formControlName="name">
                                 <mat-option *ngFor="let category of categorysEssenciais"
+                                    [value]="category.name">{{category.name}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+
+                    <div *ngIf="tipoDespesa == 2">
+                        <mat-form-field class="categorias" color="warn" formGroupName="category">
+                            <mat-label>Categorias não essenciais</mat-label>
+                            <mat-select formControlName="name">
+                                <mat-option *ngFor="let category of categorysNaoEssenciais"
                                     [value]="category.name">{{category.name}}</mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -90,11 +124,20 @@
                             formControlName="planned">
                     </mat-form-field>
 
-                    <button mat-raised-button
-                        [ngStyle]="despesasEssenciais.invalid ? { 'color': '#999999' } : { 'color': 'white', 'background-color': '#008000' }"
-                        [disabled]="despesasEssenciais.invalid" (click)="adicionarDespesasEssenciais()">
-                        <mat-icon>add</mat-icon> {{ modoEdicaoEtapa2 ? 'Salvar' : 'Adicionar' }}
-                    </button>
+                    <div>
+                        <button mat-raised-button
+                            [ngStyle]="despesasEssenciais.invalid ? { 'color': '#999999' } : { 'color': 'white', 'background-color': '#008000' }"
+                            [disabled]="despesasEssenciais.invalid" (click)="adicionarDespesasEssenciais()">
+                            {{ modoEdicaoEtapa2 ? 'Salvar' : 'Adicionar' }}
+                        </button>
+
+                        <button mat-raised-button
+                            style="background-color: rgba(255, 0, 0, 0.61); color: white; margin-left: 10px;"
+                            (click)="clear()">
+                            {{ modoEdicaoEtapa2 ? 'Cancelar' : 'Limpar' }}
+                        </button>
+                    </div>
+
                 </div>
 
                 <div class="table-wrapper">
@@ -103,6 +146,11 @@
                         <ng-container matColumnDef="category">
                             <th mat-header-cell *matHeaderCellDef> Categoria </th>
                             <td mat-cell *matCellDef="let element"> {{element.category.name}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="type">
+                            <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                            <td mat-cell *matCellDef="let element"> {{element.category.typeCategory}} </td>
                         </ng-container>
 
                         <ng-container matColumnDef="descricao">
@@ -129,114 +177,67 @@
                             </td>
                         </ng-container>
 
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                    </table>
-                </div>
-
-                <mat-divider></mat-divider>
-                <div class="button">
-                    <button mat-raised-button color="warn" matStepperPrevious>Voltar</button>
-                    <span></span>
-                    <button mat-raised-button color="warn" matStepperNext>Próximo</button>
-                </div>
-            </form>
-        </mat-step>
-
-        <mat-step [completed]="hasDataInTableEtapa3()" label="Despesas não essenciais">
-            <form class="despesas" [formGroup]="despesasNaoEssenciais">
-
-                <div class="duvida" (click)="exibirInstrucoesEtapa3 = !exibirInstrucoesEtapa3">
-                    <strong>Por que precisamos saber disso?</strong>
-                </div>
-                <div [ngClass]="{'expandir': exibirInstrucoesEtapa3, 'recolher': !exibirInstrucoesEtapa3}">
-                    <mat-card>
-                        <mat-card-content>
-                            <mat-icon class="icon">sentiment_very_dissatisfied</mat-icon>
-                            <h2>Bem-vindo à terceira etapa do seu planejamento financeiro!</h2>
-                            <p>Agora, vamos adicionar suas despesas não essenciais. Diferentemente das despesas
-                                essenciais.
-                                Ao incluir suas despesas não essenciais, você terá uma visão mais abrangente do seu
-                                orçamento
-                                e poderá tomar decisões informadas sobre seus gastos.</p>
-                            <p>Siga as instruções abaixo:</p>
-                            <p>1. Selecione a categoria correspondente à despesa não essencial que você deseja
-                                adicionar.
-                            </p>
-                            <p>2. Caso necessário, forneça uma descrição clara e concisa da despesa não essencial.</p>
-                            <p>3. Insira o valor correspondente à despesa não essencial.</p>
-                            <p>Lembre-se de ser honesto ao categorizar suas despesas e inserir os valores corretos.
-                                Isso ajudará a garantir a precisão do seu planejamento financeiro.
-                            </p>
-                            <p>Vamos começar!</p>
-                        </mat-card-content>
-                    </mat-card>
-                </div>
-
-                <div class="addCategory">
-                    <div formGroupName="category">
-                        <mat-form-field color="warn">
-                            <mat-label>Categorias não Essenciais</mat-label>
-                            <mat-select formControlName="name">
-                                <mat-option *ngFor="let category of categorysNaoEssenciais"
-                                    [value]="category.name">{{category.name}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-
-                    <mat-form-field color="warn">
-                        <mat-label>Descrição</mat-label>
-                        <input matInput formControlName="descricao">
-                    </mat-form-field>
-
-                    <mat-form-field class="planned" color="warn" floatLabel="always">
-                        <mat-label>Insira o valor</mat-label>
-                        <input matInput type="text" currencyMask
-                            [options]="{prefix: 'R$ ', thousands: '.', precision: 2, allowNegative: false, align: 'left', decimal: ','}"
-                            formControlName="planned">
-                    </mat-form-field>
-
-                    <button mat-raised-button
-                        [ngStyle]="despesasNaoEssenciais.invalid ? { 'color': '#999999' } : { 'color': 'white', 'background-color': '#008000' }"
-                        [disabled]="despesasNaoEssenciais.invalid" (click)="adicionarDespesasNaoEssenciais()">
-                        <mat-icon>add</mat-icon> {{ modoEdicaoEtapa3 ? 'Salvar' : 'Adicionar' }}
-                    </button>
-                </div>
-
-                <div class="table-wrapper">
-                    <table mat-table #table [dataSource]="dataSourceEtapa3">
-
-                        <ng-container matColumnDef="category">
-                            <th mat-header-cell *matHeaderCellDef> Categoria </th>
-                            <td mat-cell *matCellDef="let element"> {{element.category.name}} </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="descricao">
-                            <th mat-header-cell *matHeaderCellDef> Descricão </th>
-                            <td mat-cell *matCellDef="let element"> {{element.descricao}} </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="planned">
-                            <th mat-header-cell *matHeaderCellDef> Valor </th>
-                            <td mat-cell *matCellDef="let element"> {{element.planned | real}} </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="action">
-                            <th class="mat-column-acao" mat-header-cell *matHeaderCellDef> Ações </th>
-                            <td mat-cell *matCellDef="let element">
-                                <button style="margin: 2px" mat-mini-fab matTooltip="Editar" color="warn"
-                                    (click)="editarEtapa3(element)">
-                                    <i class="fa fa-solid fa-pen"></i>
-                                </button>
-                                <button mat-mini-fab matTooltip="Deletar" color="primary"
-                                    (click)="deletarEtapa3(element)">
-                                    <i class="fa fa-solid fa-trash"></i>
-                                </button>
+                        <ng-container matColumnDef="espace">
+                            <td mat-footer-cell *matFooterCellDef colspan="5">
+                                
                             </td>
                         </ng-container>
 
+                        <!-- Row Despesas essenciais -->
+                        <ng-container matColumnDef="despesasEssenciais">
+                            <td mat-footer-cell *matFooterCellDef colspan="3">
+                                TOTAL DE DESPESAS ESSENCIAIS
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="despesasEssenciais1">
+                            <td mat-footer-cell *matFooterCellDef colspan="2">
+                                {{getTotalDespesasEssenciais() | real}}
+                            </td>
+                        </ng-container>
+                        <!-- fim Row Despesas essenciais -->
+
+                        <!-- Row Despesas não essenciais -->
+                        <ng-container matColumnDef="despesasnNaoEssenciais">
+                            <td mat-footer-cell *matFooterCellDef colspan="3">
+                                TOTAL DE DESPESAS NÃO ESSENCIAIS
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="despesasnNaoEssenciais1">
+                            <td mat-footer-cell *matFooterCellDef colspan="2">
+                                {{getTotalDespesasNaoEssenciais() | real}}
+                            </td>
+                        </ng-container>
+                        <!-- fim Row Despesas não essenciais -->
+
+                        <!-- fim Row Total Despesas -->
+                        <ng-container matColumnDef="totalDespesas">
+                            <td mat-footer-cell *matFooterCellDef colspan="3">
+                                TOTAL GERAL DE DESPESAS
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="totalDespesas1">
+                            <td mat-footer-cell *matFooterCellDef colspan="2">
+                                {{getTotalDespesas() | real}}
+                            </td>
+                        </ng-container>
+                        <!-- fim Row Total Despesas -->
+
+
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+
+                        <tr mat-footer-row *matFooterRowDef="['espace']"></tr>
+                        <tr mat-footer-row *matFooterRowDef="['despesasEssenciais', 'despesasEssenciais1']"
+                            [ngClass]="{'despesas-essenciais': true, 'despesas-nao-essenciais': false, 'total-despesas': false}">
+                        </tr>
+                        <tr mat-footer-row *matFooterRowDef="['despesasnNaoEssenciais', 'despesasnNaoEssenciais1']"
+                            [ngClass]="{'despesas-essenciais': false, 'despesas-nao-essenciais': true, 'total-despesas': false}">
+                        </tr>
+                        <tr mat-footer-row *matFooterRowDef="['totalDespesas', 'totalDespesas1']"
+                            [ngClass]="{'despesas-essenciais': false, 'despesas-nao-essenciais': false, 'total-despesas': true}">
+                        </tr>
+
                     </table>
                 </div>
 
@@ -252,6 +253,39 @@
         <mat-step>
             <ng-template matStepLabel>Resumo</ng-template>
             <div class="despesas">
+                <section style="margin-top: 50px;" class="example-container mat-elevation-z8" tabindex="0">
+                    <table mat-table [dataSource]="dataSourceEtapa2">
+                        <!-- Item Column -->
+                        <ng-container matColumnDef="categoria">
+                            <th mat-header-cell *matHeaderCellDef> Categoria </th>
+                            <td mat-cell *matCellDef="let transaction"> {{transaction.category.name}} </td>
+                            <td mat-footer-cell *matFooterCellDef> Total </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="tipo">
+                            <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                            <td mat-cell *matCellDef="let transaction"> {{transaction.category.typeCategory}} </td>
+                            <td mat-footer-cell *matFooterCellDef></td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="descricao">
+                            <th mat-header-cell *matHeaderCellDef> Descrição </th>
+                            <td mat-cell *matCellDef="let transaction"> {{transaction.descricao}} </td>
+                            <td mat-footer-cell *matFooterCellDef></td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="valor">
+                            <th mat-header-cell *matHeaderCellDef> Valor </th>
+                            <td mat-cell *matCellDef="let transaction"> {{transaction.planned | real}} </td>
+                            <td mat-footer-cell *matFooterCellDef> {{getTotalDespesas() | real}} </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsResumo"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsResumo;"></tr>
+                        <tr mat-footer-row *matFooterRowDef="displayedColumnsResumo; sticky: true"></tr>
+                    </table>
+                </section>
+
                 <div class="button">
                     <button mat-raised-button color="warn" matStepperPrevious>Voltar</button>
                     <span></span>

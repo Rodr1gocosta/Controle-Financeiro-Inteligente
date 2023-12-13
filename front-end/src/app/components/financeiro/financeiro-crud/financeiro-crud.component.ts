@@ -11,23 +11,20 @@ import { CategoryDefaultService } from 'src/app/seguranca/admin/category-default
 })
 export class FinanceiroCrudComponent {
   dataSourceEtapa2: MatTableDataSource<any> = new MatTableDataSource<any>([]);
-  dataSourceEtapa3: MatTableDataSource<any> = new MatTableDataSource<any>([]);
 
-  displayedColumns: string[] = ['category', 'descricao', 'planned', 'action'];
+  displayedColumnsResumo: string[] = ['categoria', 'tipo',  'descricao', 'valor'];
+  displayedColumns: string[] = ['category', 'type', 'descricao', 'planned', 'action'];
 
   categorysEssenciais: CategoryDefault[] = [];
   categorysNaoEssenciais: CategoryDefault[] = [];
 
-  modoEdicaoEtapa2: boolean = false;
-  modoEdicaoEtapa3: boolean = false;
-
   elementEtapa2: any;
-  elementEtapa3: any;
 
-  exibirInstrucoesEtapa2: boolean = false;
-  exibirInstrucoesEtapa3: boolean = false;
+  calculationOfValues: number = 0;
+  tipoDespesa!: number;
 
-
+  modoEdicaoEtapa2: boolean = false;
+  panelOpenState = false;
   isLinear = true;
 
   planning = this.formBuilder.group({
@@ -36,61 +33,89 @@ export class FinanceiroCrudComponent {
 
   despesasEssenciais = this.formBuilder.group({
     category: this.formBuilder.group({
-      name: ['', Validators.required]
+      name: ['', Validators.required],
+      typeCategory: ['']
     }),
     descricao: [''],
-    planned: ['', Validators.required]
-  });
-
-  despesasNaoEssenciais = this.formBuilder.group({
-    category: this.formBuilder.group({
-      name: ['', Validators.required]
-    }),
-    descricao: [''],
-    planned: ['', Validators.required]
+    planned: ['', Validators.required],
   });
 
   constructor(private formBuilder: FormBuilder,
               private categoryDefaultService: CategoryDefaultService) { }
 
   ngOnInit() {
-    this.findAllByCategorys()
+    this.findAllByCategorys();
+    this.treatsValueTotalPlanned();
+  }
+
+  onTipoDespesaChange(event: any): void {
+    this.tipoDespesa = event.value;
+  }
+
+  treatsValueTotalPlanned() {
+    const totalPlannedControl = this.planning.get('totalPlanned');
+
+    if (totalPlannedControl) {
+      totalPlannedControl.valueChanges.subscribe((newValue) => {
+        if (newValue !== null) {
+          this.calculationOfValues = parseFloat(newValue) || 0;
+        }
+      });
+    }
   }
 
   adicionarDespesasEssenciais() {
-    if (this.modoEdicaoEtapa2) {
-      const index = this.dataSourceEtapa2.data.indexOf(this.elementEtapa2);
-      if (index >= 0) {
-        this.dataSourceEtapa2.data[index] = this.despesasEssenciais.value;
+    const valorDespesaControl = this.despesasEssenciais.get('planned');
 
-        this.dataSourceEtapa2._updateChangeSubscription();
+    if (valorDespesaControl && valorDespesaControl.value !== null) {
+      const valorDespesa: number = parseFloat(valorDespesaControl.value);
+
+      if (!isNaN(valorDespesa)) {
+        if (this.modoEdicaoEtapa2) {
+
+          const index = this.dataSourceEtapa2.data.indexOf(this.elementEtapa2);
+          if (index >= 0) {
+            this.dataSourceEtapa2.data[index] = this.despesasEssenciais.value;
+            this.calculationOfValues = this.calculationOfValues + this.elementEtapa2.planned;
+            this.updateCalculationOfValue(valorDespesa);
+            this.dataSourceEtapa2._updateChangeSubscription();
+          }
+
+          this.modoEdicaoEtapa2 = false;
+        } else {
+
+          const categoryControl = this.despesasEssenciais.get('category');
+
+          if (categoryControl && categoryControl.value) {
+            const categoryName = categoryControl.value.name;
+            const foundCategory = this.categorysEssenciais.find(category => category.name === categoryName) || this.categorysNaoEssenciais.find(category => category.name === categoryName);
+
+            if (foundCategory) {
+              this.despesasEssenciais.patchValue({
+                category: {
+                  ...this.despesasEssenciais.value.category,
+                  typeCategory: foundCategory.typeCategory
+                }
+              });
+            }
+          }
+
+          this.dataSourceEtapa2.data.push(this.despesasEssenciais.value);
+          this.updateCalculationOfValue(valorDespesa);
+          this.dataSourceEtapa2._updateChangeSubscription();
+
+        }
+        this.despesasEssenciais.reset();
+      } else {
+        console.error('O valor da despesa não é um número válido.');
       }
-      this.modoEdicaoEtapa2 = false;
-
     } else {
-      this.dataSourceEtapa2.data.push(this.despesasEssenciais.value);
-      this.dataSourceEtapa2._updateChangeSubscription();
-
+      console.error('O valor da despesa é nulo ou indefinido.');
     }
-    this.despesasEssenciais.reset();    
   }
 
-  adicionarDespesasNaoEssenciais() {
-    if (this.modoEdicaoEtapa3) {
-      const index = this.dataSourceEtapa3.data.indexOf(this.elementEtapa3);
-      if (index >= 0) {
-        this.dataSourceEtapa3.data[index] = this.despesasNaoEssenciais.value;
-
-        this.dataSourceEtapa3._updateChangeSubscription();
-      }
-      this.modoEdicaoEtapa3 = false;
-
-    } else {
-      this.dataSourceEtapa3.data.push(this.despesasNaoEssenciais.value);
-      this.dataSourceEtapa3._updateChangeSubscription();
-
-    }
-    this.despesasNaoEssenciais.reset();    
+  private updateCalculationOfValue(valorAtualizado: number) {
+    this.calculationOfValues = this.calculationOfValues - valorAtualizado;
   }
 
   editarEtapa2(element: any) {
@@ -99,36 +124,25 @@ export class FinanceiroCrudComponent {
     this.elementEtapa2 = element;
 
     if (element.category) {
+
+      if (element.category.typeCategory === 'ESSENCIAL') {
+        this.tipoDespesa = 1;
+      } else {
+        this.tipoDespesa = 2;
+      }
+
       // Se 'category' existe, trata como um objeto despesasEssenciais completo
       this.despesasEssenciais.setValue({
-        category: { name: element.category.name },
+        category: {
+          name: element.category.name,
+          typeCategory: element.category.typeCategory
+        },
         descricao: element.descricao,
         planned: element.planned,
       });
     } else {
       // Preencha o formulário com os dados do item selecionado
       this.despesasEssenciais.setValue({
-        descricao: element.descricao,
-        planned: element.planned
-      } as any);
-    }
-  }
-
-  editarEtapa3(element: any) {
-    // Ative o modo de edição
-    this.modoEdicaoEtapa3 = true;
-    this.elementEtapa3 = element;
-
-    if (element.category) {
-      // Se 'category' existe, trata como um objeto despesasNãoEssenciais completo
-      this.despesasNaoEssenciais.setValue({
-        category: { name: element.category.name },
-        descricao: element.descricao,
-        planned: element.planned,
-      });
-    } else {
-      // Preencha o formulário com os dados do item selecionado
-      this.despesasNaoEssenciais.setValue({
         descricao: element.descricao,
         planned: element.planned
       } as any);
@@ -137,19 +151,11 @@ export class FinanceiroCrudComponent {
 
   deletarEtapa2(element: any) {
     const index = this.dataSourceEtapa2.data.indexOf(element);
+
     if (index >= 0) {
       this.dataSourceEtapa2.data.splice(index, 1);
-
+      this.calculationOfValues = this.calculationOfValues + element.planned;
       this.dataSourceEtapa2._updateChangeSubscription();
-    }
-  }
-
-  deletarEtapa3(element: any) {
-    const index = this.dataSourceEtapa3.data.indexOf(element);
-    if (index >= 0) {
-      this.dataSourceEtapa3.data.splice(index, 1);
-
-      this.dataSourceEtapa3._updateChangeSubscription();
     }
   }
 
@@ -164,8 +170,36 @@ export class FinanceiroCrudComponent {
     return this.dataSourceEtapa2 && this.dataSourceEtapa2.data && this.dataSourceEtapa2.data.length > 0;
   }
 
-  hasDataInTableEtapa3(): boolean {
-    return this.dataSourceEtapa3 && this.dataSourceEtapa3.data && this.dataSourceEtapa3.data.length > 0;
+  clear() {
+    this.despesasEssenciais.reset();
   }
 
+  getTotalDespesas() {
+    if (this.dataSourceEtapa2 && this.dataSourceEtapa2.data) {
+      return this.dataSourceEtapa2.data.map(item => item.planned || 0).reduce((acc, value) => acc + value, 0);
+    }
+    return 0;
+  }
+
+  getTotalDespesasEssenciais() {
+    if (this.dataSourceEtapa2 && this.dataSourceEtapa2.data) {
+      const despesasEssenciais = this.dataSourceEtapa2.data.filter(item =>
+        item.category && item.category.typeCategory === 'ESSENCIAL'
+      );
+
+      return despesasEssenciais.map(item => item.planned || 0).reduce((acc, value) => acc + value, 0);
+    }
+    return 0;
+  }
+
+  getTotalDespesasNaoEssenciais() {
+    if (this.dataSourceEtapa2 && this.dataSourceEtapa2.data) {
+      const despesasNaoEssenciais = this.dataSourceEtapa2.data.filter(item =>
+        item.category && item.category.typeCategory === 'NAO_ESSENCIAL'
+      );
+
+      return despesasNaoEssenciais.map(item => item.planned || 0).reduce((acc, value) => acc + value, 0);
+    }
+    return 0;
+  }
 }
