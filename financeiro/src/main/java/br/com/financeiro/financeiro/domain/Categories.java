@@ -1,5 +1,6 @@
 package br.com.financeiro.financeiro.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,10 +29,13 @@ public class Categories implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @OneToOne
-    private Category category;
+    private String descricao;
 
+    @Column(nullable = false)
     private BigDecimal planned;
+
+    @OneToOne
+    private CategoryDefault category;
 
     @ManyToOne
     @JoinColumn(name = "planning_id", nullable = false)

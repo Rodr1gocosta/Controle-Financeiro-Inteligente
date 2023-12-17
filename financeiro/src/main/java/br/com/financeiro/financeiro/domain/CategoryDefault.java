@@ -1,6 +1,7 @@
 package br.com.financeiro.financeiro.domain;
 
 import br.com.financeiro.financeiro.domain.enums.TypeCategory;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -27,8 +28,11 @@ public class CategoryDefault implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    @Column(nullable = false)
     private String name;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TypeCategory typeCategory;
+
 }

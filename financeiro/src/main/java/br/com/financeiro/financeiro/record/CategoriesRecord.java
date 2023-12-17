@@ -4,5 +4,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public record CategoriesRecord(UUID id,
-                               CategoryRecord categoryRecord,
-                               BigDecimal planned) { }
+                               String descricao,
+                               BigDecimal planned,
+                               CategoryDefaultRecord category
+                               ) { }

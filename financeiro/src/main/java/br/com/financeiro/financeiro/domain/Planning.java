@@ -33,13 +33,13 @@ public class Planning implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column
+    @Column(nullable = false)
     private Integer month;
 
-    @Column
+    @Column(nullable = false)
     private Integer year;
 
-    @Column
+    @Column(nullable = false)
     private BigDecimal totalPlanned;
 
     @OneToMany(mappedBy = "planning", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

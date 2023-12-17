@@ -1,4 +1,9 @@
 package br.com.financeiro.financeiro.record;
 
-public record CategoryDefault() {
-}
+import br.com.financeiro.financeiro.domain.enums.TypeCategory;
+
+import java.util.UUID;
+
+public record CategoryDefaultRecord(UUID id,
+                                    String name,
+                                    TypeCategory typeCategory) {}
