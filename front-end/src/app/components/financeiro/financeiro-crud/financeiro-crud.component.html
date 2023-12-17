@@ -10,8 +10,8 @@
     </mat-card-header>
 
     <mat-stepper class="stepper" color="warn" [linear]="isLinear" #stepper>
-        <mat-step [stepControl]="planning">
-            <form class="formPlanning" [formGroup]="planning">
+        <mat-step [stepControl]="planningForm">
+            <form class="formPlanning" [formGroup]="planningForm">
                 <ng-template matStepLabel>Salário</ng-template>
 
                 <mat-card>
@@ -42,7 +42,7 @@
         </mat-step>
 
         <mat-step [completed]="hasDataInTableEtapa2()" label="Despesas">
-            <form class="despesas" [formGroup]="despesasEssenciais">
+            <form class="despesas" [formGroup]="categoriesForm">
 
                 <mat-accordion>
                     <mat-expansion-panel class="expansion" (opened)="panelOpenState = true"
@@ -58,16 +58,19 @@
                             </mat-panel-description>
                         </mat-expansion-panel-header>
                         <h2>Bem-vindo à segunda etapa do seu planejamento financeiro!</h2>
-                        <p>Por favor, siga as instruções abaixo para inserir as despesas essenciais:</p>
-                        <p>1. Selecione a categoria correspondente à despesa essencial que você deseja adicionar.
+                        <p>Por favor, siga as instruções abaixo para inserir as despesas:</p>
+                        <p>1. <strong>Selecione o tipo de despesas</strong> correspondente deseja adicionar.</p>
+                        <p>
+                            &nbsp; &nbsp; 1.1 <span><strong>Opção Essencial:</strong> É fundamental focar apenas em despesas essenciais. ou seja,
+                          aquelas que são indispensáveis para o seu sustento e bem-estar.</span>
                         </p>
-                        <p>2. Forneça uma descrição clara e concisa da despesa essencial.</p>
-                        <p>3. Insira o valor correspondente à despesa essencial.</p>
-                        <p>Nesta etapa, é fundamental focar apenas em despesas essenciais, ou seja,
-                            aquelas que são indispensáveis para o seu sustento e bem-estar.
-                            Evite incluir gastos supérfluos ou itens não essenciais, pois isso pode comprometer
-                            a precisão do seu planejamento financeiro.
+                        <p>
+                            &nbsp;  &nbsp; 1.2 <span><strong>Opção não essencial:</strong> Diferentemente das despesas essenciais. 
+                          Ao incluir suas despesas não essenciais, você terá uma visão mais abrangente do seu
+                          orçamento e poderá tomar decisões informadas sobre seus gastos.</span>
                         </p>
+                        <p>2. Forneça uma <strong>descrição</strong> clara e concisa da despesa.</p>
+                        <p>3. <strong>Insira o valor</strong> correspondente à despesa.</p>
                         <p>Vamos começar!</p>
                     </mat-expansion-panel>
                 </mat-accordion>
@@ -76,7 +79,7 @@
                     <div align="end" style="margin-top: 20px;">
                         <span
                             [ngStyle]="{'background-color': calculationOfValues < 0 ? 'rgba(255, 0, 0, 0.61)' : 'green', 'font-size': '20px', 'color': 'white', 'padding': '20px'}">
-                            Total Planejado: {{ calculationOfValues | currency:'BRL':'symbol':'1.2-2' }}
+                            Total Planejado: {{ calculationOfValues | real }}
                         </span>
                     </div>
 
@@ -126,8 +129,8 @@
 
                     <div>
                         <button mat-raised-button
-                            [ngStyle]="despesasEssenciais.invalid ? { 'color': '#999999' } : { 'color': 'white', 'background-color': '#008000' }"
-                            [disabled]="despesasEssenciais.invalid" (click)="adicionarDespesasEssenciais()">
+                            [ngStyle]="categoriesForm.invalid ? { 'color': '#999999' } : { 'color': 'white', 'background-color': '#008000' }"
+                            [disabled]="categoriesForm.invalid" (click)="adicionarDespesas()">
                             {{ modoEdicaoEtapa2 ? 'Salvar' : 'Adicionar' }}
                         </button>
 
@@ -179,7 +182,7 @@
 
                         <ng-container matColumnDef="espace">
                             <td mat-footer-cell *matFooterCellDef colspan="5">
-                                
+
                             </td>
                         </ng-container>
 
@@ -253,6 +256,18 @@
         <mat-step>
             <ng-template matStepLabel>Resumo</ng-template>
             <div class="despesas">
+                <div align="end" class="resumo">
+                    <div style="margin: 20px;">
+                        <span style="font-size: 20px; color: white; padding: 20px; background-color: rgba(161, 231, 161, 0.726); margin-right: 20px;">
+                            Salário Relatado: {{ planningTotalPlanned | real }}
+                        </span>
+                        <span
+                            [ngStyle]="{'background-color': calculationOfValues < 0 ? 'rgba(255, 0, 0, 0.61)' : 'green', 'font-size': '20px', 'color': 'white', 'padding': '20px'}">
+                            Resultado do Planejado: {{ calculationOfValues | real }}
+                        </span>
+                    </div>
+                </div>
+
                 <section style="margin-top: 50px;" class="example-container mat-elevation-z8" tabindex="0">
                     <table mat-table [dataSource]="dataSourceEtapa2">
                         <!-- Item Column -->
@@ -289,7 +304,7 @@
                 <div class="button">
                     <button mat-raised-button color="warn" matStepperPrevious>Voltar</button>
                     <span></span>
-                    <button mat-raised-button>Salvar</button>
+                    <button mat-raised-button (click)="save()">Salvar</button>
                 </div>
             </div>
         </mat-step>

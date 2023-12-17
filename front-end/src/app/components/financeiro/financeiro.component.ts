@@ -43,6 +43,10 @@ export class FinanceiroComponent {
     const dialogRef = this.dialog.open(FinanceiroCrudComponent, {
       width: '100%',
       maxHeight: '78vh',
+      data: {
+        month: this.months.indexOf(this.month) + 1,
+        year: this.year
+      }
     });
   }
 

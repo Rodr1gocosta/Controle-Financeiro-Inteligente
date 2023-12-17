@@ -3,6 +3,7 @@ package br.com.financeiro.financeiro.service.impl;
 import br.com.financeiro.financeiro.domain.Planning;
 import br.com.financeiro.financeiro.domain.User;
 import br.com.financeiro.financeiro.record.PlanningRecord;
+import br.com.financeiro.financeiro.repository.CategoryDefaultRepository;
 import br.com.financeiro.financeiro.repository.CategoryRepository;
 import br.com.financeiro.financeiro.repository.PlanningRepository;
 import br.com.financeiro.financeiro.repository.UserRepository;
@@ -29,6 +30,9 @@ public class PlanningServiceImpl implements PlanningService {
     CategoryRepository categoryRepository;
 
     @Autowired
+    CategoryDefaultRepository categoryDefaultRepository;
+
+    @Autowired
     PlanningMapper planningMapper;
 
     @Autowired
@@ -53,12 +57,11 @@ public class PlanningServiceImpl implements PlanningService {
         Planning planning = planningMapper.toEntity(planningRecord);
 
         if (planning.getCategories() != null) {
-            planning.getCategories().forEach(categories -> {
+            planning.getCategories().forEach(categorie -> {
 
-                if (categories.getCategory().getId() == null || categoryRepository.findById(categories.getCategory().getId()).isEmpty()) {
-                    categoryRepository.save(categories.getCategory());
+                if (categorie.getCategory().getId() != null && categoryDefaultRepository.existsById(categorie.getCategory().getId())) {
+                    categorie.setPlanning(planning);
                 }
-                categories.setPlanning(planning);
             });
         }
 

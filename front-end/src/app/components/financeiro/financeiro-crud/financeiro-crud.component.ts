@@ -1,8 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { CategoryDefault } from 'src/app/seguranca/admin/category-default/category-default';
 import { CategoryDefaultService } from 'src/app/seguranca/admin/category-default/category-default.service';
+import { Categories } from 'src/app/shared/model/categories';
+import { Planning } from 'src/app/shared/model/planning';
+import { FinanceiroService } from '../../service/financeiro.service';
 
 @Component({
   selector: 'app-financeiro-crud',
@@ -18,42 +22,62 @@ export class FinanceiroCrudComponent {
   categorysEssenciais: CategoryDefault[] = [];
   categorysNaoEssenciais: CategoryDefault[] = [];
 
+  planning: Planning = {};
+  categories: Categories[] = [];
+
   elementEtapa2: any;
 
   calculationOfValues: number = 0;
+  planningTotalPlanned: number = 0;
   tipoDespesa!: number;
 
-  modoEdicaoEtapa2: boolean = false;
+  modoEdicaoEtapa2 = false;
   panelOpenState = false;
   isLinear = true;
 
-  planning = this.formBuilder.group({
+  planningForm = this.formBuilder.group({
     totalPlanned: ['', [Validators.required]],
   });
 
-  despesasEssenciais = this.formBuilder.group({
+  categoriesForm = this.formBuilder.group({
     category: this.formBuilder.group({
-      name: ['', Validators.required],
+      id: [''],
+      name: [''],
       typeCategory: ['']
     }),
-    descricao: [''],
+    descricao: [null],
     planned: ['', Validators.required],
   });
 
-  constructor(private formBuilder: FormBuilder,
-              private categoryDefaultService: CategoryDefaultService) { }
+  constructor(@Inject(MAT_DIALOG_DATA)
+              public data: Planning,
+              private formBuilder: FormBuilder,
+              private categoryDefaultService: CategoryDefaultService,
+              private financeiroService: FinanceiroService
+              ) { }
 
   ngOnInit() {
     this.findAllByCategorys();
     this.treatsValueTotalPlanned();
+    this.findValueTotalPlannend();
   }
 
   onTipoDespesaChange(event: any): void {
     this.tipoDespesa = event.value;
   }
 
+  findValueTotalPlannend() {
+    const totalPlanned = this.planningForm.get('totalPlanned');
+
+    if (totalPlanned) {
+      totalPlanned.valueChanges.subscribe((value) => {
+        this.planningTotalPlanned = Number(value) || 0;
+      });
+    }
+  }
+
   treatsValueTotalPlanned() {
-    const totalPlannedControl = this.planning.get('totalPlanned');
+    const totalPlannedControl = this.planningForm.get('totalPlanned');
 
     if (totalPlannedControl) {
       totalPlannedControl.valueChanges.subscribe((newValue) => {
@@ -64,8 +88,8 @@ export class FinanceiroCrudComponent {
     }
   }
 
-  adicionarDespesasEssenciais() {
-    const valorDespesaControl = this.despesasEssenciais.get('planned');
+  adicionarDespesas() {
+    const valorDespesaControl = this.categoriesForm.get('planned');
 
     if (valorDespesaControl && valorDespesaControl.value !== null) {
       const valorDespesa: number = parseFloat(valorDespesaControl.value);
@@ -75,7 +99,7 @@ export class FinanceiroCrudComponent {
 
           const index = this.dataSourceEtapa2.data.indexOf(this.elementEtapa2);
           if (index >= 0) {
-            this.dataSourceEtapa2.data[index] = this.despesasEssenciais.value;
+            this.dataSourceEtapa2.data[index] = this.categoriesForm.value;
             this.calculationOfValues = this.calculationOfValues + this.elementEtapa2.planned;
             this.updateCalculationOfValue(valorDespesa);
             this.dataSourceEtapa2._updateChangeSubscription();
@@ -84,28 +108,29 @@ export class FinanceiroCrudComponent {
           this.modoEdicaoEtapa2 = false;
         } else {
 
-          const categoryControl = this.despesasEssenciais.get('category');
+          const categoryControl = this.categoriesForm.get('category');
 
           if (categoryControl && categoryControl.value) {
             const categoryName = categoryControl.value.name;
             const foundCategory = this.categorysEssenciais.find(category => category.name === categoryName) || this.categorysNaoEssenciais.find(category => category.name === categoryName);
 
             if (foundCategory) {
-              this.despesasEssenciais.patchValue({
+              this.categoriesForm.patchValue({
                 category: {
-                  ...this.despesasEssenciais.value.category,
-                  typeCategory: foundCategory.typeCategory
+                  ...this.categoriesForm.value.category,
+                  typeCategory: foundCategory.typeCategory,
+                  id: foundCategory.id
                 }
               });
             }
           }
 
-          this.dataSourceEtapa2.data.push(this.despesasEssenciais.value);
+          this.dataSourceEtapa2.data.push(this.categoriesForm.value);
           this.updateCalculationOfValue(valorDespesa);
           this.dataSourceEtapa2._updateChangeSubscription();
 
         }
-        this.despesasEssenciais.reset();
+        this.categoriesForm.reset();
       } else {
         console.error('O valor da despesa não é um número válido.');
       }
@@ -131,9 +156,10 @@ export class FinanceiroCrudComponent {
         this.tipoDespesa = 2;
       }
 
-      // Se 'category' existe, trata como um objeto despesasEssenciais completo
-      this.despesasEssenciais.setValue({
+      // Se 'category' existe, trata como um objeto categoriesForm completo
+      this.categoriesForm.setValue({
         category: {
+          id: element.category.id,
           name: element.category.name,
           typeCategory: element.category.typeCategory
         },
@@ -142,7 +168,7 @@ export class FinanceiroCrudComponent {
       });
     } else {
       // Preencha o formulário com os dados do item selecionado
-      this.despesasEssenciais.setValue({
+      this.categoriesForm.setValue({
         descricao: element.descricao,
         planned: element.planned
       } as any);
@@ -171,7 +197,22 @@ export class FinanceiroCrudComponent {
   }
 
   clear() {
-    this.despesasEssenciais.reset();
+    this.categoriesForm.reset();
+  }
+
+  save() {
+    this.dataSourceEtapa2.data.forEach(object => this.categories.push(object));
+
+    if(this.data) {
+      this.planning.month = this.data.month;
+      this.planning.year = this.data.year;
+      this.planning.totalPlanned = this.planningTotalPlanned;
+      this.planning.categoriesRecords = this.categories;
+    }
+
+    this.financeiroService.sendNewPlanning(this.planning).subscribe(response => {
+      console.log(response);
+    })
   }
 
   getTotalDespesas() {
