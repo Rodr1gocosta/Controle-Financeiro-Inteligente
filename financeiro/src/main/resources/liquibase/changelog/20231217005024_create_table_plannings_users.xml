@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+
+    <changeSet id="20231217005024-1" author="rodrigo.costa">
+        <createTable tableName="tb_plannings_users">
+            <column name="planning_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="planning_id" baseTableName="tb_plannings_users" constraintName="FK_TB_PLANNINGUSER_ON_PLANNING" referencedColumnNames="id" referencedTableName="tb_planning"/>
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="tb_plannings_users" constraintName="FK_TB_PLANNINGUSER_ON_USER" referencedColumnNames="id" referencedTableName="tb_user"/>
+    </changeSet>
+
+</databaseChangeLog>

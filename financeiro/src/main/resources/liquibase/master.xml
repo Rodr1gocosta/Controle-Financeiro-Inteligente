@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <include file="liquibase/changelog/20231217003351_create_table_user.xml" relativeToChangelogFile="false"/>
+    <include file="liquibase/changelog/20231217003937_create_table_planning.xml" relativeToChangelogFile="false"/>
+    <include file="liquibase/changelog/20231217005024_create_table_plannings_users.xml" relativeToChangelogFile="false"/>
+    <include file="liquibase/changelog/20231217011251_create_table_category_default.xml" relativeToChangelogFile="false"/>
+    <include file="liquibase/changelog/20231217005826_create_table_categories.xml" relativeToChangelogFile="false"/>
+    <include file="liquibase/changelog/20231217014232_added_column_status_table_user.xml" relativeToChangelogFile="false"/>
+
+</databaseChangeLog>

@@ -2,7 +2,7 @@
 
 2 - pagina home - ok
 
-3 - liberar acesso
+3 - liberar acesso - ok
 
 4 - mudar a porta do microsserviço segurança para 8081 - ok
 
@@ -31,6 +31,8 @@
 16 - criar entidade usuário no microsservico financeiro ok
 
 17 - Quando criar/atualizar/deletar um novo usuário, o microsservico segurança enviar via RABBITMQ para microsservico financeiro o usuário. ok
+
+18 - adicionar log para manitoramento de observabilidade no projeto todo
 
 
 
