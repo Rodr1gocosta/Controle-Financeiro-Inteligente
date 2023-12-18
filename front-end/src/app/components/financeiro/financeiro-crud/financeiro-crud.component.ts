@@ -1,12 +1,14 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { CategoryDefault } from 'src/app/seguranca/admin/category-default/category-default';
 import { CategoryDefaultService } from 'src/app/seguranca/admin/category-default/category-default.service';
 import { Categories } from 'src/app/shared/model/categories';
 import { Planning } from 'src/app/shared/model/planning';
 import { FinanceiroService } from '../../service/financeiro.service';
+import { ConfirmationDialogService } from 'src/app/shared/util/confirmation-dialog/confirmation-dialog.service';
+import { MessageOperationService } from 'src/app/shared/util/message-operation/message-operation.service';
 
 @Component({
   selector: 'app-financeiro-crud',
@@ -16,7 +18,7 @@ import { FinanceiroService } from '../../service/financeiro.service';
 export class FinanceiroCrudComponent {
   dataSourceEtapa2: MatTableDataSource<any> = new MatTableDataSource<any>([]);
 
-  displayedColumnsResumo: string[] = ['categoria', 'tipo',  'descricao', 'valor'];
+  displayedColumnsResumo: string[] = ['categoria', 'tipo', 'descricao', 'valor'];
   displayedColumns: string[] = ['category', 'type', 'descricao', 'planned', 'action'];
 
   categorysEssenciais: CategoryDefault[] = [];
@@ -50,11 +52,14 @@ export class FinanceiroCrudComponent {
   });
 
   constructor(@Inject(MAT_DIALOG_DATA)
-              public data: Planning,
-              private formBuilder: FormBuilder,
-              private categoryDefaultService: CategoryDefaultService,
-              private financeiroService: FinanceiroService
-              ) { }
+    public data: Planning,
+    public dialogRef: MatDialogRef<FinanceiroCrudComponent>,
+    private formBuilder: FormBuilder,
+    private categoryDefaultService: CategoryDefaultService,
+    private financeiroService: FinanceiroService,
+    private confirmationDialogService: ConfirmationDialogService,
+    private messageOperationService: MessageOperationService
+  ) { }
 
   ngOnInit() {
     this.findAllByCategorys();
@@ -81,8 +86,10 @@ export class FinanceiroCrudComponent {
 
     if (totalPlannedControl) {
       totalPlannedControl.valueChanges.subscribe((newValue) => {
-        if (newValue !== null) {
+        if (newValue !== null && this.dataSourceEtapa2.data.length == 0) {
           this.calculationOfValues = parseFloat(newValue) || 0;
+        } else if (newValue !== null && this.dataSourceEtapa2.data.length > 0) {
+          this.calculationOfValues = parseFloat(newValue) - this.getTotalDespesas();
         }
       });
     }
@@ -201,18 +208,47 @@ export class FinanceiroCrudComponent {
   }
 
   save() {
-    this.dataSourceEtapa2.data.forEach(object => this.categories.push(object));
+    this.confirmationDialogService
+      .openConfirmationDialog('Deseja salvar essa operação?')
+      .subscribe(response => {
+        if (response) {
+          this.dataSourceEtapa2.data.forEach(object => this.categories.push(object));
 
-    if(this.data) {
-      this.planning.month = this.data.month;
-      this.planning.year = this.data.year;
-      this.planning.totalPlanned = this.planningTotalPlanned;
-      this.planning.categoriesRecords = this.categories;
-    }
+          if (this.data) {
+            this.planning.month = this.data.month;
+            this.planning.year = this.data.year;
+            this.planning.totalPlanned = this.planningTotalPlanned;
+            this.planning.categoriesRecords = this.categories;
+          }
 
-    this.financeiroService.sendNewPlanning(this.planning).subscribe(response => {
-      console.log(response);
-    })
+          this.financeiroService.sendNewPlanning(this.planning).subscribe(response => {
+
+            if (response) {
+              this.dialogRef.close();
+              this.messageOperationService.message('Operação realizado com sucesso!', 'success')
+            }
+          }, error => {
+            let errorMessage = 'Ocorreu um erro na operação. Por favor, tente novamente mais tarde.';
+
+            switch (error.status) {
+              case 400: {
+                errorMessage = error.error.error;
+              } break;
+              case 401: {
+                errorMessage = 'Credenciais inválidas';
+              } break;
+              case 403: {
+                errorMessage = 'Acesso negado. Você não tem permissão para acessar este recurso.';
+              } break;
+      
+            }
+      
+            this.messageOperationService.message(errorMessage, 'error');
+
+            this.categories = [];
+          });
+        }
+      })
   }
 
   getTotalDespesas() {

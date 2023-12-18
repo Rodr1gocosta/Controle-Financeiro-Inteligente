@@ -6,6 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { Categories } from 'src/app/shared/model/categories';
 import { MatDialog } from '@angular/material/dialog';
 import { FinanceiroCrudComponent } from './financeiro-crud/financeiro-crud.component';
+import { MessageOperationService } from 'src/app/shared/util/message-operation/message-operation.service';
 
 @Component({
   selector: 'app-financeiro',
@@ -15,7 +16,7 @@ import { FinanceiroCrudComponent } from './financeiro-crud/financeiro-crud.compo
 export class FinanceiroComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatTable) table!: MatTable<any>;
-  displayedColumns: string[] = ['category', 'planned', 'pagos', 'status', 'descricao', 'acao'];
+  displayedColumns: string[] = ['category', 'tipo', 'planned', 'status', 'descricao', 'acao'];
   dataSource: any;
   showTable: boolean = true;
 
@@ -33,7 +34,8 @@ export class FinanceiroComponent {
 
 
   constructor(private financeiroService: FinanceiroService,
-              public dialog: MatDialog) { }
+              public dialog: MatDialog,
+              private messageOperationService: MessageOperationService) { }
 
   ngOnInit() {
     this.findPlanningByDateCurrent();
@@ -96,7 +98,7 @@ export class FinanceiroComponent {
   }
 
   message() {
-    this.financeiroService.message("Selecione o mês!");
+    this.messageOperationService.message("Selecione o mês!", 'alert');
   }
 
   private findPlanningByDateCurrent() {
@@ -143,7 +145,7 @@ export class FinanceiroComponent {
 
       }
 
-      this.financeiroService.message(errorMessage);
+      this.messageOperationService.message(errorMessage, 'error');
     });
   }
 

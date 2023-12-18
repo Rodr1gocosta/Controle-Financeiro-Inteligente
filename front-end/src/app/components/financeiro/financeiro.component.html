@@ -36,16 +36,16 @@
 
                         <ng-container matColumnDef="category">
                             <th mat-header-cell *matHeaderCellDef> Categoria </th>
-                            <td mat-cell *matCellDef="let element"> {{element.categoryRecord.name}} </td>
+                            <td mat-cell *matCellDef="let element"> {{element.category.name}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="tipo">
+                            <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                            <td mat-cell *matCellDef="let element"> {{element.category.typeCategory}} </td>
                         </ng-container>
 
                         <ng-container matColumnDef="planned">
                             <th mat-header-cell *matHeaderCellDef> Valor </th>
-                            <td mat-cell *matCellDef="let element"> {{element.planned}} </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="pagos">
-                            <th mat-header-cell *matHeaderCellDef> Pagos </th>
                             <td mat-cell *matCellDef="let element"> {{element.planned}} </td>
                         </ng-container>
 
@@ -56,7 +56,7 @@
 
                         <ng-container matColumnDef="descricao">
                             <th mat-header-cell *matHeaderCellDef> Descricão </th>
-                            <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+                            <td mat-cell *matCellDef="let element"> {{element.descricao}} </td>
                         </ng-container>
 
                         <ng-container matColumnDef="acao">
