@@ -1,0 +1,8 @@
+<h2 mat-dialog-title>{{ data.message }}</h2>
+<div mat-dialog-content>
+  <p>Por favor, confirme sua escolha.</p>
+</div>
+<div align="end" mat-dialog-actions>
+  <button mat-button mat-dialog-close (click)="onNoClick()" style="background-color: rgba(255, 0, 0, 0.61);">Não</button>
+  <button mat-button mat-dialog-close [mat-dialog-close]="true" cdkFocusInitial style="color: white; background-color: green;">Sim</button>
+</div>
