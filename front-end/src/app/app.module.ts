@@ -52,6 +52,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FinanceiroCrudComponent } from './components/financeiro/financeiro-crud/financeiro-crud.component';
 import { CategoryDefaultComponent } from './seguranca/admin/category-default/category-default.component';
 import { CrudCategoryDefaultComponent } from './seguranca/admin/category-default/crud-category-default/crud-category-default.component';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -83,6 +84,8 @@ import { CrudCategoryDefaultComponent } from './seguranca/admin/category-default
     NgxMaskDirective, 
     NgxMaskPipe,
     NgxCurrencyDirective,
+
+    SharedModule,
 
     MatToolbarModule,
     MatSidenavModule,

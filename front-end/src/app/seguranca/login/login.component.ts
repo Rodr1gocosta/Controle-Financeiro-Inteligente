@@ -39,7 +39,7 @@ export class LoginComponent {
     this.authService.login(username, password).subscribe(response => {
       
       this.router.navigate(['']);
-      this.authService.message('Login efetuado com sucesso!');
+      this.authService.message('Login efetuado com sucesso!', 'success');
     },
       error => {
         let errorMessage = 'Ocorreu um erro ao fazer login. Por favor, tente novamente mais tarde.';

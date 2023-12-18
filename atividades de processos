@@ -12,10 +12,6 @@
 
 7 - continuar o curso da micheli em 1:21 minutos, onde ensina adicionar os Rules de administrador e usuário. - ok
 
-8 - pesquisar para adicionar senha com caracteres, letras e números
-
-9 - transformar meu service-registry em imagem docker para facilitar no desenvolvimento
-
 10 - Salva a senha criptografada ok
 
 11 - terminar o body no frontend ok
@@ -32,7 +28,11 @@
 
 17 - Quando criar/atualizar/deletar um novo usuário, o microsservico segurança enviar via RABBITMQ para microsservico financeiro o usuário. ok
 
-18 - adicionar log para manitoramento de observabilidade no projeto todo
+19 - Adicionar modal apresentando mensagem "Desejar salvar um planejamento?" ok
+
+20 - Caso o planejamento tenha salvo com sucesso, apresentar a mensagem "Operação executado com sucesso" e atualizar a tabela com o planejamento ok
+
+21 - Caso o planejamento deem erro, apresentar a mensagem "Operação falhou": "mensagem do erro" e fazer tratamento de erro via postman 
 
 
 
@@ -43,5 +43,15 @@ https://github.com/acenelio/ms-course/tree/main
 https://github.com/gostavok/EAD/tree/main
 https://github.com/Java-Techie-jt/jwt-apigateway-security
 
+
+8 - pesquisar para adicionar senha com caracteres, letras e números
+
+9 - transformar meu service-registry em imagem docker para facilitar no desenvolvimento
+
+18 - adicionar log para manitoramento de observabilidade no projeto todo
+
+19 - adicionar cor nas mensagem de erro, sucesso e alerta
+
+20 - adicionar o cronometro de tempo do token no frontend
 
 

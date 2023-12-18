@@ -48,11 +48,12 @@ export class AuthService {
         // Por exemplo, você pode verificar a data de expiração do token aqui
     }
 
-    message(msg: String) {
+    message(msg: String, color: string = 'default') {
         this.snack.open(`${msg}`, 'OK', {
             horizontalPosition: 'end',
             verticalPosition: 'top',
-            duration: 3000
+            duration: 3000,
+            panelClass: [color]
         })
     }
  }

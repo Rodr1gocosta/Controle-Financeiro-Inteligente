@@ -27,14 +27,14 @@ public interface PlanningMapper extends EntityMapper<PlanningRecord, Planning> {
 
 
 
-//    @Override
-//    @Mapping(target = "categoriesRecords", source = "categories", qualifiedByName = "toCategoriesRecordDto")
-//    PlanningRecord toDto(Planning planning);
-//
-//    @Named("toCategoriesRecordDto")
-//    @Mapping(target = "category", source = "category", qualifiedByName = "toCategoryDto")
-//    CategoriesRecord toCategoriesRecordDto(Categories categories);
-//
+    @Override
+    @Mapping(target = "categoriesRecords", source = "categories", qualifiedByName = "toCategoriesRecordDto")
+    PlanningRecord toDto(Planning planning);
+
+    @Named("toCategoriesRecordDto")
+    @Mapping(target = "category", source = "category")
+    CategoriesRecord toCategoriesRecordDto(Categories categories);
+
 //    @Named("toCategoryDto")
 //    CategoryDefaultRecord toCategoryRecordDto(Category category);
 
