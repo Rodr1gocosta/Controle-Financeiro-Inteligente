@@ -5,11 +5,13 @@ import br.com.financeiro.financeiro.exception.ConflitException;
 import br.com.financeiro.financeiro.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @RestControllerAdvice
 public class ApplicationControllerAdvice {
@@ -36,5 +38,14 @@ public class ApplicationControllerAdvice {
         Map<String, String> errorResponse = new HashMap<>();
         errorResponse.put("warn", ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+
+    //trata os erros de validacao dos records ou entidade
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", Objects.requireNonNull(ex.getFieldError()).getDefaultMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }

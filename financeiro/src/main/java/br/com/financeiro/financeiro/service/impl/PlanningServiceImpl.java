@@ -2,6 +2,7 @@ package br.com.financeiro.financeiro.service.impl;
 
 import br.com.financeiro.financeiro.domain.Planning;
 import br.com.financeiro.financeiro.domain.User;
+import br.com.financeiro.financeiro.exception.BadRequestException;
 import br.com.financeiro.financeiro.record.PlanningRecord;
 import br.com.financeiro.financeiro.repository.CategoryDefaultRepository;
 import br.com.financeiro.financeiro.repository.CategoryRepository;
@@ -54,6 +55,11 @@ public class PlanningServiceImpl implements PlanningService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Error: Usuário não foi encontrada"));
 
+        Optional<PlanningRecord> onePlanningByMonthAndYear = findOnePlanningByMonthAndYear(planningRecord.month(), planningRecord.year(), user.getId());
+        if (onePlanningByMonthAndYear.isPresent()) {
+            throw new BadRequestException("Já existe um planejamento cadastrado para este mês e ano");
+        }
+
         Planning planning = planningMapper.toEntity(planningRecord);
 
         if (planning.getCategories() != null) {
@@ -73,6 +79,7 @@ public class PlanningServiceImpl implements PlanningService {
 
         Planning result = save(planning);
         return planningMapper.toDto(result);
+
     }
 
     @Override
