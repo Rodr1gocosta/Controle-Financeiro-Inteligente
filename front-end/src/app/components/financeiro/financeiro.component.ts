@@ -2,23 +2,44 @@ import { Component, ViewChild } from '@angular/core';
 import { FinanceiroService } from '../service/financeiro.service';
 import { Planning } from 'src/app/shared/model/planning';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
 import { Categories } from 'src/app/shared/model/categories';
 import { MatDialog } from '@angular/material/dialog';
 import { FinanceiroCrudComponent } from './financeiro-crud/financeiro-crud.component';
 import { MessageOperationService } from 'src/app/shared/util/message-operation/message-operation.service';
+import { SelectionModel } from '@angular/cdk/collections';
+import { ConfirmationDialogService } from 'src/app/shared/util/confirmation-dialog/confirmation-dialog.service';
+import { Subscription } from 'rxjs';
+import { CategoriaCrudComponent } from './categoria-crud/categoria-crud.component';
+
+export interface DisplayColumn {
+  def: string;
+  label: string;
+  hide: boolean;
+}
 
 @Component({
   selector: 'app-financeiro',
   templateUrl: './financeiro.component.html',
-  styleUrls: ['./financeiro.component.scss'],
+  styleUrls: ['./financeiro.component.scss']
 })
 export class FinanceiroComponent {
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatTable) table!: MatTable<any>;
-  displayedColumns: string[] = ['category', 'tipo', 'planned', 'status', 'descricao', 'acao'];
-  dataSource: any;
+  ELEMENT_DATA!: Categories[];
+  dataSource = new MatTableDataSource<Categories>(this.ELEMENT_DATA);
   showTable: boolean = true;
+  selection!: SelectionModel<Categories>;
+  displayedColumns: DisplayColumn[] = [
+    { def: 'select', label: 'Selecione', hide: false },
+    { def: 'category', label: 'Categoria', hide: false },
+    { def: 'tipo', label: 'Tipo', hide: false },
+    { def: 'planned', label: 'Valor', hide: false },
+    { def: 'status', label: 'Status', hide: false },
+    { def: 'descricao', label: 'Descrição', hide: false },
+    { def: 'acao', label: 'Ação', hide: false }
+  ];
+
+  disColumns!: string[];
+  checkBoxList: DisplayColumn[] = [];
 
   calendarioCustomButton!: string;
   month!: string;
@@ -29,16 +50,33 @@ export class FinanceiroComponent {
     'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
   ];
 
-  planning!: Planning;
-  categories: Categories[] = [];
+  selectedTypeCategory: string = 'all';
+  value: string = '';
 
+  planningId!: String;
+  categories: Categories[] = [];
+  salario: number = 0;
+  gastos: number = 0;
+  rendimento: number = 0;
+
+  private tabelaAtualizadaSubscription: Subscription | undefined;
 
   constructor(private financeiroService: FinanceiroService,
-              public dialog: MatDialog,
-              private messageOperationService: MessageOperationService) { }
+    public dialog: MatDialog,
+    private messageOperationService: MessageOperationService,
+    private confirmationDialogService: ConfirmationDialogService) { }
 
   ngOnInit() {
+    this.selection = new SelectionModel<Categories>(true, []);
+    this.disColumns = this.displayedColumns.map(cd => cd.def)
+
     this.findPlanningByDateCurrent();
+  }
+
+  ngOnDestroy(): void {
+    if (this.tabelaAtualizadaSubscription) {
+      this.tabelaAtualizadaSubscription.unsubscribe();
+    }
   }
 
   createPlanning(element: Planning | null) {
@@ -48,6 +86,34 @@ export class FinanceiroComponent {
       data: {
         month: this.months.indexOf(this.month) + 1,
         year: this.year
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(updatedData => {
+      if (updatedData) {
+        this.dataSource.data = updatedData.categoriesRecords;
+        this.salario = updatedData.totalPlanned;
+        this.gastos = this.getTotalDespesas();
+        this.rendimento = this.salario - this.gastos;
+        this.showTable = true;
+      }
+    });
+  }
+
+  createCategory() {
+    const dialogRef = this.dialog.open(CategoriaCrudComponent, {
+      width: '100%',
+      maxHeight: '78vh',
+      data: {
+        id: this.planningId
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(updatedData => {
+      if (updatedData) {
+        this.dataSource.data = updatedData.categoriesRecords;
+        this.gastos = this.getTotalDespesas();
+        this.rendimento = this.salario - this.gastos;
       }
     });
   }
@@ -116,20 +182,30 @@ export class FinanceiroComponent {
   private findByPlanning(month: number, year: number) {
     this.financeiroService.findByDate(month, year).subscribe(response => {
       if (response) {
-        this.planning = response;
+        if(response.id) {
+          this.planningId = response.id;
+        }
 
         if (response.categoriesRecords) {
           this.categories = response.categoriesRecords as Categories[];
           this.dataSource = new MatTableDataSource<Categories>(this.categories);
-          this.dataSource.paginator = this.paginator;
 
           this.showTable = true;
+          this.selectedTypeCategory = 'all';
+        }
+
+        if (response.totalPlanned) {
+          this.salario = response.totalPlanned;
+          this.gastos = this.getTotalDespesas();
+          this.rendimento = this.salario - this.gastos;
         }
       } else {
         this.categories = [];
         this.dataSource = new MatTableDataSource<Categories>(this.categories);
-        this.dataSource.paginator = this.paginator;
 
+        this.salario = 0;
+        this.gastos = 0;
+        this.rendimento = 0;
         this.showTable = false;
       }
     }, error => {
@@ -147,6 +223,83 @@ export class FinanceiroComponent {
 
       this.messageOperationService.message(errorMessage, 'error');
     });
+  }
+
+  public onSelectTypeCategory(): void {
+    if (this.selectedTypeCategory === 'ESSENCIAL' || this.selectedTypeCategory === 'NAO_ESSENCIAL') {
+      this.dataSource.filterPredicate = (data, filter) => {
+        return data.category.typeCategory === filter;
+      }
+      this.dataSource.filter = this.selectedTypeCategory;
+    } else {
+      this.dataSource.filter = '';
+    }
+  }
+
+  applyFilter(event: any): void {
+    const filterValue = (event.target.value || '').toString().trim().toLowerCase();
+
+    this.dataSource.filterPredicate = (data, filter) => {
+      const dataString = `${data.category.name} ${data.planned} ${data.descricao}`.toLowerCase();
+      return dataString.includes(filter);
+    }
+
+    this.dataSource.filter = filterValue;
+  }
+
+  isAllSelected(): boolean {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  masterToggle(): void {
+    this.isAllSelected()
+      ? this.selection.clear()
+      : this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  showCheckBoxes(): void {
+    this.checkBoxList = this.displayedColumns;
+  }
+
+  hideCheckBoxes(): void {
+    this.checkBoxList = [];
+  }
+
+  toggleForm(): void {
+    this.checkBoxList.length ? this.hideCheckBoxes() : this.showCheckBoxes();
+  }
+
+  hideColumn(event: any, item: string) {
+    this.displayedColumns.forEach(element => {
+      if (element['def'] == item) {
+        element['hide'] = event.checked;
+      }
+    });
+    this.disColumns = this.displayedColumns.filter(cd => !cd.hide).map(cd => cd.def)
+  }
+
+  openDeleteDialog(len: number, obj: any): void {
+    let elemento = 'elemento';
+    if (len > 1) {
+      elemento = 'elementos';
+    }
+
+    this.confirmationDialogService
+      .openConfirmationDialog(`Tem certeza de que deseja remover ${len} ${elemento}?`)
+      .subscribe(response => {
+        if (response) {
+          console.log(obj);
+        }
+      });
+  }
+
+  getTotalDespesas() {
+    if (this.dataSource && this.dataSource.data) {
+      return this.dataSource.data.map(item => item.planned || 0).reduce((acc, value) => acc + value, 0);
+    }
+    return 0;
   }
 
 }

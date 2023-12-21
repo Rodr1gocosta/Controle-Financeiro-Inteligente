@@ -1,0 +1,84 @@
+.mat-card-fieldset {
+    padding: 40px;
+    overflow-y: auto;
+
+    mat-card-header div {
+        margin-bottom: 30px;
+    }
+
+    mat-card-header div .custom-title {
+        color: white;
+    }
+
+    mat-card-header .flex-spacer {
+        flex: 1 1 auto;
+    }
+}
+
+
+.despesas {
+
+   .addCategory {
+        padding: 20px;
+        box-shadow: 0px 0px 2px #000000;
+    }
+
+    .addCategory .label {
+        color: white;
+        margin-top: 10px;
+    }
+
+    .addCategory mat-form-field {
+        margin-top: 10px;
+        margin-right: 10px;
+        width: 100%;
+        max-width: 375px;
+    }
+
+    .addCategory .categorias {
+        width: 100%;
+        max-width: 760px;
+    }
+
+    .addCategory button {
+        width: 100px;
+        max-width: 100px;
+    }
+
+    .table-wrapper {
+        padding: 20px;
+        overflow-x: auto;
+        max-width: 100%;
+        margin-bottom: 40px;
+    }
+
+    .table-wrapper .mat-column-acao {
+        width: 128px;
+        text-align: center;
+    }
+
+    .button {
+        display: flex;
+        margin-top: 40px;
+    }
+
+    .button span {
+        flex: 1 1 auto;
+    }
+}
+
+.mat-mdc-table-sticky {
+    border-top: 1px solid #e0e0e0;
+}
+
+.despesas-essenciais {
+    background-color: #AED581; 
+}
+  
+.despesas-nao-essenciais {
+    background-color: #FF8A65;
+}
+  
+.total-despesas {
+    background-color: #90A4AE;
+}

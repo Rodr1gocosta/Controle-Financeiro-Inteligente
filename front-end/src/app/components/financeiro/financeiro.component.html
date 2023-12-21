@@ -1,4 +1,4 @@
-<mat-card class="mat-card-fieldset">
+<mat-card class="mat-card-fieldset" style="background-color: #8e9091">
     <mat-card-header>
         <div class="mat-card-title-wrapper">
             <mat-card-title class="custom-title">Planejamento</mat-card-title>
@@ -7,7 +7,7 @@
 
     <div class="details">
         <div class="cardTable">
-            <mat-card class="mat-card-fieldset">
+            <mat-card class="mat-card-fieldset" style="padding: 30px;">
                 <div class="calendario">
                     <button mat-icon-button color="warn" class="hover-shadow" (click)="decreasesYear()">
                         <mat-icon>chevron_left</mat-icon>
@@ -31,46 +31,142 @@
                     </button>
                 </div>
 
+                <br>
+                <mat-divider style="margin: 20px;"></mat-divider>
+
                 <div *ngIf="showTable; else noPlanningMessage">
-                    <table style="margin-top: 80px;" mat-table #table [dataSource]="dataSource">
+
+                    <div class="control">
+                        <div class="formInput">
+                            <mat-form-field color="warn">
+                                <mat-label>Filtro por tipo de categoria</mat-label>
+                                <mat-select [(ngModel)]="selectedTypeCategory"
+                                    (selectionChange)="onSelectTypeCategory()">
+                                    <mat-option value="all">All</mat-option>
+                                    <mat-option value="ESSENCIAL">Essencial</mat-option>
+                                    <mat-option value="NAO_ESSENCIAL">Não Essencial</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field color="warn">
+                                <input matInput type="text" [(ngModel)]="value" placeholder="Pesquise aqui..."
+                                    (keyup)="applyFilter($event)">
+                            </mat-form-field>
+                        </div>
+
+                        <div>
+                            <button mat-mini-fab style="background-color: #AED581; color: white;" (click)="createCategory()"
+                                matTooltip="Adicionar categoria">
+                                <mat-icon>add</mat-icon>
+                            </button>
+
+                            <button mat-mini-fab style="background-color: teal; color: white;"
+                                matTooltip="Baixar PDF">
+                                <mat-icon>cloud_download</mat-icon>
+                            </button>
+
+                            <button mat-mini-fab style="background-color: #7da0b1; color: white;" (click)="toggleForm()"
+                                matTooltip="Aparecer/Esconder colunas">
+                                <mat-icon>remove_red_eye</mat-icon>
+                            </button>
+
+                            <button mat-mini-fab
+                                [ngStyle]="!selection.hasValue() ? { 'color': '#999999' } : { 'color': 'white', 'background-color': '#FF8A65' }"
+                                (click)="openDeleteDialog(selection.selected.length, selection.selected)"
+                                [disabled]="!selection.hasValue()" matTooltip="Excluir itens selecionados">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+
+                            <button mat-mini-fab style="background-color: #e2e2e2; color: black;"
+                                matTooltip="Mais ações">
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <div class="checkBoxList">
+                        <div *ngFor="let item of checkBoxList">
+                            <mat-checkbox (change)="hideColumn($event, item.def)" [checked]="item.hide">
+                                {{ item.label }}
+                            </mat-checkbox>
+                        </div>
+                    </div>
+
+
+                    <table class="table mat-elevation-z8" mat-table #table [dataSource]="dataSource">
+
+                        <ng-container matColumnDef="select">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <mat-checkbox (change)="$event ? masterToggle() : null"
+                                    [checked]="selection.hasValue() && isAllSelected()"
+                                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+                                </mat-checkbox>
+                            </th>
+                            <td class="mat-column-checkbox" mat-cell *matCellDef="let row">
+                                <mat-checkbox (click)="$event.stopPropagation()"
+                                    (change)="$event ? selection.toggle(row) : null"
+                                    [checked]="selection.isSelected(row)">
+                                </mat-checkbox>
+                            </td>
+                            <td mat-footer-cell *matFooterCellDef> Total </td>
+                        </ng-container>
 
                         <ng-container matColumnDef="category">
                             <th mat-header-cell *matHeaderCellDef> Categoria </th>
                             <td mat-cell *matCellDef="let element"> {{element.category.name}} </td>
+                            <td mat-footer-cell *matFooterCellDef></td>
                         </ng-container>
 
                         <ng-container matColumnDef="tipo">
                             <th mat-header-cell *matHeaderCellDef> Tipo </th>
                             <td mat-cell *matCellDef="let element"> {{element.category.typeCategory}} </td>
+                            <td mat-footer-cell *matFooterCellDef></td>
                         </ng-container>
 
                         <ng-container matColumnDef="planned">
                             <th mat-header-cell *matHeaderCellDef> Valor </th>
-                            <td mat-cell *matCellDef="let element"> {{element.planned}} </td>
+                            <td mat-cell *matCellDef="let element"> {{ element.planned | real }} </td>
+                            <td mat-footer-cell *matFooterCellDef>{{ getTotalDespesas() | real }}</td>
                         </ng-container>
 
                         <ng-container matColumnDef="status">
-                            <th mat-header-cell *matHeaderCellDef> Status </th>
+                            <th mat-header-cell *matHeaderCellDef> Despesas Pagas </th>
                             <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+                            <td mat-footer-cell *matFooterCellDef></td>
                         </ng-container>
 
                         <ng-container matColumnDef="descricao">
                             <th mat-header-cell *matHeaderCellDef> Descricão </th>
                             <td mat-cell *matCellDef="let element"> {{element.descricao}} </td>
+                            <td mat-footer-cell *matFooterCellDef></td>
                         </ng-container>
 
                         <ng-container matColumnDef="acao">
                             <th mat-header-cell *matHeaderCellDef> Ação </th>
-                            <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+                            <td mat-cell *matCellDef="let element">
+                                <button style="margin: 2px" mat-mini-fab matTooltip="Editar" color="warn">
+                                    <i class="fa fa-solid fa-pen"></i>
+                                </button>
+                                <button mat-mini-fab matTooltip="Deletar" (click)="openDeleteDialog(1, element)"
+                                    color="primary">
+                                    <i class="fa fa-solid fa-trash"></i>
+                                </button>
+                            </td>
+                            <td mat-footer-cell *matFooterCellDef></td>
                         </ng-container>
 
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                    </table>
+                        <ng-container matColumnDef="espace">
+                            <td mat-footer-cell *matFooterCellDef colspan="7">
+                                <mat-divider></mat-divider>
+                            </td>
+                        </ng-container>
 
-                    <mat-paginator color="warn" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons
-                        aria-label="Select page of periodic elements">
-                    </mat-paginator>
+                        <tr mat-header-row *matHeaderRowDef="disColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: disColumns;"></tr>
+                        <tr mat-footer-row *matFooterRowDef="['espace']"></tr>
+                        <tr mat-footer-row *matFooterRowDef="disColumns; sticky: true"></tr>
+                    </table>
                 </div>
 
                 <ng-template #noPlanningMessage>
@@ -84,7 +180,8 @@
                             </mat-card-content>
 
                             <mat-card-actions align="end">
-                                <button mat-raised-button color="warn" (click)="createPlanning(null)">Novo planejamento</button>
+                                <button mat-raised-button color="warn" (click)="createPlanning(null)">Novo
+                                    planejamento</button>
                             </mat-card-actions>
                         </mat-card>
                     </div>
@@ -93,10 +190,27 @@
         </div>
 
         <div class="adicionais">
-            <mat-card class="mat-card-fieldset">
-                <div class="cardHeader">
-                    <h2>Detalhe</h2>
-                    <a href="#" class="btn">Botão</a>
+            <mat-card class="mat-card-fieldset" style="display: flex; align-items: center; height: 100%;">
+                <div style="text-align: center; width: 70%; margin-top: 30px; color: white; background-color: #008000; padding: 20px;">
+                    <span
+                        style="width: 100%; font-size: 20px; padding: 20px;">
+                        Salário: {{ salario | real }}
+                    </span>
+                    <mat-icon>trending_up</mat-icon> 
+                </div>
+                <div style="text-align: center; width: 70%; margin-top: 20px; color: white; background-color: #ff00009c; padding: 20px;">
+                    <span
+                        style="width: 100%; font-size: 20px; padding: 20px;">
+                        Gastos: {{ gastos | real }}
+                    </span>
+                    <mat-icon>trending_down</mat-icon>
+                </div>
+                <div style="text-align: center; width: 70%; margin-top: 20px; color: white; background-color: #448AFF; padding: 20px;">
+                    <span
+                        style="width: 100%; font-size: 20px; padding: 20px;">
+                        Rendimento: {{ rendimento | real }}
+                    </span>
+                    <mat-icon> bar_chart</mat-icon>
                 </div>
             </mat-card>
         </div>

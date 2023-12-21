@@ -1,0 +1,177 @@
+<mat-card class="mat-card-fieldset">
+    <mat-card-header>
+        <div class="mat-card-title-wrapper">
+            <mat-card-title class="custom-title">Nova Categoria</mat-card-title>
+        </div>
+        <span class="flex-spacer"></span>
+        <button mat-icon-button (click)="onCancel()">
+            <mat-icon aria-label="Fechar diálogo">close</mat-icon>
+        </button>
+    </mat-card-header>
+
+    <form class="despesas" [formGroup]="categoriesForm">
+        <div class="addCategory">
+            <div class="label">
+                <label>Selecione o tipe de despesas:</label>
+            </div>
+            <div class="radioButton">
+                <mat-radio-group (change)="onTipoDespesaChange($event)">
+                    <mat-radio-button [value]="1">Essencial</mat-radio-button>
+                    <mat-radio-button [value]="2">Não essencial</mat-radio-button>
+                </mat-radio-group>
+            </div>
+
+            <div *ngIf="tipoDespesa == 1">
+                <mat-form-field class="categorias" color="warn" formGroupName="category">
+                    <mat-label>Categorias Essenciais</mat-label>
+                    <mat-select formControlName="name">
+                        <mat-option *ngFor="let category of categorysEssenciais"
+                            [value]="category.name">{{category.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div *ngIf="tipoDespesa == 2">
+                <mat-form-field class="categorias" color="warn" formGroupName="category">
+                    <mat-label>Categorias não essenciais</mat-label>
+                    <mat-select formControlName="name">
+                        <mat-option *ngFor="let category of categorysNaoEssenciais"
+                            [value]="category.name">{{category.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <mat-form-field color="warn">
+                <mat-label>Descrição</mat-label>
+                <input matInput formControlName="descricao">
+            </mat-form-field>
+
+            <mat-form-field class="planned" color="warn" floatLabel="always">
+                <mat-label>Insira o valor</mat-label>
+                <input matInput type="text" currencyMask
+                    [options]="{prefix: 'R$ ', thousands: '.', precision: 2, allowNegative: false, align: 'left', decimal: ','}"
+                    formControlName="planned">
+            </mat-form-field>
+
+            <div>
+                <button mat-raised-button
+                    [ngStyle]="categoriesForm.invalid ? { 'color': '#999999' } : { 'color': 'white', 'background-color': '#008000' }"
+                    [disabled]="categoriesForm.invalid" (click)="adicionarDespesas()">
+                    {{ modoEdicao ? 'Salvar' : 'Adicionar' }}
+                </button>
+
+                <button mat-raised-button
+                    style="background-color: rgba(255, 0, 0, 0.61); color: white; margin-left: 10px;" (click)="clear()">
+                    {{ modoEdicao ? 'Cancelar' : 'Limpar' }}
+                </button>
+            </div>
+        </div>
+
+
+        <div class="table-wrapper">
+            <table mat-table #table [dataSource]="dataSource">
+
+                <ng-container matColumnDef="category">
+                    <th mat-header-cell *matHeaderCellDef> Categoria </th>
+                    <td mat-cell *matCellDef="let element"> {{element.category.name}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="type">
+                    <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                    <td mat-cell *matCellDef="let element"> {{element.category.typeCategory}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="descricao">
+                    <th mat-header-cell *matHeaderCellDef> Descricão </th>
+                    <td mat-cell *matCellDef="let element"> {{element.descricao}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="planned">
+                    <th mat-header-cell *matHeaderCellDef> Valor </th>
+                    <td mat-cell *matCellDef="let element"> {{element.planned | real}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                    <th class="mat-column-acao" mat-header-cell *matHeaderCellDef> Ações </th>
+                    <td mat-cell *matCellDef="let element">
+                        <button style="margin: 2px" mat-mini-fab matTooltip="Editar" color="warn" (click)="editar(element)">
+                            <i class="fa fa-solid fa-pen"></i>
+                        </button>
+                        <button mat-mini-fab matTooltip="Deletar" color="primary" (click)="deletar(element)">
+                            <i class="fa fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="espace">
+                    <td mat-footer-cell *matFooterCellDef colspan="5">
+
+                    </td>
+                </ng-container>
+
+                <!-- Row Despesas essenciais -->
+                <ng-container matColumnDef="despesasEssenciais">
+                    <td mat-footer-cell *matFooterCellDef colspan="3">
+                        TOTAL DE DESPESAS ESSENCIAIS
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="despesasEssenciais1">
+                    <td mat-footer-cell *matFooterCellDef colspan="2">
+                        {{getTotalDespesasEssenciais() | real}}
+                    </td>
+                </ng-container>
+                <!-- fim Row Despesas essenciais -->
+
+                <!-- Row Despesas não essenciais -->
+                <ng-container matColumnDef="despesasnNaoEssenciais">
+                    <td mat-footer-cell *matFooterCellDef colspan="3">
+                        TOTAL DE DESPESAS NÃO ESSENCIAIS
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="despesasnNaoEssenciais1">
+                    <td mat-footer-cell *matFooterCellDef colspan="2">
+                        {{getTotalDespesasNaoEssenciais() | real}}
+                    </td>
+                </ng-container>
+                <!-- fim Row Despesas não essenciais -->
+
+                <!-- fim Row Total Despesas -->
+                <ng-container matColumnDef="totalDespesas">
+                    <td mat-footer-cell *matFooterCellDef colspan="3">
+                        TOTAL GERAL DE DESPESAS
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="totalDespesas1">
+                    <td mat-footer-cell *matFooterCellDef colspan="2">
+                        {{getTotalDespesas() | real}}
+                    </td>
+                </ng-container>
+                <!-- fim Row Total Despesas -->
+
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+
+                <tr mat-footer-row *matFooterRowDef="['espace']"></tr>
+                <tr mat-footer-row *matFooterRowDef="['despesasEssenciais', 'despesasEssenciais1']"
+                    [ngClass]="{'despesas-essenciais': true, 'despesas-nao-essenciais': false, 'total-despesas': false}">
+                </tr>
+                <tr mat-footer-row *matFooterRowDef="['despesasnNaoEssenciais', 'despesasnNaoEssenciais1']"
+                    [ngClass]="{'despesas-essenciais': false, 'despesas-nao-essenciais': true, 'total-despesas': false}">
+                </tr>
+                <tr mat-footer-row *matFooterRowDef="['totalDespesas', 'totalDespesas1']"
+                    [ngClass]="{'despesas-essenciais': false, 'despesas-nao-essenciais': false, 'total-despesas': true}">
+                </tr>
+
+            </table>
+        </div>
+
+        <mat-divider></mat-divider>
+        <div class="button">
+            <button mat-raised-button color="warn" (click)="onCancel()">Cancelar</button>
+            <span></span>
+            <button mat-raised-button color="warn" (click)="saveListFromCategorys()">Salvar</button>
+        </div>
+    </form>
+</mat-card>

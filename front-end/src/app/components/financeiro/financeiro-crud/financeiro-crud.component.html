@@ -4,7 +4,7 @@
             <mat-card-title class="custom-title">Novo Planejamento</mat-card-title>
         </div>
         <span class="flex-spacer"></span>
-        <button mat-icon-button [mat-dialog-close]="true">
+        <button mat-icon-button (click)="onCancel()">
             <mat-icon aria-label="Fechar diálogo">close</mat-icon>
         </button>
     </mat-card-header>

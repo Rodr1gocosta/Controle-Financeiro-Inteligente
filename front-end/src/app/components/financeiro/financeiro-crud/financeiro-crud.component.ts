@@ -207,6 +207,10 @@ export class FinanceiroCrudComponent {
     this.categoriesForm.reset();
   }
 
+  onCancel() {
+    this.dialogRef.close();
+  }
+
   save() {
     this.confirmationDialogService
       .openConfirmationDialog('Deseja salvar essa operação?')
@@ -224,7 +228,7 @@ export class FinanceiroCrudComponent {
           this.financeiroService.sendNewPlanning(this.planning).subscribe(response => {
 
             if (response) {
-              this.dialogRef.close();
+              this.dialogRef.close(response);
               this.messageOperationService.message('Operação realizado com sucesso!', 'success')
             }
           }, error => {

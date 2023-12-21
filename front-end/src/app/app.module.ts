@@ -53,6 +53,7 @@ import { FinanceiroCrudComponent } from './components/financeiro/financeiro-crud
 import { CategoryDefaultComponent } from './seguranca/admin/category-default/category-default.component';
 import { CrudCategoryDefaultComponent } from './seguranca/admin/category-default/crud-category-default/crud-category-default.component';
 import { SharedModule } from './shared/shared.module';
+import { CategoriaCrudComponent } from './components/financeiro/categoria-crud/categoria-crud.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import { SharedModule } from './shared/shared.module';
     DashboardComponent,
     RealPipe,
     CategoryDefaultComponent,
-    CrudCategoryDefaultComponent
+    CrudCategoryDefaultComponent,
+    CategoriaCrudComponent
   ],
   imports: [
     BrowserModule,
