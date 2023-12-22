@@ -2,7 +2,9 @@ package br.com.financeiro.financeiro.service;
 
 import br.com.financeiro.financeiro.domain.Planning;
 import br.com.financeiro.financeiro.record.PlanningRecord;
+import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -45,4 +47,13 @@ public interface PlanningService {
      * @return the entity.
      */
     Optional<PlanningRecord> findOnePlanningByMonthAndYear(Integer month, Integer year, UUID userId);
+
+    /**
+     * Get the "planning" by month and year.
+     *
+     * @param response, the response of the entity.
+     * @param userId, the id of the user.
+     * @param planningId, the planningId of the entity.
+     */
+    void downloadPlanning(HttpServletResponse response, UUID planningId, UUID userId) throws IOException;
 }

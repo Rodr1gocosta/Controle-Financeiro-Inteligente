@@ -54,6 +54,8 @@ export class FinanceiroComponent {
   value: string = '';
 
   planningId!: String;
+  planningIdDownload!: string;
+
   categories: Categories[] = [];
   salario: number = 0;
   gastos: number = 0;
@@ -184,6 +186,7 @@ export class FinanceiroComponent {
       if (response) {
         if(response.id) {
           this.planningId = response.id;
+          this.planningIdDownload = response.id;
         }
 
         if (response.categoriesRecords) {
@@ -300,6 +303,29 @@ export class FinanceiroComponent {
       return this.dataSource.data.map(item => item.planned || 0).reduce((acc, value) => acc + value, 0);
     }
     return 0;
+  }
+
+  onDownloadPDF() {
+    this.financeiroService.onDownloadPDF(this.planningIdDownload).subscribe((data: Blob) => {
+      const file = new Blob([data], {type: data.type});
+      const blob = window.URL.createObjectURL(file);
+      const link = document.createElement('a');
+
+      link.href = blob;
+
+      const dataAtual = new Date();
+      const dataFormatada = dataAtual.toISOString().split('T')[0];
+      link.download = `planejamento_${dataFormatada}.pdf`; 
+
+      link.click();
+
+      window.URL.revokeObjectURL(blob);
+      link.remove();
+
+    }, (error) => {
+      let errorMessage = error.error.error;
+      this.messageOperationService.message(errorMessage, 'error');
+    });
   }
 
 }
