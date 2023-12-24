@@ -18,6 +18,7 @@ import { UserComponent } from './user.component';
 import { UserCrudComponent } from './user-crud/user-crud.component';
 
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 @NgModule({
@@ -43,6 +44,8 @@ import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 
     NgxMaskDirective, 
     NgxMaskPipe,
+
+    NgxSpinnerModule.forRoot(),
   ]
 })
 export class UserModule { }

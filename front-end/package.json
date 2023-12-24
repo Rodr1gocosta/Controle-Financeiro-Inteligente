@@ -22,6 +22,7 @@
     "@angular/router": "^16.2.0",
     "ngx-currency": "^4.0.0",
     "ngx-mask": "^17.0.4",
+    "ngx-spinner": "^16.0.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"

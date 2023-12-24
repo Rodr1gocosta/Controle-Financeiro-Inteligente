@@ -5,8 +5,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { NgxCurrencyDirective } from 'ngx-currency';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 import {MatInputModule} from '@angular/material/input';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -54,6 +56,8 @@ import { CategoryDefaultComponent } from './seguranca/admin/category-default/cat
 import { CrudCategoryDefaultComponent } from './seguranca/admin/category-default/crud-category-default/crud-category-default.component';
 import { SharedModule } from './shared/shared.module';
 import { CategoriaCrudComponent } from './components/financeiro/categoria-crud/categoria-crud.component';
+import { SpinnerInterceptor } from './seguranca/interceptor/spinner.interceptor';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -86,6 +90,7 @@ import { CategoriaCrudComponent } from './components/financeiro/categoria-crud/c
     NgxMaskDirective, 
     NgxMaskPipe,
     NgxCurrencyDirective,
+    NgxSpinnerModule,
 
     SharedModule,
 
@@ -111,12 +116,18 @@ import { CategoriaCrudComponent } from './components/financeiro/categoria-crud/c
     MatStepperModule,
     MatGridListModule,
     MatRadioModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatProgressSpinnerModule
   ],
   providers: [ provideNgxMask(),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: SpinnerInterceptor,
       multi: true
     }
   ],
