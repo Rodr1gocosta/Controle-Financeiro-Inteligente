@@ -53,8 +53,7 @@ export class FinanceiroComponent {
   selectedTypeCategory: string = 'all';
   value: string = '';
 
-  planningId!: String;
-  planningIdDownload!: string;
+  planningId!: string;
 
   categories: Categories[] = [];
   salario: number = 0;
@@ -118,6 +117,30 @@ export class FinanceiroComponent {
         this.rendimento = this.salario - this.gastos;
       }
     });
+  }
+
+  delete() {
+    this.financeiroService.deletePlanning(this.planningId).subscribe(() => {
+      
+      this.messageOperationService.message('Operação realizado com sucesso!', 'success');
+
+    }, error => {
+      let errorMessage = 'Ocorreu um erro na operação. Por favor, tente novamente mais tarde.';
+
+      switch (error.status) {
+        case 400: {
+          errorMessage = error.error.error;
+        } break;
+        case 401: {
+          errorMessage = 'Credenciais inválidas';
+        } break;
+        case 403: {
+          errorMessage = 'Acesso negado. Você não tem permissão para acessar este recurso.';
+        } break;
+      }
+
+      this.messageOperationService.message(errorMessage, 'error');
+    })
   }
 
   decreasesYear() {
@@ -186,7 +209,6 @@ export class FinanceiroComponent {
       if (response) {
         if(response.id) {
           this.planningId = response.id;
-          this.planningIdDownload = response.id;
         }
 
         if (response.categoriesRecords) {
@@ -306,16 +328,14 @@ export class FinanceiroComponent {
   }
 
   onDownloadPDF() {
-    this.financeiroService.onDownloadPDF(this.planningIdDownload).subscribe((data: Blob) => {
+    this.financeiroService.onDownloadPDF(this.planningId).subscribe((data: Blob) => {
       const file = new Blob([data], {type: data.type});
       const blob = window.URL.createObjectURL(file);
       const link = document.createElement('a');
 
       link.href = blob;
 
-      const dataAtual = new Date();
-      const dataFormatada = dataAtual.toISOString().split('T')[0];
-      link.download = `planejamento_${dataFormatada}.pdf`; 
+      link.download = `planejamento_${this.month}_${this.year}.pdf`; 
 
       link.click();
 

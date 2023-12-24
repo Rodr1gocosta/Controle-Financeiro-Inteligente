@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -75,6 +74,24 @@ public class PlanningController {
     }
 
     /**
+     * {@code DELETE  /planning/:id} : delete the "id" planning.
+     *
+     * @param planningId the id of the planning to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
+     */
+    @DeleteMapping("/planning/{planningId}")
+    public ResponseEntity<Void> deletePlanning(@PathVariable UUID planningId) {
+        log.debug("REST request to delete Planning : {}", planningId);
+
+        if (planningId == null) {
+            throw new BadRequestException("Não existe planejamento com esse ID");
+        }
+        planningService.delete(planningId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    /**
      * {@code GET  /planning/download/{planningId}} : download by id.
      *
      * @param planningId for planning download
@@ -82,10 +99,9 @@ public class PlanningController {
      */
     @GetMapping("/planning/download/{planningId}")
     public void downloadPlanning(HttpServletResponse response, @PathVariable(value = "planningId")UUID planningId, @RequestHeader("laggedInUser") UUID userId) throws IOException {
-        response.setContentType("application/pdf");
-
-        String dataAtualFormatada = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        response.setHeader("Content-Disposition", "attachment; filename=planejamento_" + dataAtualFormatada + ".pdf");
+        if (planningId == null) {
+            throw new BadRequestException("Não existe planejamento com esse ID");
+        }
 
         planningService.downloadPlanning(response, planningId, userId);
     }

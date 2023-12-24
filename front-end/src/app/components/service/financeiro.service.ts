@@ -19,10 +19,14 @@ export class FinanceiroService {
     return this.http.get<Planning>(`${environment.baseUrl}/api/financas/planning/${month}/${year}`);
   }
 
+  deletePlanning(planningId: string): Observable<void> {
+    return this.http.delete<void>(`${environment.baseUrl}/api/financas/planning/${planningId}`);
+  }
+
   onDownloadPDF(planningId: string): Observable<Blob> {
     return this.http.get(`${environment.baseUrl}/api/financas/planning/download/${planningId}`, { 
       responseType: 'blob',
-      reportProgress: true 
     });
   }
+
 }

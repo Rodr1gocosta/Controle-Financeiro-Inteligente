@@ -31,6 +31,13 @@ public interface PlanningService {
     Optional<PlanningRecord> findOne(UUID id);
 
     /**
+     * Delete the "id" planning.
+     *
+     * @param id the id of the entity.
+     */
+    void delete(UUID id);
+
+    /**
      * Save a planning.
      *
      * @param planningRecord the entity to save.

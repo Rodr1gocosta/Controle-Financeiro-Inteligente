@@ -82,6 +82,8 @@ public class PlanningServiceImpl implements PlanningService {
     @Override
     public Optional<PlanningRecord> findOne(UUID id) { return planningRepository.findById(id).map(planningMapper::toDto); }
 
+    @Override
+    public void delete(UUID id) { planningRepository.deleteById(id); }
 
     @Override
     @Transactional
@@ -162,6 +164,9 @@ public class PlanningServiceImpl implements PlanningService {
         String telefone = user.getPhoneNumber().replaceAll("(\\d{2})(\\d{4})(\\d{4})", "($1) $2-$3");
         String salario = formatarSalario(planning.getTotalPlanned());
 
+
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=planejamento_" + dataPlanejamento + ".pdf");
         PdfWriter pdfWriter = new PdfWriter(response.getOutputStream());
         PdfDocument pdfDocument = new PdfDocument(pdfWriter);
         pdfDocument.setDefaultPageSize(PageSize.A4);

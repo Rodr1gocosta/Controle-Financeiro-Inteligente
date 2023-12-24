@@ -1,3 +1,5 @@
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "large" color = "#fff" type = "ball-atom" [fullScreen] = "true"><p style="color: white" > Carregando... </p></ngx-spinner>
+
 <mat-card class="mat-card-fieldset" style="background-color: #8e9091">
     <mat-card-header>
         <div class="mat-card-title-wrapper">
@@ -77,10 +79,15 @@
                                 <mat-icon>delete</mat-icon>
                             </button>
 
-                            <button mat-mini-fab style="background-color: #e2e2e2; color: black;"
+                            <button mat-mini-fab [matMenuTriggerFor]="menu1" style="background-color: #e2e2e2; color: black;"
                                 matTooltip="Mais ações">
                                 <mat-icon>more_vert</mat-icon>
                             </button>
+                            <mat-menu #menu1="matMenu">
+                                <button mat-menu-item (click)="delete()">
+                                    <span>Excluir Planejamento</span>
+                                </button>
+                            </mat-menu>
                         </div>
 
                     </div>
