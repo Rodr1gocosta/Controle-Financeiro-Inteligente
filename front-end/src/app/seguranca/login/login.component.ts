@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
+import { MessageOperationService } from 'src/app/shared/util/message-operation/message-operation.service';
 
 const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
@@ -18,7 +19,8 @@ export class LoginComponent {
   constructor(
               private formBuilder: FormBuilder,
               private authService: AuthService,
-              private router: Router
+              private router: Router,
+              private message: MessageOperationService
   ) { }
 
   ngOnInit(): void {
@@ -39,21 +41,14 @@ export class LoginComponent {
     this.authService.login(username, password).subscribe(response => {
       
       this.router.navigate(['']);
-      this.authService.message('Login efetuado com sucesso!', 'success');
+      this.message.message('Login efetuado com sucesso!', 'success');
     },
       error => {
-        let errorMessage = 'Ocorreu um erro ao fazer login. Por favor, tente novamente mais tarde.';
-
         switch (error.status) {
-          case 401: {
-            errorMessage = 'Credenciais inválidas. Verifique seu nome de usuário e senha.';
-          } break;
           case 403: {
-            errorMessage = 'Usuário inativo. Entre em contato com o suporte.';
+            this.message.message('Usuário inativo. Entre em contato com o suporte.', 'warn');
           } break;
         }
-
-        this.authService.message(errorMessage);
       }
     );
   }

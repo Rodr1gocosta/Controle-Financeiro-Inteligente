@@ -98,12 +98,13 @@ public class PlanningController {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)}, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/planning/download/{planningId}")
-    public void downloadPlanning(HttpServletResponse response, @PathVariable(value = "planningId")UUID planningId, @RequestHeader("laggedInUser") UUID userId) throws IOException {
+    public ResponseEntity<Void> downloadPlanning(HttpServletResponse response, @PathVariable(value = "planningId")UUID planningId, @RequestHeader("laggedInUser") UUID userId) throws IOException {
         if (planningId == null) {
             throw new BadRequestException("Não existe planejamento com esse ID");
         }
 
         planningService.downloadPlanning(response, planningId, userId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

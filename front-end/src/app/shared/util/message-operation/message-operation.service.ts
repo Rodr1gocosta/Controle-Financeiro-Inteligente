@@ -12,7 +12,7 @@ export class MessageOperationService {
         this.snack.open(`${msg}`, 'OK', {
             horizontalPosition: 'end',
             verticalPosition: 'top',
-            duration: 1000,
+            duration: 3000,
             panelClass: [color]
         })
     }

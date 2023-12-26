@@ -58,6 +58,7 @@ import { SharedModule } from './shared/shared.module';
 import { CategoriaCrudComponent } from './components/financeiro/categoria-crud/categoria-crud.component';
 import { SpinnerInterceptor } from './seguranca/interceptor/spinner.interceptor';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ErrorHandlerInterceptor } from './seguranca/interceptor/error-handler.interceptor';
 
 @NgModule({
   declarations: [
@@ -129,7 +130,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
       provide: HTTP_INTERCEPTORS,
       useClass: SpinnerInterceptor,
       multi: true
-    }
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorHandlerInterceptor,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent]
 })

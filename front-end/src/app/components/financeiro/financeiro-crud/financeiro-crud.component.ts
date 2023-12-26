@@ -232,23 +232,6 @@ export class FinanceiroCrudComponent {
               this.messageOperationService.message('Operação realizado com sucesso!', 'success')
             }
           }, error => {
-            let errorMessage = 'Ocorreu um erro na operação. Por favor, tente novamente mais tarde.';
-
-            switch (error.status) {
-              case 400: {
-                errorMessage = error.error.error;
-              } break;
-              case 401: {
-                errorMessage = 'Credenciais inválidas';
-              } break;
-              case 403: {
-                errorMessage = 'Acesso negado. Você não tem permissão para acessar este recurso.';
-              } break;
-      
-            }
-      
-            this.messageOperationService.message(errorMessage, 'error');
-
             this.categories = [];
           });
         }

@@ -4,6 +4,7 @@ import { CategoryDefault } from './category-default';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { CrudCategoryDefaultComponent } from './crud-category-default/crud-category-default.component';
+import { MessageOperationService } from 'src/app/shared/util/message-operation/message-operation.service';
 
 @Component({
   selector: 'app-category-default',
@@ -18,7 +19,8 @@ export class CategoryDefaultComponent {
   categoryDefault: CategoryDefault[] = [];
 
   constructor(private categoryDefaultService: CategoryDefaultService,
-              public dialog: MatDialog) { }
+              public dialog: MatDialog,
+              private message: MessageOperationService) { }
 
 
   ngOnInit() {
@@ -29,19 +31,6 @@ export class CategoryDefaultComponent {
     this.categoryDefaultService.findAll().subscribe((response) => {
       this.categoryDefault = response as CategoryDefault[];
       this.dataSource = new MatTableDataSource<CategoryDefault>(this.categoryDefault);
-    }, error => {
-      let errorMessage = 'Ocorreu um erro na operação. Por favor, tente novamente mais tarde.';
-
-      switch (error.status) {
-        case 401: {
-          errorMessage = 'Credenciais inválidas';
-        } break;
-        case 403: {
-          errorMessage = 'Acesso negado. Você não tem permissão para acessar este recurso.';
-        } break;
-      }
-
-      this.categoryDefaultService.message(errorMessage);
     })
   }
 
@@ -67,23 +56,7 @@ export class CategoryDefaultComponent {
       const newData = [...currentData, response];
       this.dataSource.data = newData;
 
-      this.categoryDefaultService.message('Operação efetuada com sucesso!');
-    }, error => {
-      let errorMessage = 'Ocorreu um erro na operação. Por favor, tente novamente mais tarde.';
-
-      switch (error.status) {
-        case 400: {
-          errorMessage = 'Dados inválidas. Certifique-se de que você forneceu dados válidos e tente novamente';
-        } break;
-        case 401: {
-          errorMessage = 'Credenciais inválidas';
-        } break;
-        case 403: {
-          errorMessage = 'Acesso negado. Você não tem permissão para acessar este recurso.';
-        } break;
-      }
-
-      this.categoryDefaultService.message(errorMessage);
+      this.message.message('Operação efetuada com sucesso!', 'success');
     });
   }
 }

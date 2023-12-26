@@ -4,6 +4,7 @@ import br.com.financeiro.financeiro.domain.Categories;
 import br.com.financeiro.financeiro.domain.Planning;
 import br.com.financeiro.financeiro.domain.User;
 import br.com.financeiro.financeiro.exception.BadRequestException;
+import br.com.financeiro.financeiro.exception.NotFoundException;
 import br.com.financeiro.financeiro.record.PlanningRecord;
 import br.com.financeiro.financeiro.repository.CategoryDefaultRepository;
 import br.com.financeiro.financeiro.repository.CategoryRepository;
@@ -90,7 +91,7 @@ public class PlanningServiceImpl implements PlanningService {
     public PlanningRecord savePlanning(PlanningRecord planningRecord, UUID userId) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Error: Usuário não foi encontrada"));
+                .orElseThrow(() -> new BadRequestException("Error: Usuário não foi encontrada"));
 
         Optional<PlanningRecord> onePlanningByMonthAndYear = findOnePlanningByMonthAndYear(planningRecord.month(), planningRecord.year(), user.getId());
         if (onePlanningByMonthAndYear.isPresent()) {
@@ -133,7 +134,7 @@ public class PlanningServiceImpl implements PlanningService {
     public void downloadPlanning(HttpServletResponse response, UUID planningId, UUID userId) throws IOException {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Error: Usuário não foi encontrada"));
+                .orElseThrow(() -> new NotFoundException("Usuário não foi encontrada para download"));
 
         List<Planning> planningList = user.getPlanningList();
         Optional<Planning> findPlanning = planningList.stream()
@@ -146,7 +147,7 @@ public class PlanningServiceImpl implements PlanningService {
             monipulatePDF(response, user, planning);
 
         } else {
-            throw new RuntimeException("Planejamento não encontrado com o ID: " + planningId);
+            throw new NotFoundException("Planejamento não encontrado para download");
         }
     }
 

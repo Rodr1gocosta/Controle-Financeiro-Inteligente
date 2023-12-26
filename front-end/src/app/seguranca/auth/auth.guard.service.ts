@@ -1,13 +1,13 @@
 import { Injectable } from "@angular/core";
-import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from "@angular/router";
+import { Router } from "@angular/router";
 import { AuthService } from "./auth.service";
 
 @Injectable({
     providedIn: 'root'
-  })
-export class AuthGuardService { 
+})
+export class AuthGuardService {
 
-    constructor(private authService: AuthService, 
+    constructor(private authService: AuthService,
         private router: Router) {}
 
     canActivate(): boolean {
@@ -17,5 +17,5 @@ export class AuthGuardService {
             this.router.navigate(['/login']); // Redireciona para a página de login
             return false; // Bloqueia o acesso à rota
         }
-        }
+    }
 }

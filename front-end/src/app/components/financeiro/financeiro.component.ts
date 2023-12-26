@@ -8,7 +8,7 @@ import { FinanceiroCrudComponent } from './financeiro-crud/financeiro-crud.compo
 import { MessageOperationService } from 'src/app/shared/util/message-operation/message-operation.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ConfirmationDialogService } from 'src/app/shared/util/confirmation-dialog/confirmation-dialog.service';
-import { Subscription } from 'rxjs';
+import { Subscription, throwError } from 'rxjs';
 import { CategoriaCrudComponent } from './categoria-crud/categoria-crud.component';
 
 export interface DisplayColumn {
@@ -121,25 +121,7 @@ export class FinanceiroComponent {
 
   delete() {
     this.financeiroService.deletePlanning(this.planningId).subscribe(() => {
-      
       this.messageOperationService.message('Operação realizado com sucesso!', 'success');
-
-    }, error => {
-      let errorMessage = 'Ocorreu um erro na operação. Por favor, tente novamente mais tarde.';
-
-      switch (error.status) {
-        case 400: {
-          errorMessage = error.error.error;
-        } break;
-        case 401: {
-          errorMessage = 'Credenciais inválidas';
-        } break;
-        case 403: {
-          errorMessage = 'Acesso negado. Você não tem permissão para acessar este recurso.';
-        } break;
-      }
-
-      this.messageOperationService.message(errorMessage, 'error');
     })
   }
 
@@ -233,20 +215,6 @@ export class FinanceiroComponent {
         this.rendimento = 0;
         this.showTable = false;
       }
-    }, error => {
-      let errorMessage = 'Ocorreu um erro na operação. Por favor, tente novamente mais tarde.';
-
-      switch (error.status) {
-        case 401: {
-          errorMessage = 'Credenciais inválidas';
-        } break;
-        case 403: {
-          errorMessage = 'Acesso negado. Você não tem permissão para acessar este recurso.';
-        } break;
-
-      }
-
-      this.messageOperationService.message(errorMessage, 'error');
     });
   }
 
@@ -341,10 +309,30 @@ export class FinanceiroComponent {
 
       window.URL.revokeObjectURL(blob);
       link.remove();
+    }, error => {
+      if (error.status === 404) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const jsonResponse = JSON.parse(reader.result as string);
 
-    }, (error) => {
-      let errorMessage = error.error.error;
-      this.messageOperationService.message(errorMessage, 'error');
+            if (jsonResponse && jsonResponse.error) {
+              const errorMessage = jsonResponse.error;
+              this.messageOperationService.message(errorMessage, 'error');
+            } else {
+              console.error('Formato JSON inválido:', reader.result);
+            }
+          } catch (parseError) {
+            console.error('Erro ao fazer o parsing do JSON:', parseError);
+          }
+        };
+
+        reader.readAsText(error.error);
+      } else {
+        console.error('Erro desconhecido:', error);
+      }
+
+      return throwError(error);
     });
   }
 

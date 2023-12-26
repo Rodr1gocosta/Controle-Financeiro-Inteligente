@@ -36,7 +36,7 @@ public class ApplicationControllerAdvice {
     public ResponseEntity<Map<String, String>>  notFoundException(NotFoundException ex) {
         //errorResponse cria um Json para retornar a mensagem em forma de Json
         Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("warn", ex.getMessage());
+        errorResponse.put("error", ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
