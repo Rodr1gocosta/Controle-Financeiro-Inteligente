@@ -9,8 +9,26 @@ import { AuthService } from 'src/app/seguranca/auth/auth.service';
 })
 export class HeaderComponent {
 
+  timeRemaining!: number;
+  private intervalId: any;
+
   constructor(private authService: AuthService,
-              private router: Router) {}
+    private router: Router) { }
+
+  ngOnInit() {
+    this.intervalId = setInterval(() => {
+      this.timeRemaining = this.authService.getTimeUntilTokenExpiration();
+
+      if (this.timeRemaining === 0) {
+        this.authService.logout();
+        clearInterval(this.intervalId); 
+      }
+    }, 1000);
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.intervalId);
+  }
 
   homeRoute() {
     this.router.navigate(['/home']);
@@ -26,6 +44,21 @@ export class HeaderComponent {
 
   logout() {
     this.authService.logout();
+  }
+
+  formatTime(seconds: number): string {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+  
+    // Limita o tempo a no máximo 24 horas
+    const limitedHours = hours > 24 ? 24 : hours;
+  
+    const hoursDisplay = limitedHours > 0 ? limitedHours + 'h ' : '';
+    const minutesDisplay = minutes > 0 ? minutes + 'min ' : '';
+    const secondsDisplay = remainingSeconds > 0 ? remainingSeconds + 's' : '';
+  
+    return hoursDisplay + minutesDisplay + secondsDisplay;
   }
 
 }

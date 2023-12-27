@@ -123,12 +123,12 @@ import { ErrorHandlerInterceptor } from './seguranca/interceptor/error-handler.i
   providers: [ provideNgxMask(),
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
+      useClass: SpinnerInterceptor,
       multi: true
     },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: SpinnerInterceptor,
+      useClass: AuthInterceptor,
       multi: true
     },
     {

@@ -34,9 +34,7 @@ export class LoginComponent {
     if (this.loginForm.invalid) {
       return;
     }
-
-    this.router.navigate(['']);
-
+    
     const { username, password } = this.loginForm.value;
     this.authService.login(username, password).subscribe(response => {
       

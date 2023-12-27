@@ -22,8 +22,6 @@
 
 14 - implementar bean no mapperstruct ok
 
-15 - implementar seguranca no microsservico financeiro
-
 16 - criar entidade usuário no microsservico financeiro ok
 
 17 - Quando criar/atualizar/deletar um novo usuário, o microsservico segurança enviar via RABBITMQ para microsservico financeiro o usuário. ok
@@ -32,9 +30,9 @@
 
 20 - Caso o planejamento tenha salvo com sucesso, apresentar a mensagem "Operação executado com sucesso" e atualizar a tabela com o planejamento ok
 
-21 - Caso o planejamento deem erro, apresentar a mensagem "Operação falhou": "mensagem do erro" e fazer tratamento de erro via postman 
+20 - adicionar o cronometro de tempo do token no frontend - OK
 
-
+--------------------------------------------------------------------------------------------------------------------------------------------------------
 
 INFORMÕES ADICIONAIS:
 
@@ -43,15 +41,46 @@ https://github.com/acenelio/ms-course/tree/main
 https://github.com/gostavok/EAD/tree/main
 https://github.com/Java-Techie-jt/jwt-apigateway-security
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------
 
-8 - pesquisar para adicionar senha com caracteres, letras e números
+A - transformar meu service-registry em imagem docker para facilitar no desenvolvimento
+B - adicionar log para manitoramento de observabilidade no projeto todo
+C - resiliencia nos broker
+D - adicionar elastSearch
+E - cache
 
-9 - transformar meu service-registry em imagem docker para facilitar no desenvolvimento
 
-18 - adicionar log para manitoramento de observabilidade no projeto todo
+3 - adicionar cor nas mensagem de erro, sucesso e alerta
 
-19 - adicionar cor nas mensagem de erro, sucesso e alerta
+4 - implementar seguranca no microsservico financeiro
 
-20 - adicionar o cronometro de tempo do token no frontend
+5 - enviar email para o usuário criar a senha (o email tem validade de 30 minutos para ativar, caso contrário entrar em contato com suporte)
+
+6 - pesquisar para adicionar senha com caracteres, letras e números
+
+7 - quando o usuário criar a senha, ativar o usuário
+
+8 - Caso o planejamento deem erro, apresentar a mensagem "Operação falhou": "mensagem do erro" e fazer tratamento de erro via postman 
+
+9 - resetar senha do usuário
+
+10 - criar a tela de home
+
+11 - bloquear rotar de administrador
+
+12 - como administrador, função de editar, ativar, excluir e coloca permissções de usuários
+
+13 - baixar em excel todos usuários
+
+14 - filtro de pesquisa de usuário
+
+15 - Tela de login: resetar senha do usuário
+
+16 - Tela de login: recaptch
+
+17 - Tela de login: Relembre
+
+
+
 
 

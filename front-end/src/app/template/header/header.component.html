@@ -1,8 +1,10 @@
 <mat-toolbar class="header mat-elevation-z8">
     <div class="mat-toolbar-row">
       <a (click)="homeRoute()">Logo</a>
-      <span class="flex-spacer"></span> <!-- Adicione essa linha para criar um espaço flexível -->
+      <span class="flex-spacer"></span>
       
+      <p style="font-size: 15px; margin-right: 20px; margin-top: 10px;">Tempo de Acesso: {{ formatTime(timeRemaining) }}</p>
+
       <button mat-button [matMenuTriggerFor]="menu">
         <i style="font-size: 20px;" class="fal fa-user"></i>
       </button>

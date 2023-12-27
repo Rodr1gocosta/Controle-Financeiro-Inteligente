@@ -12,10 +12,10 @@ export class AuthGuardService {
 
     canActivate(): boolean {
         if (this.authService.isAuthenticated()) {
-            return true; // Permite o acesso à rota
+            return true;
         } else {
-            this.router.navigate(['/login']); // Redireciona para a página de login
-            return false; // Bloqueia o acesso à rota
+            this.router.navigate(['/login']);
+            return false;
         }
     }
 }
