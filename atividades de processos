@@ -48,6 +48,9 @@ B - adicionar log para manitoramento de observabilidade no projeto todo
 C - resiliencia nos broker
 D - adicionar elastSearch
 E - cache
+F - Adicionar SWAGGER
+G - Assistir curso de segurança para aplicação - https://cursos.alura.com.br/course/seguranca-web-em-java-parte-1
+H - Assistir curso de documentação - https://cursos.alura.com.br/course/spring-boot-3-documente-teste-prepare-api-deploy
 
 
 3 - adicionar cor nas mensagem de erro, sucesso e alerta

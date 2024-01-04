@@ -10,9 +10,11 @@ import br.com.financeiro.seguranca.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -30,6 +32,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final UserEventPublisher userEventPublisher;
+
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Save a User.
@@ -69,12 +73,14 @@ public class UserService {
 
     @Transactional
     public User saveUser(UserRecord userRecord, Role role) {
-        User user = new User();
+        String encodedPassword = passwordEncoder.encode(PasswordGenerator.generateTemporaryPassword(8));
 
+        User user = new User();
         user.setId(userRecord.id());
         user.setName(userRecord.name());
         user.setUsername(userRecord.username());
-        user.setPassword(userRecord.password());
+        user.setPassword(encodedPassword);
+        user.setToken(generateUniqueTokenWithExpiration());
         user.setStatus(userRecord.status());
         user.setCpf(userRecord.cpf());
         user.setPhoneNumber(userRecord.phoneNumber());
@@ -92,7 +98,17 @@ public class UserService {
         UserEventRecord userEventRecord = new UserEventRecord(result.getId(), result.getName(), result.isStatus(), result.getCpf(), result.getPhoneNumber(), ActionType.CREATE);
         userEventPublisher.publishUserEvent(userEventRecord);
 
+        //enviar para notificação o email para o usuário criar sua senha
+
         return result;
     }
 
+    private String generateUniqueTokenWithExpiration() {
+        String uniqueToken = UUID.randomUUID().toString();
+        LocalDateTime now = LocalDateTime.now();
+
+        LocalDateTime expirationDateTime = now.plusHours(1);
+
+        return uniqueToken + "_" + now.toString() + "_" + expirationDateTime.toString();
+    }
 }

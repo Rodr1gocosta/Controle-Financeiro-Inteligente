@@ -2,22 +2,22 @@
     <mat-card-content class="container">
         <form class="form" [formGroup]="loginForm">
             <div class="full-width">
-                <mat-card-title style="color: aliceblue; margin-top: 40px; margin-bottom: 100px;">LOGO MARCA</mat-card-title>
+                <mat-icon class="icon">sentiment_very_dissatisfied</mat-icon>
+                <mat-card-title style="margin-bottom: 20px; color: white;">Fazer login</mat-card-title>
 
-                <mat-form-field class="mat-form-field" appearance="fill">
+
+                <mat-form-field class="mat-form-field" color="warn" appearance="fill">
                     <mat-label>Email</mat-label>
                     <input matInput type="email" name="username" formControlName="username" placeholder="Email de usuário">
-                    <span matTextSuffix><i style="font-size: 20px;" class="fa fa-user"></i></span>
+                    <span matTextSuffix><i style="font-size: 20px; color: rgba(255, 255, 255, 0.432);" class="fa fa-user"></i></span>
                         
                     <mat-error>{{ errorValidUsername() }}</mat-error>
                 </mat-form-field>
 
-                <mat-form-field class="mat-form-field">
+                <mat-form-field class="mat-form-field" color="warn">
                     <mat-label>Senha</mat-label>
-                    <input matInput type="password" name="password" formControlName="password" placeholder="Insira a senha" [type]="hide ? 'password' : 'text'">
-                    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-                        <i style="font-size: 20px;" class="fa fa-eye-slash"></i>
-                    </button>
+                    <mat-pass-toggle-visibility style="color: rgba(255, 255, 255, 0.432);" #toggle1 matSuffix></mat-pass-toggle-visibility>
+                    <input matInput type="password" name="password" formControlName="password" placeholder="Insira a senha" [type]="toggle1.type">
                     <mat-error>{{ errorValidPassword() }}</mat-error>
                 </mat-form-field>
 

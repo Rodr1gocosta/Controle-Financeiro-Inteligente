@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>IF - Inteligência Financeira</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f4f4f4;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+            }
+            .container {
+                max-width: 600px;
+                background-color: #081b29;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                text-align: center;
+            }
+            h1 {
+                color: cadetblue;
+                font-size: 30px;
+                margin-bottom: 60px;
+            }
+            p {
+                color: white;
+            }
+            .senha {
+                display: inline-block;
+                margin-top: 15px;
+                margin-bottom: 25px;
+                padding: 10px 20px;
+                background-color: rgb(255, 115, 0);
+                color: darkslategrey;
+                text-decoration: none;
+                border-radius: 5px;
+            }
+            .brand-name {
+                font-family: Vemana2000;
+                font-weight: bold;
+                font-size: 16px;
+                color: cadetblue;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Bem-vindo ao sistema financeiro!</h1>
+            <p>Estamos empolgados por tê-lo(a) a bordo. Para começar, por favor, crie sua senha de acesso clicando no botão abaixo:</p>
+            <a class="senha" th:href="${resetLink}" target="_blank">Criar Senha</a>
+            <p>Se o botão acima não funcionar, copie e cole o seguinte link em seu navegador:</p>
+            <p>[(${resetLink})]</p>
+
+            <h2 style="margin-top: 20px; color: white">Precisa de ajuda?</h2>
+            <p>Não hesite em nos contatar respondendo a este e-mail</p>
+
+            <p>Obrigado por escolher &nbsp; <span class="brand-name">IF - Inteligência Financeira</span></p>
+        </div>
+    </body>
+</html>

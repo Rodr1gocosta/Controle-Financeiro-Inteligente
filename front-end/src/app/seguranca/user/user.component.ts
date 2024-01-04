@@ -57,7 +57,6 @@ export class UserComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
-        result.password = "12345678";
         this.saveNewUser(result);
       }
     });

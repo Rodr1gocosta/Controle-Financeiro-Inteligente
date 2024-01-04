@@ -7,7 +7,6 @@ import java.util.UUID;
 
 public record UserRecord(UUID id,
                          @NotBlank(message = "Preenchimento obrigatório") @Email(message = "Email inválido") String username,
-                         String password,
                          @NotBlank(message = "Preenchimento obrigatório") String name,
                          boolean status,
                          @NotBlank(message = "Preenchimento obrigatório") String phoneNumber,

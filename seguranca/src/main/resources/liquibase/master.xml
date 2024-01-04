@@ -12,5 +12,6 @@
     <include file="liquibase/changelog/20231124034733_added_fake_data_role.xml" relativeToChangelogFile="false"/>
     <include file="liquibase/changelog/20231124034733_added_fake_data_user.xml" relativeToChangelogFile="false"/>
     <include file="liquibase/changelog/20231124055033_added_fake_data_user_role.xml" relativeToChangelogFile="false"/>
+    <include file="liquibase/changelog/20231229171620_update_table_user.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

@@ -6,6 +6,7 @@ import br.com.financeiro.seguranca.domain.enums.RoleName;
 import br.com.financeiro.seguranca.exception.BadRequestException;
 import br.com.financeiro.seguranca.exception.ConflitException;
 import br.com.financeiro.seguranca.record.UserRecord;
+import br.com.financeiro.seguranca.service.PasswordGenerator;
 import br.com.financeiro.seguranca.service.RoleService;
 import br.com.financeiro.seguranca.service.UserService;
 import jakarta.validation.Valid;
@@ -37,7 +38,6 @@ public class UserController {
 
     private final RoleService roleService;
 
-    private final PasswordEncoder passwordEncoder;
 
     /**
      * {@code POST  /user} : Create a new User.
@@ -58,8 +58,7 @@ public class UserController {
         Role role = roleService.findByRoleName(RoleName.ROLE_USER)
                 .orElseThrow(() -> new RuntimeException("Error: A função não foi encontrada"));
 
-        String encodedPassword = passwordEncoder.encode(userRecord.password());
-        UserRecord treatedUser = new UserRecord(null, userRecord.username(), encodedPassword, userRecord.name(), userRecord.status(), userRecord.phoneNumber(), userRecord.cpf());
+        UserRecord treatedUser = new UserRecord(null, userRecord.username(), userRecord.name(), userRecord.status(), userRecord.phoneNumber(), userRecord.cpf());
 
         User result = userService.saveUser(treatedUser, role);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
@@ -96,5 +95,24 @@ public class UserController {
             throw new BadRequestException("Usuário não encontrado!");
         }
     }
+
+//    @PutMapping("/user/password")
+//    public ResponseEntity<Object> createPassword(){
+//
+//        Optional<UserModel> userModelOptional = userService.findById(userId);
+//        if(!userModelOptional.isPresent()){
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+//        } if(!userModelOptional.get().getPassword().equals(userDto.getOldPassword())) {
+//            log.warn("Mismatched old password userId {}", userId);
+//            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Mismatched old password!");
+//        } else {
+//            UserModel userModel = userModelOptional.get();
+//            userModel.setPassword(userDto.getPassword());
+//            userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
+//
+//            userService.updatePassword(userModel);
+//            return ResponseEntity.status(HttpStatus.OK).body("Password updated successfully.");
+//        }
+//    }
 
 }

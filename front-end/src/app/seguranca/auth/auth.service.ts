@@ -24,6 +24,7 @@ export class AuthService {
 
     login(username: string, password: string): Observable<any> {
         const url = this.baseUrl + "/api/security/authenticate";
+        this.clearToken();
 
         return this.http.post<any>(url, { username, password }).pipe(
             map((response: any) => {

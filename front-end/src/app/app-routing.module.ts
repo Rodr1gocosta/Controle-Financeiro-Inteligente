@@ -7,9 +7,11 @@ import { FinanceiroComponent } from './components/financeiro/financeiro.componen
 import { InvestimentoComponent } from './components/investimento/investimento.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { CategoryDefaultComponent } from './seguranca/admin/category-default/category-default.component';
+import { PasswordResetComponent } from './seguranca/password/password-reset/password-reset.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
+  {path: 'nova-senha', component: PasswordResetComponent},
 
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuardService] },

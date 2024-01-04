@@ -4,6 +4,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { SharedModule } from './shared/shared.module';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
@@ -33,7 +34,8 @@ import {MatStepperModule} from '@angular/material/stepper';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatExpansionModule} from '@angular/material/expansion';
-
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatPasswordStrengthModule} from '@angular-material-extensions/password-strength';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './seguranca/login/login.component';
@@ -47,6 +49,8 @@ import { BodyComponent } from './template/body/body.component';
 import { RealPipe } from './shared/pipe/RealPipe';
 
 import { AuthInterceptor } from './seguranca/interceptor/auth.interceptor';
+import { ErrorHandlerInterceptor } from './seguranca/interceptor/error-handler.interceptor';
+import { SpinnerInterceptor } from './seguranca/interceptor/spinner.interceptor';
 
 import { FinanceiroComponent } from './components/financeiro/financeiro.component';
 import { InvestimentoComponent } from './components/investimento/investimento.component';
@@ -54,11 +58,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FinanceiroCrudComponent } from './components/financeiro/financeiro-crud/financeiro-crud.component';
 import { CategoryDefaultComponent } from './seguranca/admin/category-default/category-default.component';
 import { CrudCategoryDefaultComponent } from './seguranca/admin/category-default/crud-category-default/crud-category-default.component';
-import { SharedModule } from './shared/shared.module';
 import { CategoriaCrudComponent } from './components/financeiro/categoria-crud/categoria-crud.component';
-import { SpinnerInterceptor } from './seguranca/interceptor/spinner.interceptor';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ErrorHandlerInterceptor } from './seguranca/interceptor/error-handler.interceptor';
+import { PasswordResetComponent } from './seguranca/password/password-reset/password-reset.component';
 
 @NgModule({
   declarations: [
@@ -77,7 +78,8 @@ import { ErrorHandlerInterceptor } from './seguranca/interceptor/error-handler.i
     RealPipe,
     CategoryDefaultComponent,
     CrudCategoryDefaultComponent,
-    CategoriaCrudComponent
+    CategoriaCrudComponent,
+    PasswordResetComponent
   ],
   imports: [
     BrowserModule,
@@ -92,6 +94,8 @@ import { ErrorHandlerInterceptor } from './seguranca/interceptor/error-handler.i
     NgxMaskPipe,
     NgxCurrencyDirective,
     NgxSpinnerModule,
+
+    MatPasswordStrengthModule.forRoot(),
 
     SharedModule,
 
