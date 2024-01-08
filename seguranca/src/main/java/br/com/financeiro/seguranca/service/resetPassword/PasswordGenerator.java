@@ -1,5 +1,6 @@
-package br.com.financeiro.seguranca.service;
+package br.com.financeiro.seguranca.service.resetPassword;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -20,5 +21,13 @@ public class PasswordGenerator {
             senha.append(CARACTERES.charAt(index));
         }
         return senha.toString();
+    }
+
+     public boolean isPasswordLengthInvalid(String password) {
+        return (
+                StringUtils.isEmpty(password) ||
+                        password.length() < 8||
+                        password.length() > 100
+        );
     }
 }

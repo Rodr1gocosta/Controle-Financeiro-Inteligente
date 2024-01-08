@@ -5,10 +5,11 @@ import br.com.financeiro.seguranca.domain.User;
 import br.com.financeiro.seguranca.domain.enums.RoleName;
 import br.com.financeiro.seguranca.exception.BadRequestException;
 import br.com.financeiro.seguranca.exception.ConflitException;
+import br.com.financeiro.seguranca.record.PasswordRecord;
 import br.com.financeiro.seguranca.record.UserRecord;
-import br.com.financeiro.seguranca.service.PasswordGenerator;
 import br.com.financeiro.seguranca.service.RoleService;
 import br.com.financeiro.seguranca.service.UserService;
+import br.com.financeiro.seguranca.service.resetPassword.PasswordGenerator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -18,9 +19,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,6 +44,8 @@ public class UserController {
     private final UserService userService;
 
     private final RoleService roleService;
+
+    private final PasswordGenerator passwordGenerator;
 
 
     /**
@@ -96,23 +105,26 @@ public class UserController {
         }
     }
 
-//    @PutMapping("/user/password")
-//    public ResponseEntity<Object> createPassword(){
-//
-//        Optional<UserModel> userModelOptional = userService.findById(userId);
-//        if(!userModelOptional.isPresent()){
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
-//        } if(!userModelOptional.get().getPassword().equals(userDto.getOldPassword())) {
-//            log.warn("Mismatched old password userId {}", userId);
-//            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Mismatched old password!");
-//        } else {
-//            UserModel userModel = userModelOptional.get();
-//            userModel.setPassword(userDto.getPassword());
-//            userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
-//
-//            userService.updatePassword(userModel);
-//            return ResponseEntity.status(HttpStatus.OK).body("Password updated successfully.");
-//        }
-//    }
+    /**
+     * {@code PUT  /user/password} : Finish to reset the password of the user.
+     *
+     * @param passwordRecord the generated key and the new password.
+     * @throws BadRequestException {@code 400 (Bad Request)} if the password is incorrect.
+     * @throws RuntimeException {@code 500 (Internal Server Error)} if the password could not be reset.
+     */
+    @PutMapping("/user/password")
+    public ResponseEntity<Object> createPassword(@RequestBody @Valid PasswordRecord passwordRecord) {
+        try {
+            if (passwordGenerator.isPasswordLengthInvalid(passwordRecord.password())) {
+                throw new BadRequestException("Senha invalida!");
+            }
+
+            userService.completePasswordReset(passwordRecord);
+            return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "Senha atualizada com sucesso"));
+
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception);
+        }
+    }
 
 }

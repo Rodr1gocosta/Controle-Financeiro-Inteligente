@@ -23,7 +23,7 @@ public class NotificacaoApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		UserRecord userRecord = new UserRecord("Rodrigo Costa", "rodrigomcosta21@gmail.com", "5637060a-a3f1-485b-87ca-87a320949559_2023-12-29T19:18:56.866707341_2023-12-29T20:18:56.866707341");
+		UserRecord userRecord = new UserRecord("Rodrigo Costa", "rodrigomcosta20@icloud.com", "a73c868b-b738-41e2-87d9-c227b87efef4_2024-01-06T10:35:25.069234108_2024-01-06T11:35:25.069234108");
 		mailService.sendCreationEmail(userRecord);
 	}
 }

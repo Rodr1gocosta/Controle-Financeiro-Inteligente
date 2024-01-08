@@ -50,7 +50,7 @@ public class TokenValidationGatewayFilter implements GatewayFilter {
 
     private Mono<Void> handleNullToken(ServerWebExchange exchange, GatewayFilterChain chain) {
         String requestPath = exchange.getRequest().getPath().value();
-        if ("/api/security/authenticate".equals(requestPath)) {
+        if ("/api/security/authenticate".equals(requestPath) || "/api/security/user/password".equals(requestPath)) {
             return chain.filter(exchange);
         } else {
             return setUnauthorizedStatus(exchange);

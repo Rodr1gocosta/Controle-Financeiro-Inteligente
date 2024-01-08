@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageOperationService } from 'src/app/shared/util/message-operation/message-operation.service';
+import { UserService } from '../../user/user.service';
 
 @Component({
   selector: 'app-password-reset',
@@ -20,7 +21,8 @@ export class PasswordResetComponent {
   constructor(private route: ActivatedRoute,
               private formBuilder: FormBuilder,
               private router: Router,
-              private message: MessageOperationService) { }
+              private message: MessageOperationService,
+              private userService: UserService) { }
 
   ngOnInit(): void {
     this.token = this.route.snapshot.queryParamMap.get('token');
@@ -43,6 +45,11 @@ export class PasswordResetComponent {
     if(this.strength < 100) {
       this.message.message('A senha não segue a regra de segurança.', 'Error')
     }
+
+    this.userService.sendNewPassword(this.passwordResetForm.value).subscribe(response => {
+      this.message.message('Operação realizado com sucesso.', 'success');
+      this.router.navigate(['/login']);
+    });
   }
 
   onStrengthChanged(strength: number) {
@@ -52,6 +59,10 @@ export class PasswordResetComponent {
     } else {
       this.confirm = false;
     }
+  }
+
+  routerLogin() {
+    this.router.navigate(['/login']);
   }
 
 }

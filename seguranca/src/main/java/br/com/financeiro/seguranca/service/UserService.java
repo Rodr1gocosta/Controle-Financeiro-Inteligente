@@ -5,8 +5,14 @@ import br.com.financeiro.seguranca.broker.record.UserEventRecord;
 import br.com.financeiro.seguranca.domain.Role;
 import br.com.financeiro.seguranca.domain.User;
 import br.com.financeiro.seguranca.domain.enums.ActionType;
+import br.com.financeiro.seguranca.exception.NotFoundException;
+import br.com.financeiro.seguranca.exception.TokenExpiredException;
+import br.com.financeiro.seguranca.record.PasswordRecord;
 import br.com.financeiro.seguranca.record.UserRecord;
 import br.com.financeiro.seguranca.repository.UserRepository;
+import br.com.financeiro.seguranca.service.resetPassword.PasswordGenerator;
+import br.com.financeiro.seguranca.service.resetPassword.TokenDecoder;
+import br.com.financeiro.seguranca.service.resetPassword.TokenReset;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,11 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,6 +38,8 @@ public class UserService {
     private final UserEventPublisher userEventPublisher;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final TokenDecoder tokenDecoder;
 
     /**
      * Save a User.
@@ -80,7 +86,7 @@ public class UserService {
         user.setName(userRecord.name());
         user.setUsername(userRecord.username());
         user.setPassword(encodedPassword);
-        user.setToken(generateUniqueTokenWithExpiration());
+        user.setToken(tokenDecoder.generateUniqueTokenWithExpiration());
         user.setStatus(userRecord.status());
         user.setCpf(userRecord.cpf());
         user.setPhoneNumber(userRecord.phoneNumber());
@@ -103,12 +109,22 @@ public class UserService {
         return result;
     }
 
-    private String generateUniqueTokenWithExpiration() {
-        String uniqueToken = UUID.randomUUID().toString();
-        LocalDateTime now = LocalDateTime.now();
+    public void completePasswordReset(PasswordRecord passwordRecord) throws TokenExpiredException {
+        User user = userRepository.findByToken(passwordRecord.token())
+                .orElseThrow(() -> new NotFoundException("Token não foi encontrado!"));
 
-        LocalDateTime expirationDateTime = now.plusHours(1);
+        TokenReset tokenReset = tokenDecoder.decodeToken(user.getToken());
 
-        return uniqueToken + "_" + now.toString() + "_" + expirationDateTime.toString();
+        if (tokenReset.expirationTime().isAfter(LocalDateTime.now())) {
+            user.setPassword(passwordEncoder.encode(passwordRecord.password()));
+            user.setStatus(true);
+            user.setToken(null);
+
+            userRepository.save(user);
+        } else {
+            throw new TokenExpiredException("O token expirou!");
+        }
+
     }
+
 }

@@ -19,4 +19,8 @@ export class UserService {
     return this.http.post(`${environment.baseUrl}/api/security/user`, obj).pipe(take(1));
   }
 
+  sendNewPassword(obj: object) {
+    return this.http.put(`${environment.baseUrl}/api/security/user/password`, obj).pipe(take(1));
+  }
+
 }
