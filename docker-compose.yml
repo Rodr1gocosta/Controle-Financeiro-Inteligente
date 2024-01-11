@@ -10,3 +10,8 @@ services:
       file: seguranca/src/main/docker/postgresql.yml
       service: seguranca-db
     container_name: seguranca-db
+  rabbitMQ:
+    extends:
+      file: docker/rabbitmq.yml
+      service: rabbitmq
+    container_name: rabbitmq

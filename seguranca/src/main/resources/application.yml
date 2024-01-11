@@ -13,14 +13,18 @@ spring:
             ddl-auto: none
     liquibase:
         change-log: liquibase/master.xml
-
     rabbitmq:
-        addresses: amqps://zqlkokyg:LjRJD3AV8OwPdDVAK8o7QGNSJDCjoG5b@chimpanzee.rmq.cloudamqp.com/zqlkokyg
-
-broker:
-    queue:
-        financeiro:
-            name: default.user
+        host: localhost
+        port: 5672
+        username: admin
+        password: admin
+    cloud:
+      stream:
+          bindings:
+              userEventSupplier-out-0:
+                  destination: seguranca.event.newUser
+              userNewPasswordEventSupplier-out-0:
+                  destination: seguranca.event.newUserPassword
 
 api:
     securty:

@@ -15,12 +15,23 @@ spring:
         change-log: liquibase/master.xml
 
     rabbitmq:
-        addresses: amqps://zqlkokyg:LjRJD3AV8OwPdDVAK8o7QGNSJDCjoG5b@chimpanzee.rmq.cloudamqp.com/zqlkokyg
-
-broker:
-    queue:
-        financeiro:
-            name: default.user
+        host: localhost
+        port: 5672
+        username: admin
+        password: admin
+    cloud:
+        stream:
+            bindings:
+                userEventConsumer-in-0:
+                    destination: seguranca.event.newUser
+                    group: financeiro
+            rabbit:
+                bindings:
+                    userEventConsumer-in-0:
+                        consumer:
+                            auto-bind-dlq: true
+        function:
+            definition: userEventConsumer;
 
 eureka:
     client:

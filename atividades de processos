@@ -45,7 +45,7 @@ https://github.com/Java-Techie-jt/jwt-apigateway-security
 
 A - transformar meu service-registry em imagem docker para facilitar no desenvolvimento
 B - adicionar log para manitoramento de observabilidade no projeto todo
-C - resiliencia nos broker
+C - resiliencia nos broker - OK
 D - adicionar elastSearch
 E - cache
 F - Adicionar SWAGGER
@@ -57,17 +57,15 @@ H - Assistir curso de documentação - https://cursos.alura.com.br/course/spring
 
 4 - implementar seguranca no microsservico financeiro
 
-5 - enviar email para o usuário criar a senha (o email tem validade de 30 minutos para ativar, caso contrário entrar em contato com suporte)
+5 - enviar email para o usuário criar a senha (o email tem validade de 30 minutos para ativar, caso contrário entrar em contato com suporte) - OK
 
-6 - pesquisar para adicionar senha com caracteres, letras e números
+6 - pesquisar para adicionar senha com caracteres, letras e números - OK
 
-7 - quando o usuário criar a senha, ativar o usuário
+7 - quando o usuário criar a senha, ativar o usuário - OK
 
 8 - Caso o planejamento deem erro, apresentar a mensagem "Operação falhou": "mensagem do erro" e fazer tratamento de erro via postman 
 
-9 - resetar senha do usuário
-
-10 - criar a tela de home
+10 - criar a tela de home - OK
 
 11 - bloquear rotar de administrador
 
@@ -82,6 +80,32 @@ H - Assistir curso de documentação - https://cursos.alura.com.br/course/spring
 16 - Tela de login: recaptch
 
 17 - Tela de login: Relembre
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+SPRING CLOUD:
+Spring Cloud stream - RABBITMQ
+Spring Cloud Netfilx
+Spring Cloud Gateway
+
+SPRING SECURITY
+SPRING BOOT
+
+SPRING DATA:
+Spring Data JPA
+
+DOCKER
+DOCKER-COMPOSE
+
+POSTGRESQL
+
+MAPSTRUCT
+LIQUIBASE
+TOKEN JWT
+thymeleaf
+
+
 
 
 

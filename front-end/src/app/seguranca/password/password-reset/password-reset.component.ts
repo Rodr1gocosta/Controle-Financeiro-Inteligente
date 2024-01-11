@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageOperationService } from 'src/app/shared/util/message-operation/message-operation.service';
 import { UserService } from '../../user/user.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-password-reset',
@@ -22,7 +23,8 @@ export class PasswordResetComponent {
               private formBuilder: FormBuilder,
               private router: Router,
               private message: MessageOperationService,
-              private userService: UserService) { }
+              private userService: UserService,
+              private auth: AuthService) { }
 
   ngOnInit(): void {
     this.token = this.route.snapshot.queryParamMap.get('token');
@@ -45,6 +47,8 @@ export class PasswordResetComponent {
     if(this.strength < 100) {
       this.message.message('A senha não segue a regra de segurança.', 'Error')
     }
+
+    this.auth.clearToken();
 
     this.userService.sendNewPassword(this.passwordResetForm.value).subscribe(response => {
       this.message.message('Operação realizado com sucesso.', 'success');

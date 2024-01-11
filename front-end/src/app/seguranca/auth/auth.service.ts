@@ -98,7 +98,7 @@ export class AuthService {
         return new Date(decodedToken.exp * 1000);
     }
 
-    private clearToken() {
+    clearToken() {
         this.tokenExpiration = undefined;
         localStorage.removeItem(this.tokenKey);
     }

@@ -1,22 +1,26 @@
-package br.com.financeiro.financeiro.broker.consumer;
+package br.com.financeiro.financeiro.stream.consumer;
 
-import br.com.financeiro.financeiro.broker.record.UserEventRecord;
+import br.com.financeiro.financeiro.stream.record.UserEventRecord;
 import br.com.financeiro.financeiro.domain.enums.ActionType;
 import br.com.financeiro.financeiro.record.UserRecord;
 import br.com.financeiro.financeiro.service.UserService;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.Payload;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.function.Consumer;
+
+@Slf4j
 @Component
-public class UserConsumer {
+@RequiredArgsConstructor
+public class UserEventConsumer implements Consumer<UserEventRecord> {
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
 
-    @RabbitListener(queues = "${broker.queue.financeiro.name}")
-    public void listenUserEvent(@Payload UserEventRecord userEventRecord) {
+    @Override
+    public void accept(UserEventRecord userEventRecord) {
+        log.info("Novo usuario recebido " + userEventRecord.id());
+
         UserRecord userRecord =  new UserRecord(userEventRecord.id(), userEventRecord.name(), userEventRecord.status(), userEventRecord.cpf(), userEventRecord.phoneNumber());
 
         switch (ActionType.valueOf(userEventRecord.actionType())) {

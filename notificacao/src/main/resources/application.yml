@@ -15,6 +15,24 @@ spring:
           auth: true
           starttls:
             enable: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+  cloud:
+    stream:
+      bindings:
+        userNewPasswordConsumer-in-0:
+          destination: seguranca.event.newUserPassword
+          group: notificacao
+      rabbit:
+        bindings:
+          userNewPasswordConsumer-in-0:
+            consumer:
+              auto-bind-dlq: true
+    function:
+      definition: userNewPasswordConsumer;
 
 eureka:
   client:

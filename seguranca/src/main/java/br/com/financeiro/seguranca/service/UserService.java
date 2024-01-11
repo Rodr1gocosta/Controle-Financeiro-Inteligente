@@ -1,7 +1,5 @@
 package br.com.financeiro.seguranca.service;
 
-import br.com.financeiro.seguranca.broker.publisher.UserEventPublisher;
-import br.com.financeiro.seguranca.broker.record.UserEventRecord;
 import br.com.financeiro.seguranca.domain.Role;
 import br.com.financeiro.seguranca.domain.User;
 import br.com.financeiro.seguranca.domain.enums.ActionType;
@@ -13,6 +11,9 @@ import br.com.financeiro.seguranca.repository.UserRepository;
 import br.com.financeiro.seguranca.service.resetPassword.PasswordGenerator;
 import br.com.financeiro.seguranca.service.resetPassword.TokenDecoder;
 import br.com.financeiro.seguranca.service.resetPassword.TokenReset;
+import br.com.financeiro.seguranca.stream.StreamSupplier;
+import br.com.financeiro.seguranca.stream.record.UserEventRecord;
+import br.com.financeiro.seguranca.stream.record.UserNewPasswordEventRecord;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,11 +36,11 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    private final UserEventPublisher userEventPublisher;
-
     private final PasswordEncoder passwordEncoder;
 
     private final TokenDecoder tokenDecoder;
+
+    private final StreamSupplier streamSupplier;
 
     /**
      * Save a User.
@@ -102,9 +103,11 @@ public class UserService {
         User result = save(user);
 
         UserEventRecord userEventRecord = new UserEventRecord(result.getId(), result.getName(), result.isStatus(), result.getCpf(), result.getPhoneNumber(), ActionType.CREATE);
-        userEventPublisher.publishUserEvent(userEventRecord);
+        streamSupplier.publishUserEvent(userEventRecord);
 
         //enviar para notificação o email para o usuário criar sua senha
+        UserNewPasswordEventRecord userNewPasswordEventRecord = new UserNewPasswordEventRecord(result.getName(), result.getUsername(), result.getToken());
+        streamSupplier.publishUserNewPasswordEvent(userNewPasswordEventRecord);
 
         return result;
     }
@@ -120,7 +123,11 @@ public class UserService {
             user.setStatus(true);
             user.setToken(null);
 
-            userRepository.save(user);
+            User result = save(user);
+
+            UserEventRecord userEventRecord = new UserEventRecord(result.getId(), result.getName(), result.isStatus(), result.getCpf(), result.getPhoneNumber(), ActionType.UPDATE);
+            streamSupplier.publishUserEvent(userEventRecord);
+
         } else {
             throw new TokenExpiredException("O token expirou!");
         }

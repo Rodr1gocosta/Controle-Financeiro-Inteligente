@@ -1,6 +1,4 @@
-package br.com.financeiro.seguranca.broker.record;
-
-import br.com.financeiro.seguranca.domain.enums.ActionType;
+package br.com.financeiro.financeiro.stream.record;
 
 import java.util.UUID;
 
@@ -9,5 +7,5 @@ public record UserEventRecord(UUID id,
                               boolean status,
                               String cpf,
                               String phoneNumber,
-                              ActionType actionType
+                              String actionType
                               ) { }
