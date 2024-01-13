@@ -1,6 +1,6 @@
 <mat-card class="telaLogin">
     <mat-card-content class="container">
-        <form class="form" [formGroup]="loginForm">
+        <form *ngIf="state" class="formLogin" [formGroup]="loginForm">
             <div class="full-width">
                 <mat-icon class="icon">sentiment_very_dissatisfied</mat-icon>
                 <mat-card-title style="margin-bottom: 20px; color: white;">Fazer login</mat-card-title>
@@ -24,11 +24,29 @@
 
                 <div style="display: flex; align-items: center; margin-bottom: 20px;">
                     <mat-checkbox [color]="'warn'"><p style="color: white; margin: 5px;">Lembre de Mim</p></mat-checkbox>
-                    <p style="color: white; margin: 5px; margin-left: 60px;">Esqueceu sua Senha?</p>
+                    <a id="esqueceuSenha" (click)="redirectResetPassword()">Esqueceu sua Senha?</a>
                 </div>
 
                 <button mat-raised-button [ngStyle]="loginForm.invalid ? { 'color': '#999999', 'background-color': '#e15349' } : { 'color': 'white', 'background-color': '#F44336' }" type="submit" [disabled]="loginForm.invalid" (click)="onSubmit()">Entrar</button>
 
+            </div>
+        </form>
+
+        <form class="formResetPassword" *ngIf="!state" [formGroup]="resetPasswordForm">
+            <div class="full-width">
+                <mat-icon class="icon">sentiment_very_dissatisfied</mat-icon>
+                <mat-card-title *ngIf="!messageResetPassword" style="margin-bottom: 20px; color: white;">Informe o seu email para a recuperação de senha.</mat-card-title>
+    
+                <mat-form-field *ngIf="!messageResetPassword" class="mat-form-field" color="warn" appearance="fill">
+                    <mat-label>Email</mat-label>
+                    <input matInput type="email" placeholder="Seu email" formControlName="email">
+                </mat-form-field>
+
+                <h1 *ngIf="messageResetPassword" style="color: lime;">Email enviado com sucesso!</h1>
+                <h2 *ngIf="messageResetPassword" style="color: white; margin: 25px; text-align: center; font-size: 16px;">Enviamos um e-mail para você com as instruções para mudar de senha.</h2>
+
+                <button *ngIf="!messageResetPassword" mat-raised-button color="warn" style="margin-top: 10px; margin-bottom: 5px;" (click)="resetPassword()" [disabled]="resetPasswordForm.invalid">Recuperar</button>
+                <button mat-stroked-button color="warn" (click)="backLogin()">Voltar para o login</button>
             </div>
         </form>
     </mat-card-content>

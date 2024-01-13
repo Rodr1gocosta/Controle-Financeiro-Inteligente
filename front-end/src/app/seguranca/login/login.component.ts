@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { MessageOperationService } from 'src/app/shared/util/message-operation/message-operation.service';
+import { UserService } from '../user/user.service';
 
 const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
@@ -14,12 +15,17 @@ const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 export class LoginComponent {
   
   loginForm!: FormGroup;
+  resetPasswordForm!: FormGroup;
+
+  state: boolean = true;
+  messageResetPassword: boolean = false;
 
   constructor(
               private formBuilder: FormBuilder,
               private authService: AuthService,
               private router: Router,
-              private message: MessageOperationService
+              private message: MessageOperationService,
+              private userService: UserService
   ) { }
 
   ngOnInit(): void {
@@ -27,6 +33,10 @@ export class LoginComponent {
       username: ['', [Validators.required, Validators.pattern(emailPattern)]],
       password: ['', Validators.required]
     });
+
+    this.resetPasswordForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.pattern(emailPattern)]]
+    })
   }
 
   onSubmit(): void {
@@ -48,6 +58,28 @@ export class LoginComponent {
         }
       }
     );
+  }
+
+  resetPassword() {
+    if(this.resetPasswordForm.invalid) {
+      return;
+    }
+
+    this.authService.clearToken();
+    this.userService.resetPassword(this.resetPasswordForm.value).subscribe(response => {
+
+      this.messageResetPassword = true;
+      this.message.message("Email enviado com as instruções de recriar a senha", 'success');
+    })
+  }
+
+  redirectResetPassword() {
+    this.state = false;
+    this.messageResetPassword = false;
+  }
+
+  backLogin() {
+    this.state = true;
   }
 
   errorValidUsername() {

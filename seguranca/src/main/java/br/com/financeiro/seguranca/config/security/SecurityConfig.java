@@ -30,11 +30,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> {
                     request.requestMatchers(HttpMethod.POST, "/api/security/authenticate").permitAll();
 
+                    request.requestMatchers(HttpMethod.POST, "/api/security/user/resetPassword").permitAll();
+
+                    request.requestMatchers(HttpMethod.PUT, "/api/security/user/password").permitAll();
+
                     request.requestMatchers(HttpMethod.GET, "/api/security/user/**").hasAnyRole("ADMIN");
 
                     request.requestMatchers(HttpMethod.POST, "/api/security/user/**").hasAnyRole("ADMIN");
-
-                    request.requestMatchers(HttpMethod.PUT, "/api/security/user/password").permitAll();
 
                     request.anyRequest().authenticated();
                 })

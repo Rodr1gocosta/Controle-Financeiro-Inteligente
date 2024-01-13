@@ -5,7 +5,9 @@ import br.com.financeiro.seguranca.domain.User;
 import br.com.financeiro.seguranca.domain.enums.RoleName;
 import br.com.financeiro.seguranca.exception.BadRequestException;
 import br.com.financeiro.seguranca.exception.ConflitException;
+import br.com.financeiro.seguranca.exception.NotFoundException;
 import br.com.financeiro.seguranca.record.PasswordRecord;
+import br.com.financeiro.seguranca.record.ResetPasswordRecord;
 import br.com.financeiro.seguranca.record.UserRecord;
 import br.com.financeiro.seguranca.service.RoleService;
 import br.com.financeiro.seguranca.service.UserService;
@@ -114,17 +116,26 @@ public class UserController {
      */
     @PutMapping("/user/password")
     public ResponseEntity<Object> createPassword(@RequestBody @Valid PasswordRecord passwordRecord) {
-        try {
-            if (passwordGenerator.isPasswordLengthInvalid(passwordRecord.password())) {
-                throw new BadRequestException("Senha invalida!");
-            }
-
-            userService.completePasswordReset(passwordRecord);
-            return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "Senha atualizada com sucesso"));
-
-        } catch (Exception exception) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception);
+        if (passwordGenerator.isPasswordLengthInvalid(passwordRecord.password())) {
+            throw new BadRequestException("Senha invalida!");
         }
+
+        userService.completePasswordReset(passwordRecord);
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "Senha atualizada com sucesso"));
+    }
+
+    @PostMapping(value = "/user/resetPassword")
+    public ResponseEntity<Object> resetPassword(@RequestBody @Valid ResetPasswordRecord resetPasswordRecord) {
+        if (resetPasswordRecord.email() == null) {
+            throw new BadRequestException("Campo email vazio");
+        }
+
+        if (!userService.checkUsername(resetPasswordRecord.email())) {
+            throw new NotFoundException("Email não existe!");
+        }
+
+        userService.sendEmailToResetPassword(resetPasswordRecord);
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "Recriar a senha por email enviado com sucesso"));
     }
 
 }

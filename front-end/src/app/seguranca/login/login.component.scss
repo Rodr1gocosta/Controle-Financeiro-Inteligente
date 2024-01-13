@@ -15,10 +15,21 @@
     overflow: hidden;
 }
 
-.form {
+.formLogin {
     position: absolute;
     width: 40%;
     height: 100%; 
+    background-color: rgba(34, 34, 34, 0.534);
+    top: 0;
+    left: 0;
+}
+
+.formResetPassword {
+    margin-top: 60px;
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    max-height: 65%; 
     background-color: rgba(34, 34, 34, 0.534);
     top: 0;
     left: 0;
@@ -45,4 +56,24 @@ button {
     color: #FF5252;
     margin-top: 50px;
     margin-bottom: 50px;
+}
+
+#esqueceuSenha {
+    color: white; 
+    margin: 5px; 
+    margin-left: 60px; 
+    text-decoration: none; 
+    cursor: pointer; 
+    position: relative;
+}
+
+#esqueceuSenha:hover::after {
+    content: "";
+    display: block;
+    height: 1px;
+    width: 100%;
+    background-color: rgb(255, 255, 255);
+    position: absolute;
+    bottom: -2px;
+    left: 0;
 }

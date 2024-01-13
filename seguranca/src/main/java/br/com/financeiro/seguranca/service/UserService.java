@@ -6,6 +6,7 @@ import br.com.financeiro.seguranca.domain.enums.ActionType;
 import br.com.financeiro.seguranca.exception.NotFoundException;
 import br.com.financeiro.seguranca.exception.TokenExpiredException;
 import br.com.financeiro.seguranca.record.PasswordRecord;
+import br.com.financeiro.seguranca.record.ResetPasswordRecord;
 import br.com.financeiro.seguranca.record.UserRecord;
 import br.com.financeiro.seguranca.repository.UserRepository;
 import br.com.financeiro.seguranca.service.resetPassword.PasswordGenerator;
@@ -122,6 +123,7 @@ public class UserService {
             user.setPassword(passwordEncoder.encode(passwordRecord.password()));
             user.setStatus(true);
             user.setToken(null);
+            user.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
 
             User result = save(user);
 
@@ -132,6 +134,20 @@ public class UserService {
             throw new TokenExpiredException("O token expirou!");
         }
 
+    }
+
+    public void sendEmailToResetPassword(ResetPasswordRecord resetPasswordRecord) {
+        Optional<User> user = userRepository.findByUsername(resetPasswordRecord.email());
+
+        if (user.isPresent()) {
+            User user1 = user.get();
+            user1.setToken(tokenDecoder.generateUniqueTokenWithExpiration());
+
+            User result = save(user1);
+
+            UserNewPasswordEventRecord userNewPasswordEventRecord = new UserNewPasswordEventRecord(result.getName(), result.getUsername(), result.getToken());
+            streamSupplier.publishUserNewPasswordEvent(userNewPasswordEventRecord);
+        }
     }
 
 }
