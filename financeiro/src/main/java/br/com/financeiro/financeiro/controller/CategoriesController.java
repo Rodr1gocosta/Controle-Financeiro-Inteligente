@@ -4,7 +4,8 @@ import br.com.financeiro.financeiro.exception.BadRequestException;
 import br.com.financeiro.financeiro.record.CategoriesRecord;
 import br.com.financeiro.financeiro.service.CategoriesService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,12 +20,13 @@ import java.util.UUID;
 /**
  * REST controller for managing {@link br.com.financeiro.financeiro.controller.CategoriesController}.
  */
+@Log4j2
 @RestController
 @RequestMapping("/api/financas")
+@RequiredArgsConstructor
 public class CategoriesController {
 
-    @Autowired
-    CategoriesService categoriesService;
+    private final CategoriesService categoriesService;
 
     /**
      * {@code POST  /categories} : Create a new Categories.
@@ -33,7 +35,8 @@ public class CategoriesController {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new Categories, or with status {@code 400 (Bad Request)} if the Categories has already an ID.
      */
     @PostMapping("/categories/{planningId}")
-    public ResponseEntity<Object> createCategories(@RequestBody @Valid List<CategoriesRecord> categoriesRecordList,@PathVariable(value = "planningId") UUID planningId) {
+    public ResponseEntity<Object> createCategories(@RequestBody @Valid List<CategoriesRecord> categoriesRecordList, @PathVariable(value = "planningId") UUID planningId) {
+        log.debug("REST request to save Categories : {}", categoriesRecordList);
 
         for (CategoriesRecord categoriesRecord : categoriesRecordList) {
             if (categoriesRecord.id() != null) {

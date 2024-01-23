@@ -1,39 +1,31 @@
 package br.com.financeiro.financeiro.controller;
 
 import br.com.financeiro.financeiro.domain.CategoryDefault;
-import br.com.financeiro.financeiro.domain.enums.TypeCategory;
 import br.com.financeiro.financeiro.exception.BadRequestException;
 import br.com.financeiro.financeiro.service.CategoryDefaultService;
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * REST controller for managing {@link br.com.financeiro.financeiro.controller.CategoryDefaultController}.
  */
+@Log4j2
 @RestController
 @RequestMapping("/api/financas")
+@RequiredArgsConstructor
 public class CategoryDefaultController {
 
-    private final Logger log = LoggerFactory.getLogger(PlanningController.class);
-
-    @Autowired
-    CategoryDefaultService categoryDefaultService;
+    private final CategoryDefaultService categoryDefaultService;
 
     /**
      * {@code POST  /categoryDefault} : Create a new categoryDefault.
@@ -43,7 +35,7 @@ public class CategoryDefaultController {
      */
     @PostMapping("/categoryDefault")
     public ResponseEntity<Object> createCategoryDefault(@RequestBody @Valid CategoryDefault categoryDefault) {
-        log.debug("REST request to save categoryDefault : {}", categoryDefault);
+        log.debug("REST request to save category : {}", categoryDefault);
 
         if (categoryDefault.getId() != null) {
             throw new BadRequestException("Uma nova categoria não pode ter um ID");
@@ -59,7 +51,7 @@ public class CategoryDefaultController {
      */
     @GetMapping("/categoryDefault")
     public ResponseEntity<List<CategoryDefault>> getAllCategoryDefault() {
-        log.debug("REST request to getAll of Category");
+        log.debug("REST request to get all of Category");
         return ResponseEntity.status(HttpStatus.OK).body(categoryDefaultService.findAll());
     }
 
