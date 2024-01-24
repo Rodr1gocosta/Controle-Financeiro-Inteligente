@@ -36,6 +36,7 @@ import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.VerticalAlignment;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,6 +58,7 @@ import java.util.UUID;
 /**
  * Service Implementation for managing {@link Planning}.
  */
+@Log4j2
 @Service
 public class PlanningServiceImpl implements PlanningService {
 
@@ -89,6 +91,7 @@ public class PlanningServiceImpl implements PlanningService {
     @Override
     @Transactional
     public PlanningRecord savePlanning(PlanningRecord planningRecord, UUID userId) {
+        log.debug("Request to save Planning : {}", planningRecord);
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BadRequestException("Error: Usuário não foi encontrada"));
@@ -123,15 +126,16 @@ public class PlanningServiceImpl implements PlanningService {
     @Override
     @Transactional(readOnly = true)
     public Optional<PlanningRecord> findOnePlanningByMonthAndYear(Integer month, Integer year, UUID userId) {
+        log.debug("Request to find one Planning by month and year");
 
         Optional<Planning> byMonthAndYearAndUserListId = planningRepository.findByMonthAndYearAndUserList_Id(month, year, userId);
-
         return byMonthAndYearAndUserListId.map(planningMapper::toDto);
     }
 
     @Override
     @Transactional
     public void downloadPlanning(HttpServletResponse response, UUID planningId, UUID userId) throws IOException {
+        log.debug("Request to download Planning by id : {}", planningId);
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Usuário não foi encontrada para download"));

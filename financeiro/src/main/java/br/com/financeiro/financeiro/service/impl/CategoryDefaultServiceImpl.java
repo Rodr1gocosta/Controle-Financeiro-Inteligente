@@ -3,8 +3,7 @@ package br.com.financeiro.financeiro.service.impl;
 import br.com.financeiro.financeiro.domain.CategoryDefault;
 import br.com.financeiro.financeiro.repository.CategoryDefaultRepository;
 import br.com.financeiro.financeiro.service.CategoryDefaultService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +13,9 @@ import java.util.UUID;
 /**
  * Service Implementation for managing {@link CategoryDefault}.
  */
+@Log4j2
 @Service
 public class CategoryDefaultServiceImpl implements CategoryDefaultService {
-
-    private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
     CategoryDefaultRepository categoryDefaultRepository;

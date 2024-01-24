@@ -44,7 +44,7 @@ https://github.com/Java-Techie-jt/jwt-apigateway-security
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 A - transformar meu service-registry em imagem docker para facilitar no desenvolvimento
-B - adicionar log para manitoramento de observabilidade no projeto todo
+B - adicionar log para manitoramento de observabilidade no projeto todo - OK
 C - resiliencia nos broker - OK
 D - adicionar elastSearch
 E - cache
@@ -94,11 +94,13 @@ SPRING BOOT
 
 SPRING DATA:
 Spring Data JPA
+Spring Data Elasticsearch
+
+POSTGRESQL
+ELASTIC STACK - ELASTICSEARCH, KIBANA E LOGSTASH
 
 DOCKER
 DOCKER-COMPOSE
-
-POSTGRESQL
 
 MAPSTRUCT
 LIQUIBASE

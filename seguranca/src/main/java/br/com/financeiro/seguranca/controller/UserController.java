@@ -14,8 +14,7 @@ import br.com.financeiro.seguranca.service.UserService;
 import br.com.financeiro.seguranca.service.resetPassword.PasswordGenerator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -35,13 +34,13 @@ import java.util.UUID;
 
 
 /**
- * REST controller for managing {@link br.com.financeiro.seguranca.controller.UserController}.
+ * REST controller for managing {@link User}.
  */
+@Log4j2
 @RestController
 @RequestMapping("/api/security")
 @RequiredArgsConstructor
 public class UserController {
-    private final Logger log = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
 
@@ -58,6 +57,7 @@ public class UserController {
      */
     @PostMapping("/user")
     public ResponseEntity<Object> createUser(@RequestBody @Valid UserRecord userRecord) {
+        log.info("REST request to create User : {}", userRecord);
 
         if (userRecord.id() != null) {
             throw new BadRequestException("Um novo usuário não pode ter um ID");
@@ -83,7 +83,7 @@ public class UserController {
      */
     @GetMapping("/user")
     public ResponseEntity<Page<User>> getAllUsers(@PageableDefault(size = 15) Pageable pageable) {
-        log.debug("REST request to get a pages of Usuários");
+        log.info("REST request to get a pages of Users");
 
         Page<User> result = userService.findAll(pageable);
         return ResponseEntity.status(HttpStatus.OK).body(result);
@@ -97,7 +97,7 @@ public class UserController {
      */
     @GetMapping("/user/{id}")
     public ResponseEntity<Object> getOneUser(@PathVariable(value = "id")UUID id) {
-        log.debug("REST request to get Usuários : {}", id);
+        log.info("REST request to get User : {}", id);
         Optional<User> result = userService.findById(id);
 
         if(result.isPresent()){

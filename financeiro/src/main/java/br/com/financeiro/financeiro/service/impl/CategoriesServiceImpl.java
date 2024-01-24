@@ -11,6 +11,7 @@ import br.com.financeiro.financeiro.repository.PlanningRepository;
 import br.com.financeiro.financeiro.service.CategoriesService;
 import br.com.financeiro.financeiro.service.mapper.CategoriesMapper;
 import br.com.financeiro.financeiro.service.mapper.PlanningMapper;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ import java.util.UUID;
 /**
  * Service Implementation for managing {@link Categories}.
  */
+@Log4j2
 @Service
 public class CategoriesServiceImpl implements CategoriesService {
 
@@ -48,6 +50,7 @@ public class CategoriesServiceImpl implements CategoriesService {
     @Override
     @Transactional
     public Optional<PlanningRecord> saveCategoriesList(List<CategoriesRecord> categoriesRecordList, UUID planningId) {
+        log.debug("Request to save list categories : {}", categoriesRecordList);
 
         Optional<Planning> planning = planningRepository.findById(planningId);
         if (planning.isEmpty()) {

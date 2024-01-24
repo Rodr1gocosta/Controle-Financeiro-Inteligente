@@ -2,6 +2,7 @@ package br.com.financeiro.notificacao.service;
 
 import br.com.financeiro.notificacao.record.UserRecord;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class MailService {
@@ -20,6 +22,7 @@ public class MailService {
 
     @Async
     public void sendEmail(String to, String subject, String templateName, Context context) {
+        log.info("Execution send Email : {}", to);
 
         try {
             MimeMessagePreparator messagePreparator = mimeMessage -> {

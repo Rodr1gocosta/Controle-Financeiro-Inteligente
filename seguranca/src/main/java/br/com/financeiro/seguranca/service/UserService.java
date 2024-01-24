@@ -16,6 +16,7 @@ import br.com.financeiro.seguranca.stream.StreamSupplier;
 import br.com.financeiro.seguranca.stream.record.UserEventRecord;
 import br.com.financeiro.seguranca.stream.record.UserNewPasswordEventRecord;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,6 +32,7 @@ import java.util.UUID;
 /**
  * Service Implementation for managing {@link User}.
  */
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -81,6 +83,8 @@ public class UserService {
 
     @Transactional
     public User saveUser(UserRecord userRecord, Role role) {
+        log.info("REST request authenticate");
+
         String encodedPassword = passwordEncoder.encode(PasswordGenerator.generateTemporaryPassword(8));
 
         User user = new User();

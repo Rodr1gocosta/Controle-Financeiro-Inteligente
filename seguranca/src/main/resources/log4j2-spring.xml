@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration status="WARN">
+    <properties>
+        <property name="filename">logs/ms-seguranca.log</property>
+    </properties>
+
+    <Appenders>
+        <File name="File" fileName="${filename}">
+            <PatternLayout pattern="${%d{ISO8601}  %-5level --- [%thread] : %logger{36} - %msg%n}"/>
+        </File>
+
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${%d{ISO8601}  %highlight{%-5level} --- [%thread] : %highlight{%logger{36}} - %msg%n}"/>
+        </Console>
+
+        <Socket name="logstash" host="localhost" port="5000">
+            <PatternLayout pattern="${%d{ISO8601}  %-5level --- [%thread] : %logger{36} - %msg%n}"/>
+        </Socket>
+    </Appenders>
+
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="File"/>
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="logstash" />
+        </Root>
+    </Loggers>
+</configuration>
+
