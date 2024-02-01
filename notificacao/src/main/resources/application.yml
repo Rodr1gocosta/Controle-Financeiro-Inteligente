@@ -1,41 +1,47 @@
-server:
-  port: 8083
-
 spring:
-  application:
-    name: notificacao
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: if.inteligenciafinanceira2023@gmail.com
-    password: msnf trfw vebz jiah
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: admin
-    password: admin
-  cloud:
-    stream:
-      bindings:
-        userNewPasswordConsumer-in-0:
-          destination: seguranca.event.newUserPassword
-          group: notificacao
-      rabbit:
-        bindings:
-          userNewPasswordConsumer-in-0:
-            consumer:
-              auto-bind-dlq: true
-    function:
-      definition: userNewPasswordConsumer;
+    application:
+        name: notificacao
+    profiles:
+      active: dev
+    config:
+      import: 'configserver:'
+    cloud:
+      config:
+        discovery:
+          service-id: config-server
 
-eureka:
-  client:
-    service-url:
-      defaultzone: http://localhost:8761/eureka
+#    mail:
+#        host: smtp.gmail.com
+#        port: 587
+#        username: if.inteligenciafinanceira2023@gmail.com
+#        password: msnf trfw vebz jiah
+#        properties:
+#            mail:
+#                smtp:
+#                    auth: true
+#                    starttls:
+#                        enable: true
+#    rabbitmq:
+#        host: localhost
+#        port: 5672
+#        username: admin
+#        password: admin
+#    cloud:
+#        stream:
+#            bindings:
+#                userNewPasswordConsumer-in-0:
+#                    destination: seguranca.event.newUserPassword
+#                    group: notificacao
+#            rabbit:
+#                bindings:
+#                    userNewPasswordConsumer-in-0:
+#                        consumer:
+#                            auto-bind-dlq: true
+#        function:
+#            definition: userNewPasswordConsumer;
+#
+#eureka:
+#    client:
+#        serviceUrl:
+#            defaultzone: http://localhost:8761/eureka
 

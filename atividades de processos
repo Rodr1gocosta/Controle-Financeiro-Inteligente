@@ -30,7 +30,15 @@
 
 20 - Caso o planejamento tenha salvo com sucesso, apresentar a mensagem "Operação executado com sucesso" e atualizar a tabela com o planejamento ok
 
-20 - adicionar o cronometro de tempo do token no frontend - OK
+21 - adicionar o cronometro de tempo do token no frontend - OK
+
+22 - enviar email para o usuário criar a senha (o email tem validade de 30 minutos para ativar, caso contrário entrar em contato com suporte) - OK
+
+23 - pesquisar para adicionar senha com caracteres, letras e números - OK
+
+24 - quando o usuário criar a senha, ativar o usuário - OK
+
+25 - criar a tela de home - OK
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -46,40 +54,30 @@ https://github.com/Java-Techie-jt/jwt-apigateway-security
 A - transformar meu service-registry em imagem docker para facilitar no desenvolvimento
 B - adicionar log para manitoramento de observabilidade no projeto todo - OK
 C - resiliencia nos broker - OK
-D - adicionar elastSearch
+D - adicionar elastSearch para pesquisa
 E - cache
 F - Adicionar SWAGGER
 G - Assistir curso de segurança para aplicação - https://cursos.alura.com.br/course/seguranca-web-em-java-parte-1
 H - Assistir curso de documentação - https://cursos.alura.com.br/course/spring-boot-3-documente-teste-prepare-api-deploy
 
 
-3 - adicionar cor nas mensagem de erro, sucesso e alerta
+1 - implementar seguranca no microsservico financeiro
 
-4 - implementar seguranca no microsservico financeiro
+2 - Caso o planejamento deem erro, apresentar a mensagem "Operação falhou": "mensagem do erro" e fazer tratamento de erro via postman 
 
-5 - enviar email para o usuário criar a senha (o email tem validade de 30 minutos para ativar, caso contrário entrar em contato com suporte) - OK
+3 - bloquear rotar de administrador
 
-6 - pesquisar para adicionar senha com caracteres, letras e números - OK
+4 - como administrador, função de editar, ativar, excluir e coloca permissções de usuários
 
-7 - quando o usuário criar a senha, ativar o usuário - OK
+5 - baixar em excel todos usuários
 
-8 - Caso o planejamento deem erro, apresentar a mensagem "Operação falhou": "mensagem do erro" e fazer tratamento de erro via postman 
+6 - filtro de pesquisa de usuário
 
-10 - criar a tela de home - OK
+7 - Tela de login: resetar senha do usuário
 
-11 - bloquear rotar de administrador
+8 - Tela de login: recaptch
 
-12 - como administrador, função de editar, ativar, excluir e coloca permissções de usuários
-
-13 - baixar em excel todos usuários
-
-14 - filtro de pesquisa de usuário
-
-15 - Tela de login: resetar senha do usuário
-
-16 - Tela de login: recaptch
-
-17 - Tela de login: Relembre
+9 - Tela de login: Relembre
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------

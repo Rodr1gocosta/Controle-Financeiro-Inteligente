@@ -7,15 +7,15 @@
 
     <Appenders>
         <File name="File" fileName="${filename}">
-            <PatternLayout pattern="${%d{ISO8601}  %-5level --- [%thread] : %logger{36} - %msg%n}"/>
+            <PatternLayout pattern="${%d{ISO8601}  %-5level --- [%thread] : %logger{36} - %msg}%n"/>
         </File>
 
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="${%d{ISO8601}  %highlight{%-5level} --- [%thread] : %highlight{%logger{36}} - %msg%n}"/>
+            <PatternLayout pattern="${%d{ISO8601}  %highlight{%-5level} --- [%thread] : %highlight{%logger{36}} - %msg}%n"/>
         </Console>
 
         <Socket name="logstash" host="localhost" port="5000">
-            <PatternLayout pattern="${%d{ISO8601}  %-5level --- [%thread] : %logger{36} - %msg%n}"/>
+            <PatternLayout pattern="${%d{ISO8601}  %-5level --- [%thread] : %logger{36} - %msg}%n"/>
         </Socket>
     </Appenders>
 

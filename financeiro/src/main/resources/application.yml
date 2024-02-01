@@ -1,39 +1,47 @@
-server:
-    port: 8082
 spring:
     application:
         name: financeiro
-
-    datasource:
-        url: jdbc:postgresql://localhost:5433/financeiro-db
-        username: postgres
-        password: root
-    jpa:
-        hibernate:
-            ddl-auto: none
-    liquibase:
-        change-log: liquibase/master.xml
-
-    rabbitmq:
-        host: localhost
-        port: 5672
-        username: admin
-        password: admin
+    profiles:
+        active: dev
+    config:
+        import: 'configserver:'
     cloud:
-        stream:
-            bindings:
-                userEventConsumer-in-0:
-                    destination: seguranca.event.newUser
-                    group: financeiro
-            rabbit:
-                bindings:
-                    userEventConsumer-in-0:
-                        consumer:
-                            auto-bind-dlq: true
-        function:
-            definition: userEventConsumer;
+        config:
+            discovery:
+                service-id: config-server
 
-eureka:
-    client:
-        service-url:
-            defaultzone: http://localhost:8761/eureka
+
+
+#    datasource:
+#        url: jdbc:postgresql://localhost:5433/financeiro-db
+#        username: postgres
+#        password: root
+#    jpa:
+#        hibernate:
+#            ddl-auto: none
+#    liquibase:
+#        change-log: liquibase/master.xml
+#
+#    rabbitmq:
+#        host: localhost
+#        port: 5672
+#        username: admin
+#        password: admin
+#    cloud:
+#        stream:
+#            bindings:
+#                userEventConsumer-in-0:
+#                    destination: seguranca.event.newUser
+#                    group: financeiro
+#            rabbit:
+#                bindings:
+#                    userEventConsumer-in-0:
+#                        consumer:
+#                            auto-bind-dlq: true
+#        function:
+#            definition: userEventConsumer;
+#
+#eureka:
+#    client:
+#        service-url:
+#            defaultzone: http://localhost:8761/eureka

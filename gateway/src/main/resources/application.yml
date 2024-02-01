@@ -1,33 +1,39 @@
-server:
-    port: 8080
-
 spring:
     application:
         name: gateway
+    profiles:
+        active: dev
+    config:
+        import: 'configserver:'
     cloud:
-        gateway:
-            routes:
-            - id: seguranca
-              uri: lb://seguranca
-              predicates:
-                  - Path=/api/security/**
-              filters:
-                - TokenValidationFilter
+        config:
+            discovery:
+                service-id: config-server
 
-
-            - id: financeiro
-              uri: lb://financeiro
-              predicates:
-                - Path=/api/financas/**
-              filters:
-                - TokenValidationFilter
-
-eureka:
-    client:
-        serviceUrl:
-            defaultzone: http://localhost:8761/eureka
-
-api:
-    securty:
-        token:
-            secret: 123456
+#    cloud:
+#        gateway:
+#            routes:
+#            - id: seguranca
+#              uri: lb://seguranca
+#              predicates:
+#                  - Path=/api/security/**
+#              filters:
+#                - TokenValidationFilter
+#
+#
+#            - id: financeiro
+#              uri: lb://financeiro
+#              predicates:
+#                - Path=/api/financas/**
+#              filters:
+#                - TokenValidationFilter
+#
+#eureka:
+#    client:
+#        serviceUrl:
+#            defaultzone: http://localhost:8761/eureka
+#
+#api:
+#    securty:
+#        token:
+#            secret: 123456
