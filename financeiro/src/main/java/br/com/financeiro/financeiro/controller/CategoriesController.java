@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,4 +51,25 @@ public class CategoriesController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(categoriesService.saveCategoriesList(categoriesRecordList, planningId));
     }
+
+    /**
+     * {@code DELETE  /categories/:id} : delete the categories by "id".
+     *
+     * @param categoriesIdList the ids to the categories to delete.
+     * @param planningId the id to the find planning.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
+     */
+    @DeleteMapping("/categories/{planningId}")
+    public ResponseEntity<Void> deleteCategories(@RequestBody List<UUID> categoriesIdList, @PathVariable(value = "planningId") UUID planningId) {
+        log.info("REST request to delete Categories : {}", categoriesIdList);
+
+        if (planningId == null) {
+            log.error("Não existe planejamento com esse ID");
+            throw new BadRequestException("Para adicionar uma nova categoria, deve ter um planejamento cadastro");
+        }
+        categoriesService.deleteCategoriesList(categoriesIdList, planningId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }

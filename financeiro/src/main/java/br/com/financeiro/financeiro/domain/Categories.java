@@ -11,6 +11,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -19,6 +20,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@ToString
 @Entity
 @Table(name = "TB_CATEGORIES")
 public class Categories implements Serializable {

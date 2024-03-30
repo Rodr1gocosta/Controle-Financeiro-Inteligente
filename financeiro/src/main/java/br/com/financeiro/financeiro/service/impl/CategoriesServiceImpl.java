@@ -52,22 +52,46 @@ public class CategoriesServiceImpl implements CategoriesService {
     public Optional<PlanningRecord> saveCategoriesList(List<CategoriesRecord> categoriesRecordList, UUID planningId) {
         log.debug("Request to save list categories : {}", categoriesRecordList);
 
-        Optional<Planning> planning = planningRepository.findById(planningId);
-        if (planning.isEmpty()) {
-            throw new BadRequestException("Não existe um planejamento cadastrado! Cadastre um novo planejamento!");
-        }
+        Planning planning = getPlanning(planningId);
 
         for (CategoriesRecord categoriesRecord : categoriesRecordList) {
             Categories categorie = categoriesMapper.toEntity(categoriesRecord);
 
             if (categorie.getCategory().getId() != null && categoryDefaultRepository.existsById(categorie.getCategory().getId())) {
-                categorie.setPlanning(planning.get());
+                categorie.setPlanning(planning);
 
                 Categories resultCategorie = categoriesRepository.save(categorie);
-                planning.get().getCategories().add(resultCategorie);
+                planning.getCategories().add(resultCategorie);
             }
         }
 
-        return Optional.ofNullable(planningMapper.toDto(planning.get()));
+        return Optional.ofNullable(planningMapper.toDto(planning));
+    }
+
+    @Override
+    @Transactional
+    public void deleteCategoriesList(List<UUID> categoriesIdList, UUID planningId) {
+        log.debug("Request to delete list categories : {}", categoriesIdList);
+
+        Planning planning = getPlanning(planningId);
+
+        Optional.ofNullable(planning.getCategories())
+                .filter(categories -> !categories.isEmpty())
+                .orElseThrow(() -> new BadRequestException("A lista de categorias está nula ou vazia"))
+                .stream()
+                .filter(category -> categoriesIdList.contains(category.getId()))
+                .toList()
+                .forEach(category -> {
+                    category.setPlanning(null);
+                    categoriesRepository.delete(category);
+                    planning.getCategories().remove(category);
+                });
+
+        planningRepository.save(planning);
+    }
+
+    private Planning getPlanning(UUID planningId) {
+        return planningRepository.findById(planningId)
+                .orElseThrow(() -> new BadRequestException("Não existe um planejamento cadastrado! Cadastre um novo planejamento!"));
     }
 }
