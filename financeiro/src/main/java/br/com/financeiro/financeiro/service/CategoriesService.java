@@ -14,7 +14,7 @@ import java.util.UUID;
 public interface CategoriesService {
 
     /**
-     * Save a planning.
+     * Save a categories.
      *
      * @param categories the entity to save.
      * @return the persisted entity.
@@ -22,10 +22,18 @@ public interface CategoriesService {
     Categories save(Categories categories);
 
     /**
-     * Save a planning.
+     * Save a categories.
      *
      * @param categoriesRecordList the entity to save.
      * @return the persisted record.
      */
     Optional<PlanningRecord> saveCategoriesList(List<CategoriesRecord> categoriesRecordList, UUID planningId);
+
+    /**
+     * Delete a categories list.
+     *
+     * @param categoriesIdList the to delete categories.
+     * @param planningId the to find planning
+     */
+    void deleteCategoriesList(List<UUID> categoriesIdList, UUID planningId);
 }
