@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, take } from 'rxjs';
 import { Planning } from 'src/app/shared/model/planning';
@@ -21,6 +21,17 @@ export class FinanceiroService {
 
   deletePlanning(planningId: string): Observable<void> {
     return this.http.delete<void>(`${environment.baseUrl}/api/financas/planning/${planningId}`);
+  }
+
+  deleteCategories(categoriesIdList: any[], planningId: string): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }),
+      body: categoriesIdList
+    };
+
+    return this.http.delete(`${environment.baseUrl}/api/financas/categories/${planningId}`, httpOptions);
   }
 
   onDownloadPDF(planningId: string): Observable<Blob> {

@@ -189,7 +189,7 @@ export class FinanceiroComponent {
   private findByPlanning(month: number, year: number) {
     this.financeiroService.findByDate(month, year).subscribe(response => {
       if (response) {
-        if(response.id) {
+        if (response.id) {
           this.planningId = response.id;
         }
 
@@ -273,19 +273,40 @@ export class FinanceiroComponent {
     this.disColumns = this.displayedColumns.filter(cd => !cd.hide).map(cd => cd.def)
   }
 
-  openDeleteDialog(len: number, obj: any): void {
+  openDeleteDialog(len: number, obj: Categories[]): void {
     let elemento = 'elemento';
     if (len > 1) {
       elemento = 'elementos';
+    }
+
+    let idsList: string[] = [];
+    if (Array.isArray(obj)) {
+      idsList = obj.map(category => category.id);
+    } else {
+      let categories: Categories = obj;
+      idsList.push(categories.id);
     }
 
     this.confirmationDialogService
       .openConfirmationDialog(`Tem certeza de que deseja remover ${len} ${elemento}?`)
       .subscribe(response => {
         if (response) {
-          console.log(obj);
+          this.deleteCategories(idsList);
         }
       });
+  }
+
+  private deleteCategories(idsList: string[]): void {
+    this.financeiroService.deleteCategories(idsList, this.planningId).subscribe({
+      next: response => {
+        this.dataSource.data = this.dataSource.data.filter(item => !idsList.includes(item.id));
+        this.selection.clear();
+        this.messageOperationService.message('Operação realizado com sucesso!', 'success');
+      },
+      error: error => {
+        this.messageOperationService.message('Erro ao realizar a operação!', 'error');
+      }
+    });
   }
 
   getTotalDespesas() {
@@ -297,13 +318,13 @@ export class FinanceiroComponent {
 
   onDownloadPDF() {
     this.financeiroService.onDownloadPDF(this.planningId).subscribe((data: Blob) => {
-      const file = new Blob([data], {type: data.type});
+      const file = new Blob([data], { type: data.type });
       const blob = window.URL.createObjectURL(file);
       const link = document.createElement('a');
 
       link.href = blob;
 
-      link.download = `planejamento_${this.month}_${this.year}.pdf`; 
+      link.download = `planejamento_${this.month}_${this.year}.pdf`;
 
       link.click();
 
