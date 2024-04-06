@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>br.com.financeiro</groupId>
 	<artifactId>service-registry</artifactId>
-	<version>v1.0.0-SNAPSHOT</version>
+	<version>v1.0.1-SNAPSHOT</version>
 	<name>service-registry</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
