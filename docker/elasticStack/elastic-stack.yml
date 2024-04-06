@@ -39,7 +39,3 @@ services:
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
     depends_on:
       - elasticsearch
-
-networks:
-  elastic:
-    driver: bridge
