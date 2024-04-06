@@ -1,4 +1,9 @@
 version: '3.8'
+
+networks:
+  elastic:
+    driver: bridge
+
 services:
   postgresql-financeiro:
     extends:
@@ -41,7 +46,15 @@ services:
     container_name: logstash
     networks:
       - elastic
+  
+  service-registry:
+    extends:
+      file: docker/microsservice.yml
+      service: service-registry
+    container_name: service-registry
 
-networks:
-  elastic:
-    driver: bridge
+  config-server:
+    extends:
+      file: docker/microsservice.yml
+      service: config-server
+    container_name: config-server
