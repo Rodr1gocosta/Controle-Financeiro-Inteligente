@@ -21,8 +21,6 @@ services:
       ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
     ports:
       - "5601:5601"
-    depends_on:
-      - elasticsearch
 
   logstash:
     image: docker.elastic.co/logstash/logstash:8.12.0
@@ -37,5 +35,3 @@ services:
     volumes:
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
-    depends_on:
-      - elasticsearch

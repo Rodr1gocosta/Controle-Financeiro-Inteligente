@@ -1,5 +1,6 @@
 FROM openjdk:17
 WORKDIR /app
-COPY target/service-registry-v1.0.0-SNAPSHOT.jar /app/
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} service-registry.jar
 EXPOSE 8761
-CMD ["java", "-jar", "service-registry-v1.0.0-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "service-registry.jar"]
