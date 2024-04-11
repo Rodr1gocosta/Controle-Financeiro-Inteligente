@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   service-registry:
-    image: docker.io/rodr1gocosta/controlefinanceiro-registry
+    image: docker.io/rodr1gocosta/controlefinanceiro-service-registry
     container_name: service-registry
     ports:
       - "8761:8761"
