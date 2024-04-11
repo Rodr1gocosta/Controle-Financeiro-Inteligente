@@ -37,6 +37,6 @@ jobs:
         file: service-registry/Dockerfile
         push: true
         tags: | 
-          rodr1gocosta/controlefinanceiro-service-registry:${{github.run_number}}
+          rodr1gocosta/controlefinanceiro-service-registry:v${{github.run_number}}
           rodr1gocosta/controlefinanceiro-service-registry:latest
 
