@@ -20,9 +20,12 @@ jobs:
         
     - name: Build JAR for service-registry
       run: mvn clean package -pl service-registry -am
+
+    - name: Build JAR for config-server
+      run: mvn clean package -pl config-server -am
       
-    - name: List contents of target directory
-      run: ls -l service-registry/target
+    # - name: List contents of target directory
+    #   run: ls -l service-registry/target
 
     - name: Docker Login
       uses: docker/login-action@v3.1.0
@@ -40,3 +43,12 @@ jobs:
           rodr1gocosta/controlefinanceiro-service-registry:v${{github.run_number}}
           rodr1gocosta/controlefinanceiro-service-registry:latest
 
+    - name: Build and push Docker image for config-server
+      uses: docker/build-push-action@v5.3.0
+      with:
+        context: .
+        file: config-server/Dockerfile
+        push: true
+        tags: | 
+            rodr1gocosta/controlefinanceiro-config-server:v${{github.run_number}}
+            rodr1gocosta/controlefinanceiro-config-server:latest
