@@ -7,7 +7,7 @@ services:
       - "8761:8761"
       
   config-server:
-    image: docker.io/rodr1gocosta/controlefinanceiro-configserver
+    image: docker.io/rodr1gocosta/controlefinanceiro-config-server
     container_name: config-server
     ports:
       - "8888:8888"
