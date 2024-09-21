@@ -8,6 +8,7 @@ import { AuthService } from 'src/app/seguranca/auth/auth.service';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
+  isAdmin: boolean = false;
 
   timeRemaining!: number;
   private intervalId: any;
@@ -16,6 +17,8 @@ export class HeaderComponent {
     private router: Router) { }
 
   ngOnInit() {
+    this.isAdmin = this.authService.isUserAdmin();
+
     this.intervalId = setInterval(() => {
       this.timeRemaining = this.authService.getTimeUntilTokenExpiration();
 
