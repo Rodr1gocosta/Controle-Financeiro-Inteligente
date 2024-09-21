@@ -5,13 +5,12 @@
 }
 
 .home {
-    background: url('../../assets/images/home.jpg') no-repeat;
-    background-size: cover;
-    background-position: center;
     height: 100vh;
     display: flex;
     align-items: center;
     padding: 0 10%;
+    border: 2px solid rgb(255, 115, 0);
+    border-radius: 10px;
 }
 
 .home-content {
@@ -20,58 +19,19 @@
     h1 {
         position: relative;
         font-size: 56px;
-        font-weight: 700px;
         line-height: 1.2;
-        color: white;
-    }
-
-    h1::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 100%;
-        height: 100%;
-        background-color: #081b29;
-        animation: showRight 1s ease forwards;
-        animation-delay: 1s;
     }
 
     h3 {
         position: relative;
         font-size: 32px;
-        font-weight: 700px;
         color: cadetblue;
-    }
-
-    h3::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 100%;
-        height: 100%;
-        background-color: #081b29;
-        animation: showRight 1s ease forwards;
-        animation-delay: 1.3s;
     }
 
     p {
         position: relative;
         font-size: 16px;
         margin: 20px 0 40px;
-    }
-
-    p::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 100%;
-        height: 100%;
-        background-color: #081b29;
-        animation: showRight 1s ease forwards;
-        animation-delay: 1.3s;
     }
 
     .btn-box {
@@ -87,12 +47,11 @@
             justify-content: center;
             align-items: center;
             width: 150px;
-            height: 100%;
-            background-color: rgb(255, 115, 0);
             border: 2px solid rgb(255, 115, 0);
+            background-color: orangered; 
+            color: white;
             border-radius: 8px;
             font-size: 19px;
-            color: darkslategrey;
             text-decoration: none;
             font-weight: 600;
             letter-spacing: 1px;
@@ -130,7 +89,8 @@
     right: 0;
     width: 100%;
     height: 100%;
-    background-color: #081b29;
+    background-color: cadetblue;
+    border-radius: 8px;
     animation: showRight 1s ease forwards;
     animation-delay: 1.9s;
     z-index: 2;
@@ -183,24 +143,6 @@
         width: 100%;
     }
 }
-
-.home-imgHover {
-    position: absolute;
-    top: 0;
-    right: 30px;
-    width: 700px;
-    height: 91.5%;
-    background: transparent;
-    transition: 3s;
-    margin-right: 18px;
-    margin-top: 47px;
-}
-
-.home-imgHover:hover {
-    background-color: #081b29;
-    opacity: .9;
-}
-
 
 @keyframes showRight {
     100% {

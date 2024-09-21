@@ -1,10 +1,12 @@
 <mat-toolbar class="header mat-elevation-z8">
-    <div class="mat-toolbar-row">
-      <a class="logo" (click)="homeRoute()">Logo</a>
-      <span class="flex-spacer"></span>
-      
-      <p style="font-size: 15px; margin-right: 20px; margin-top: 10px;">Tempo de Acesso: {{ formatTime(timeRemaining) }}</p>
+  <div class="mat-toolbar-row">
+    <a class="logo" (click)="homeRoute()">Logo</a>
+    <span class="flex-spacer"></span>
 
+    <p class="tempoDeAcesso">Tempo de Acesso: {{ formatTime(timeRemaining) }}
+    </p>
+
+    <div *ngIf="isAdmin">
       <button mat-button [matMenuTriggerFor]="menu">
         <i style="font-size: 20px;" class="fal fa-user"></i>
       </button>
@@ -13,11 +15,12 @@
           Controle de Usuário
         </button>
         <button mat-menu-item (click)="controlCategoryDefaultRoute()">
-          Controle de Categorias 
+          Controle de Categorias
         </button>
       </mat-menu>
-  
-      <!-- <button mat-button [matMenuTriggerFor]="menu">
+    </div>
+
+    <!-- <button mat-button [matMenuTriggerFor]="menu">
         <i style="font-size: 20px;" class="fal fa-calendar"></i>
       </button>
       <mat-menu #menu="matMenu">
@@ -25,8 +28,8 @@
           Calendário
         </button>
       </mat-menu> -->
-  
-      <!-- <button mat-button [matMenuTriggerFor]="menu">
+
+    <!-- <button mat-button [matMenuTriggerFor]="menu">
         <i style="font-size: 20px;" class="fal fa-bell"></i>
       </button>
       <mat-menu #menu="matMenu">
@@ -34,10 +37,10 @@
           Notificação
         </button>
       </mat-menu> -->
-  
-      <button mat-button (click)="logout()">
-          <i style="font-size: 20px;" class="fal fa-share-square"></i>
-      </button>
-  
-    </div>
-  </mat-toolbar>
+
+    <button mat-button (click)="logout()">
+      <i style="font-size: 20px;" class="fal fa-share-square"></i>
+    </button>
+
+  </div>
+</mat-toolbar>

@@ -14,6 +14,7 @@ export class AuthService {
 
     private tokenExpiration?: Date;
     private tokenKey = 'token';
+    private decodedToken: any;
 
     constructor(private http: HttpClient,
         private router: Router,
@@ -50,6 +51,11 @@ export class AuthService {
         return false;
     }
 
+    isUserAdmin() {
+        const user = this.decodedToken.roles;
+        return user && user === "ROLE_ADMIN";
+    }
+
     getTimeUntilTokenExpiration(): number {
         if (this.tokenExpiration) {
             const currentTime = new Date().getTime();
@@ -64,8 +70,8 @@ export class AuthService {
     }
 
     private saveToken(token: string) {
-        const decodedToken: any = jwtDecode(token);
-        this.tokenExpiration = new Date(decodedToken.exp * 1000);
+        this.decodedToken = jwtDecode(token);
+        this.tokenExpiration = new Date(this.decodedToken.exp * 1000);
 
         localStorage.setItem('token', token);
     }
