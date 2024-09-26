@@ -24,17 +24,14 @@ jobs:
     - name: Build JAR for config-server
       run: mvn clean package -pl config-server -am
 
-    - name: Build JAR for gateway
-      run: mvn clean package -pl gateway -am
+    # - name: Build JAR for gateway
+    #   run: mvn clean package -pl gateway -am
 
     - name: Build JAR for seguranca
       run: mvn clean package -pl seguranca -am
 
     - name: Build JAR for notificacao
       run: mvn clean package -pl notificacao -am
-      
-    # - name: List contents of target directory
-    #   run: ls -l service-registry/target
 
     - name: Docker Login
       uses: docker/login-action@v3.1.0
