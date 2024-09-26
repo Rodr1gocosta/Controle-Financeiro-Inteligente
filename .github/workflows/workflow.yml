@@ -1,17 +1,17 @@
 name: CI/CD
+run-name: Pipeline CI/CD executada por ${{ github.actor }} em ${{ github.run_number }}
 
 on:
-  push:
-    branches: [ "master" ]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
+    - name: Pegar o código no repositório
     - uses: actions/checkout@v3
     
-    - name: Set up JDK 17
+    - name: Configurar JDK 17
       uses: actions/setup-java@v3
       with:
         java-version: '17'
@@ -23,6 +23,15 @@ jobs:
 
     - name: Build JAR for config-server
       run: mvn clean package -pl config-server -am
+
+    - name: Build JAR for gateway
+      run: mvn clean package -pl gateway -am
+
+    - name: Build JAR for seguranca
+      run: mvn clean package -pl seguranca -am
+
+    - name: Build JAR for notificacao
+      run: mvn clean package -pl notificacao -am
       
     # - name: List contents of target directory
     #   run: ls -l service-registry/target
