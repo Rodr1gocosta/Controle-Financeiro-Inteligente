@@ -87,3 +87,13 @@ jobs:
         tags: | 
             rodr1gocosta/controlefinanceiro-config-server:v${{github.run_number}}
             rodr1gocosta/controlefinanceiro-config-server:latest
+
+    - name: Buildar e enviar para Docker a image gateway
+      uses: docker/build-push-action@v5.3.0
+      with:
+        context: .
+        file: gateway/Dockerfile
+        push: true
+        tags: | 
+            rodr1gocosta/controlefinanceiro-gateway:v${{github.run_number}}
+            rodr1gocosta/controlefinanceiro-gateway:latest
