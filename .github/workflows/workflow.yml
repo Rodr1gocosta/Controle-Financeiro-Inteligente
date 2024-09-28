@@ -18,36 +18,39 @@ jobs:
         distribution: 'temurin'
         cache: maven
         
-    - name: Build JAR for service-registry
+    - name: Buildar JAR para service-registry
       run: mvn clean package -pl service-registry -am
 
-    - name: Build JAR for config-server
+    - name: Buildar JAR para config-server
       run: mvn clean package -pl config-server -am
 
     # Build sem os testes temporario
-    - name: Build JAR for gateway
+    - name: Buildar JAR para gateway
       run: mvn clean package -pl gateway -am -DskipTests
 
-    - name: Build JAR for seguranca
+    - name: Buildar JAR para seguranca
       run: mvn clean package -pl seguranca -am -DskipTests
 
-    - name: Build JAR for seguranca
+    - name: Buildar JAR para financeiro
       run: mvn clean package -pl financeiro -am -DskipTests
 
-    - name: Build JAR for notificacao
+    - name: Buildar JAR para notificacao
       run: mvn clean package -pl notificacao -am -DskipTests
 
   docker:
     runs-on: ubuntu-latest
     needs: [build]
     steps:
+    - name: Pegar o código no repositório
+      uses: actions/checkout@v3
+
     - name: Docker Login
       uses: docker/login-action@v3.1.0
       with:
         Username: ${{ secrets.DOCKERHUB_USERNAME }}
         Password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-    - name: Build and push Docker images
+    - name: Buildar e enviar para Docker a image service-registry
       uses: docker/build-push-action@v5.3.0
       with:
         context: .
@@ -57,7 +60,7 @@ jobs:
           rodr1gocosta/controlefinanceiro-service-registry:v${{github.run_number}}
           rodr1gocosta/controlefinanceiro-service-registry:latest
 
-    - name: Build and push Docker image for config-server
+    - name: Buildar e enviar para Docker a image config-server
       uses: docker/build-push-action@v5.3.0
       with:
         context: .
