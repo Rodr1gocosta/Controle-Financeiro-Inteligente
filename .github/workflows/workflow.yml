@@ -37,12 +37,30 @@ jobs:
     - name: Buildar JAR para notificacao
       run: mvn clean package -pl notificacao -am -DskipTests
 
+    - name: Uploadar JARs como artefatos
+      uses: actions/upload-artifact@v3
+      with:
+        name: built-jars
+        path: |
+          service-registry/target/*.jar
+          config-server/target/*.jar
+          gateway/target/*.jar
+          seguranca/target/*.jar
+          financeiro/target/*.jar
+          notificacao/target/*.jar
+
   docker:
     runs-on: ubuntu-latest
     needs: [build]
     steps:
     - name: Pegar o código no repositório
       uses: actions/checkout@v3
+
+    - name: Baixar JARs construídos
+      uses: actions/download-artifact@v3
+      with:
+        name: built-jars
+        path: .
 
     - name: Docker Login
       uses: docker/login-action@v3.1.0
