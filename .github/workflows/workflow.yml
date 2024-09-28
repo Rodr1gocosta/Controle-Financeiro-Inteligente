@@ -107,3 +107,13 @@ jobs:
         tags: | 
             rodr1gocosta/controlefinanceiro-seguranca:v${{github.run_number}}
             rodr1gocosta/controlefinanceiro-seguranca:latest
+
+    - name: Buildar e enviar para Docker a image financeiro
+      uses: docker/build-push-action@v5.3.0
+      with:
+        context: .
+        file: financeiro/Dockerfile
+        push: true
+        tags: | 
+            rodr1gocosta/controlefinanceiro-financeiro:v${{github.run_number}}
+            rodr1gocosta/controlefinanceiro-financeiro:latest
