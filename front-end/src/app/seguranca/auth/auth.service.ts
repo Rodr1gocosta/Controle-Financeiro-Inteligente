@@ -51,9 +51,27 @@ export class AuthService {
         return false;
     }
 
-    isUserAdmin() {
-        const user = this.decodedToken.roles;
-        return user && user === "ROLE_ADMIN";
+    isUserAdmin(): boolean {
+        const token = localStorage.getItem(this.tokenKey);
+    
+        if (!token) {
+            return false;
+        }
+    
+        try {
+            this.decodedToken = jwtDecode<{ roles: string | string[] }>(token);
+    
+            const roles = this.decodedToken.roles;
+    
+            if (Array.isArray(roles)) {
+                return roles.includes("ROLE_ADMIN");
+            }
+    
+            return roles === "ROLE_ADMIN";
+        } catch (error) {
+            console.error("Erro ao decodificar o token:", error);
+            return false;
+        }
     }
 
     getTimeUntilTokenExpiration(): number {
