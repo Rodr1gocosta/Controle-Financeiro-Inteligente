@@ -97,3 +97,13 @@ jobs:
         tags: | 
             rodr1gocosta/controlefinanceiro-gateway:v${{github.run_number}}
             rodr1gocosta/controlefinanceiro-gateway:latest
+
+    - name: Buildar e enviar para Docker a image seguranca
+      uses: docker/build-push-action@v5.3.0
+      with:
+        context: .
+        file: seguranca/Dockerfile
+        push: true
+        tags: | 
+            rodr1gocosta/controlefinanceiro-seguranca:v${{github.run_number}}
+            rodr1gocosta/controlefinanceiro-seguranca:latest
