@@ -117,3 +117,13 @@ jobs:
         tags: | 
             rodr1gocosta/controlefinanceiro-financeiro:v${{github.run_number}}
             rodr1gocosta/controlefinanceiro-financeiro:latest
+
+    - name: Buildar e enviar para Docker a image notificacao
+      uses: docker/build-push-action@v5.3.0
+      with:
+        context: .
+        file: notificacao/Dockerfile
+        push: true
+        tags: | 
+            rodr1gocosta/controlefinanceiro-notificacao:v${{github.run_number}}
+            rodr1gocosta/controlefinanceiro-notificacao:latest
