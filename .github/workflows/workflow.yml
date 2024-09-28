@@ -28,11 +28,14 @@ jobs:
     - name: Build JAR for gateway
       run: mvn clean package -pl gateway -am -DskipTests
 
-    # - name: Build JAR for seguranca
-    #   run: mvn clean package -pl seguranca -am
+    - name: Build JAR for seguranca
+      run: mvn clean package -pl seguranca -am -DskipTests
 
-    # - name: Build JAR for notificacao
-    #   run: mvn clean package -pl notificacao -am
+    - name: Build JAR for seguranca
+      run: mvn clean package -pl financeiro -am -DskipTests
+
+    - name: Build JAR for notificacao
+      run: mvn clean package -pl notificacao -am -DskipTests
 
   docker:
     runs-on: ubuntu-latest
