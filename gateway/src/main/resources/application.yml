@@ -9,3 +9,5 @@ spring:
         config:
             discovery:
                 service-id: config-server
+            username: configserver
+            password: '12345678c'

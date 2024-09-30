@@ -12,6 +12,9 @@ spring:
                     default-label: main
 
 authConfig:
+    configServer:
+        username: configserver
+        password: '12345678c'
     serviceRegistry:
         username: serviceregistry
         password: '12345678'
