@@ -1,12 +1,18 @@
 package br.com.financeiro.seguranca.config.security;
 
+import jakarta.servlet.DispatcherType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,8 +21,35 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 
 @Configuration
+@EnableMethodSecurity
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Autowired
+    AuthenticationEntryPointImpl authenticationEntryPoint;
+
+    @Autowired
+    AccessDeniedHandlerImpl accessDeniedHandler;
+
+    private static final String[] AUTH_WHITELIST = {
+            "/api/security/**",
+            "/api/security/authenticate"
+    };
+
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        String hierarchy = "ROLE_ADMIN > ROLE_USER";
+        roleHierarchy.setHierarchy(hierarchy);
+        return roleHierarchy;
+    }
+
+    @Bean
+    public DefaultMethodSecurityExpressionHandler expressionHandler() {
+        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+        expressionHandler.setRoleHierarchy(roleHierarchy());
+        return expressionHandler;
+    }
 
     @Bean
     public AuthenticationJwtFilter authenticationJwtFilter() {
@@ -25,21 +58,18 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.csrf(csrf -> csrf.disable())
+        return http
+                .exceptionHandling(exh -> {
+                    exh.accessDeniedHandler(accessDeniedHandler);
+                    exh.authenticationEntryPoint(authenticationEntryPoint);
+                })
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> {
-                    request.requestMatchers(HttpMethod.POST, "/api/security/authenticate").permitAll();
-
-                    request.requestMatchers(HttpMethod.POST, "/api/security/user/resetPassword").permitAll();
-
-                    request.requestMatchers(HttpMethod.PUT, "/api/security/user/password").permitAll();
-
-                    request.requestMatchers(HttpMethod.GET, "/api/security/user/**").hasAnyRole("ADMIN");
-
-                    request.requestMatchers(HttpMethod.POST, "/api/security/user/**").hasAnyRole("ADMIN");
-
+                    request.dispatcherTypeMatchers(DispatcherType.ERROR).permitAll();
+                    request.requestMatchers(AUTH_WHITELIST).permitAll();
                     request.anyRequest().authenticated();
                 })
+                .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(authenticationJwtFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
