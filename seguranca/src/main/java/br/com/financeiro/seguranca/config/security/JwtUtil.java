@@ -20,8 +20,11 @@ import java.util.stream.Collectors;
 @Component
 public class JwtUtil {
 
-    @Value(value = "${api.securty.token.secret}")
+    @Value(value = "${api.security.token.secret}")
     private String secret;
+
+    @Value(value = "${api.security.token.expiration}")
+    private Long expiration;
 
     public String createToken(Authentication authentication) {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
@@ -29,9 +32,11 @@ public class JwtUtil {
         final String roles = userPrincipal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
 
         try {
-            return Jwts.builder().setSubject(userPrincipal.getId().toString()).claim("roles", roles)
+            return Jwts.builder()
+                    .setSubject(userPrincipal.getId().toString())
+                    .claim("roles", roles)
                     .setIssuedAt(new Date())
-                    .setExpiration(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
+                    .setExpiration(new Date(System.currentTimeMillis() + expiration))
                     .signWith(SignatureAlgorithm.HS512, secret)
                     .compact();
         } catch (Exception exception){

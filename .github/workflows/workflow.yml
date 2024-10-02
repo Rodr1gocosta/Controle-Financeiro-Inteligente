@@ -11,43 +11,64 @@ jobs:
     - name: Pegar o código no repositório
       uses: actions/checkout@v3
     
-    - name: Configurar JDK 17
+    - name: Configurar JDK 21
       uses: actions/setup-java@v3
       with:
-        java-version: '17'
+        java-version: '21'
         distribution: 'temurin'
         cache: maven
         
-    - name: Build JAR for service-registry
+    - name: Buildar JAR para service-registry
       run: mvn clean package -pl service-registry -am
 
-    - name: Build JAR for config-server
+    - name: Buildar JAR para config-server
       run: mvn clean package -pl config-server -am
 
     # Build sem os testes temporario
-    - name: Build JAR for gateway
+    - name: Buildar JAR para gateway
       run: mvn clean package -pl gateway -am -DskipTests
 
-    - name: Build JAR for seguranca
+    - name: Buildar JAR para seguranca
       run: mvn clean package -pl seguranca -am -DskipTests
 
-    - name: Build JAR for seguranca
+    - name: Buildar JAR para financeiro
       run: mvn clean package -pl financeiro -am -DskipTests
 
-    - name: Build JAR for notificacao
+    - name: Buildar JAR para notificacao
       run: mvn clean package -pl notificacao -am -DskipTests
+
+    - name: Uploadar JARs como artefatos
+      uses: actions/upload-artifact@v3
+      with:
+        name: built-jars
+        path: |
+          service-registry/target/*.jar
+          config-server/target/*.jar
+          gateway/target/*.jar
+          seguranca/target/*.jar
+          financeiro/target/*.jar
+          notificacao/target/*.jar
 
   docker:
     runs-on: ubuntu-latest
     needs: [build]
     steps:
+    - name: Pegar o código no repositório
+      uses: actions/checkout@v3
+
+    - name: Baixar JARs construídos
+      uses: actions/download-artifact@v3
+      with:
+        name: built-jars
+        path: .
+
     - name: Docker Login
       uses: docker/login-action@v3.1.0
       with:
         Username: ${{ secrets.DOCKERHUB_USERNAME }}
         Password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-    - name: Build and push Docker images
+    - name: Buildar e enviar para Docker a image service-registry
       uses: docker/build-push-action@v5.3.0
       with:
         context: .
@@ -57,7 +78,7 @@ jobs:
           rodr1gocosta/controlefinanceiro-service-registry:v${{github.run_number}}
           rodr1gocosta/controlefinanceiro-service-registry:latest
 
-    - name: Build and push Docker image for config-server
+    - name: Buildar e enviar para Docker a image config-server
       uses: docker/build-push-action@v5.3.0
       with:
         context: .
@@ -66,3 +87,43 @@ jobs:
         tags: | 
             rodr1gocosta/controlefinanceiro-config-server:v${{github.run_number}}
             rodr1gocosta/controlefinanceiro-config-server:latest
+
+    - name: Buildar e enviar para Docker a image gateway
+      uses: docker/build-push-action@v5.3.0
+      with:
+        context: .
+        file: gateway/Dockerfile
+        push: true
+        tags: | 
+            rodr1gocosta/controlefinanceiro-gateway:v${{github.run_number}}
+            rodr1gocosta/controlefinanceiro-gateway:latest
+
+    - name: Buildar e enviar para Docker a image seguranca
+      uses: docker/build-push-action@v5.3.0
+      with:
+        context: .
+        file: seguranca/Dockerfile
+        push: true
+        tags: | 
+            rodr1gocosta/controlefinanceiro-seguranca:v${{github.run_number}}
+            rodr1gocosta/controlefinanceiro-seguranca:latest
+
+    - name: Buildar e enviar para Docker a image financeiro
+      uses: docker/build-push-action@v5.3.0
+      with:
+        context: .
+        file: financeiro/Dockerfile
+        push: true
+        tags: | 
+            rodr1gocosta/controlefinanceiro-financeiro:v${{github.run_number}}
+            rodr1gocosta/controlefinanceiro-financeiro:latest
+
+    - name: Buildar e enviar para Docker a image notificacao
+      uses: docker/build-push-action@v5.3.0
+      with:
+        context: .
+        file: notificacao/Dockerfile
+        push: true
+        tags: | 
+            rodr1gocosta/controlefinanceiro-notificacao:v${{github.run_number}}
+            rodr1gocosta/controlefinanceiro-notificacao:latest

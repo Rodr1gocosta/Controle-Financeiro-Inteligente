@@ -1,5 +1,6 @@
 package br.com.financeiro.financeiro.controller;
 
+import br.com.financeiro.financeiro.config.AuthenticationCurrentUserService;
 import br.com.financeiro.financeiro.exception.BadRequestException;
 import br.com.financeiro.financeiro.record.PlanningRecord;
 import br.com.financeiro.financeiro.service.PlanningService;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,6 +34,8 @@ public class PlanningController {
 
     private final PlanningService planningService;
 
+    private final AuthenticationCurrentUserService authenticationCurrentUserService;
+
     /**
      * {@code POST  /planning} : Create a new Planning.
      *
@@ -41,7 +43,7 @@ public class PlanningController {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new Planning, or with status {@code 400 (Bad Request)} if the Planning has already an ID.
      */
     @PostMapping("/planning")
-    public ResponseEntity<Object> createPlanning(@RequestBody @Valid PlanningRecord planningRecord, @RequestHeader("laggedInUser") UUID userId) {
+    public ResponseEntity<Object> createPlanning(@RequestBody @Valid PlanningRecord planningRecord) {
         log.info("REST request to save planning : {}", planningRecord);
 
         if (planningRecord.id() != null) {
@@ -49,7 +51,7 @@ public class PlanningController {
             throw new BadRequestException("Um novo planejamento não pode ter um ID");
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(planningService.savePlanning(planningRecord, userId));
+        return ResponseEntity.status(HttpStatus.CREATED).body(planningService.savePlanning(planningRecord, authenticationCurrentUserService.getCurrentUser().getId()));
     }
 
     /**
@@ -60,10 +62,10 @@ public class PlanningController {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the planningRecord, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/planning/{month}/{year}")
-    public ResponseEntity<Object> getOnePlanning(@PathVariable(value = "month")Integer month, @PathVariable(value = "year")Integer year, @RequestHeader("laggedInUser") UUID userId) {
+    public ResponseEntity<Object> getOnePlanning(@PathVariable(value = "month")Integer month, @PathVariable(value = "year")Integer year) {
         log.info("REST request to get one Planning : {} {}", month, year);
 
-        Optional<PlanningRecord> result = planningService.findOnePlanningByMonthAndYear(month, year, userId);
+        Optional<PlanningRecord> result = planningService.findOnePlanningByMonthAndYear(month, year, authenticationCurrentUserService.getCurrentUser().getId());
         if(result.isPresent()){
             return ResponseEntity.status(HttpStatus.OK).body(result.get());
         } else {
@@ -101,7 +103,7 @@ public class PlanningController {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)}, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/planning/download/{planningId}")
-    public ResponseEntity<Void> downloadPlanning(HttpServletResponse response, @PathVariable(value = "planningId")UUID planningId, @RequestHeader("laggedInUser") UUID userId) throws IOException {
+    public ResponseEntity<Void> downloadPlanning(HttpServletResponse response, @PathVariable(value = "planningId")UUID planningId) throws IOException {
         log.info("REST request to download Planning : {}", planningId);
 
         if (planningId == null) {
@@ -109,7 +111,7 @@ public class PlanningController {
             throw new BadRequestException("Não existe planejamento com esse ID");
         }
 
-        planningService.downloadPlanning(response, planningId, userId);
+        planningService.downloadPlanning(response, planningId, authenticationCurrentUserService.getCurrentUser().getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

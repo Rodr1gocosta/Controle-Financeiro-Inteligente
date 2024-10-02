@@ -1,4 +1,4 @@
-package br.com.financeiro.seguranca.config.security;
+package br.com.financeiro.financeiro.config;
 
 import jakarta.servlet.DispatcherType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
 @Configuration
 @EnableMethodSecurity
 @EnableWebSecurity
@@ -31,10 +30,10 @@ public class SecurityConfig {
     @Autowired
     AccessDeniedHandlerImpl accessDeniedHandler;
 
-    private static final String[] AUTH_WHITELIST = {
-            "/api/security/**",
-            "/api/security/authenticate"
-    };
+    @Bean
+    public AuthenticationJwtFilter authenticationJwtFilter() {
+        return new AuthenticationJwtFilter();
+    }
 
     @Bean
     public RoleHierarchy roleHierarchy() {
@@ -52,11 +51,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationJwtFilter authenticationJwtFilter() {
-        return new AuthenticationJwtFilter();
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .exceptionHandling(exh -> {
@@ -66,7 +60,6 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> {
                     request.dispatcherTypeMatchers(DispatcherType.ERROR).permitAll();
-                    request.requestMatchers(AUTH_WHITELIST).permitAll();
                     request.anyRequest().authenticated();
                 })
                 .csrf(AbstractHttpConfigurer::disable)
@@ -75,8 +68,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return  configuration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
     }
 
     @Bean

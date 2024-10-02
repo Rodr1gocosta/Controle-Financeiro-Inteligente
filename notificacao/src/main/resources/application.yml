@@ -2,10 +2,12 @@ spring:
     application:
         name: notificacao
     profiles:
-      active: dev
+        active: dev
     config:
-      import: 'configserver:'
+        import: 'configserver:'
     cloud:
-      config:
-        discovery:
-          service-id: config-server
+        config:
+            discovery:
+                service-id: config-server
+            username: configserver
+            password: '12345678c'

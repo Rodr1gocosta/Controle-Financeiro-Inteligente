@@ -4,9 +4,16 @@ spring:
     application:
         name: service-registry
 
+authConfig:
+    serviceRegistry:
+        username: serviceregistry
+        password: '12345678'
+
 eureka:
+    instance:
+        hostname: localhost
     client:
         fetch-registry: false
         register-with-eureka: false
-    instance:
-        hostname: service-registry
+        serviceUrl:
+            defaultZone: http://${authConfig.serviceRegistry.username}:${authConfig.serviceRegistry.password}@${eureka.instance.hostname}:${server.port}/eureka/

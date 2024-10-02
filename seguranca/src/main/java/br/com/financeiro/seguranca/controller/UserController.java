@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -55,6 +56,7 @@ public class UserController {
      * @param userRecord the userRecord to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new User, or with status {@code 400 (Bad Request)} if the User has already an ID.
      */
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping("/user")
     public ResponseEntity<Object> createUser(@RequestBody @Valid UserRecord userRecord) {
         log.info("REST request to create User : {}", userRecord);
@@ -81,6 +83,7 @@ public class UserController {
      * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Users in body.
      */
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping("/user")
     public ResponseEntity<Page<User>> getAllUsers(@PageableDefault(size = 15) Pageable pageable) {
         log.info("REST request to get a pages of Users");
@@ -95,6 +98,7 @@ public class UserController {
      * @param id the id of the User to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the User, or with status {@code 400 (Bad Request)}.
      */
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping("/user/{id}")
     public ResponseEntity<Object> getOneUser(@PathVariable(value = "id")UUID id) {
         log.info("REST request to get User : {}", id);
