@@ -1,4 +1,4 @@
-FROM openjdk:17
+FROM openjdk:21
 WORKDIR /app
 ARG JAR_FILE=notificacao/target/*.jar
 COPY ${JAR_FILE} /app/notificacao.jar
