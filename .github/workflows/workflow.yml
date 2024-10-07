@@ -7,6 +7,53 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      service-registry:
+        image: rodr1gocosta/controlefinanceiro-service-registry:latest
+        ports:
+          - 8761:8761
+
+      config-server:
+        image: rodr1gocosta/controlefinanceiro-config-server:latest
+        ports:
+          - 8888:8888
+
+      gateway:
+        image: rodr1gocosta/controlefinanceiro-gateway:latest
+        ports:
+          - 8080:8080
+
+      logstash:
+        image: docker.elastic.co/logstash/logstash:8.12.0
+        ports:
+          - 5000:5000
+
+      rabbitmq:
+        image: rabbitmq:3.12-management
+        env:
+          RABBITMQ_DEFAULT_USER: admin
+          RABBITMQ_DEFAULT_PASS: admin
+        ports:
+          - 5672:5672
+
+      seguranca-db:
+        image: postgres:14
+        env:
+          POSTGRES_DB: seguranca-db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: root
+        ports:
+          - 5432:5432
+
+      financeiro-db:
+        image: postgres:14
+        env:
+          POSTGRES_DB: financeiro-db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: root
+        ports:
+          - 5433:5432
+
     steps:
     - name: Pegar o código no repositório
       uses: actions/checkout@v3
@@ -24,18 +71,17 @@ jobs:
     - name: Buildar JAR para config-server
       run: mvn clean package -pl config-server -am
 
-    # Build sem os testes temporario
     - name: Buildar JAR para gateway
-      run: mvn clean package -pl gateway -am -DskipTests
+      run: mvn clean package -pl gateway -am
 
     - name: Buildar JAR para seguranca
-      run: mvn clean package -pl seguranca -am -DskipTests
+      run: mvn clean package -pl seguranca -am
 
     - name: Buildar JAR para financeiro
-      run: mvn clean package -pl financeiro -am -DskipTests
+      run: mvn clean package -pl financeiro -am
 
     - name: Buildar JAR para notificacao
-      run: mvn clean package -pl notificacao -am -DskipTests
+      run: mvn clean package -pl notificacao -am
 
     - name: Uploadar JARs como artefatos
       uses: actions/upload-artifact@v3
