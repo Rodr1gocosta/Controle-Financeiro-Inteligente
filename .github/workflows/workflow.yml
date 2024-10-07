@@ -53,10 +53,10 @@ jobs:
     - name: Buildar JAR para gateway
       run: mvn clean package -pl gateway -am
 
-    # Build sem os testes temporario
     - name: Buildar JAR para seguranca
-      run: mvn clean package -pl seguranca -am -DskipTests
+      run: mvn clean package -pl seguranca -am
 
+    # Build sem os testes temporario
     - name: Buildar JAR para financeiro
       run: mvn clean package -pl financeiro -am -DskipTests
 
