@@ -1,4 +1,0 @@
-# src/test/resources/application-test.yml
-eureka:
-  client:
-    enabled: false
