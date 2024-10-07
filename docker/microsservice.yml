@@ -1,13 +1,15 @@
 version: '3.8'
 services:
   service-registry:
-    image: docker.io/rodr1gocosta/controlefinanceiro-service-registry
+    image: rodr1gocosta/controlefinanceiro-service-registry:latest
     container_name: service-registry
     ports:
       - "8761:8761"
       
   config-server:
-    image: docker.io/rodr1gocosta/controlefinanceiro-config-server
+    image: rodr1gocosta/controlefinanceiro-config-server:latest
     container_name: config-server
     ports:
       - "8888:8888"
+    depends_on:
+      - service-registry
