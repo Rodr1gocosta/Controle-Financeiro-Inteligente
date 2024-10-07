@@ -7,6 +7,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      service-registry:
+        image: rodr1gocosta/controlefinanceiro-service-registry:latest
+        ports:
+          - 8761:8761
+      config-server:
+        image: rodr1gocosta/controlefinanceiro-config-server:latest
+        ports:
+          - 8888:8888
+
     steps:
     - name: Pegar o código no repositório
       uses: actions/checkout@v3
@@ -24,10 +34,10 @@ jobs:
     - name: Buildar JAR para config-server
       run: mvn clean package -pl config-server -am
 
-    # Build sem os testes temporario
     - name: Buildar JAR para gateway
-      run: mvn clean package -pl gateway -am -DskipTests
+      run: mvn clean package -pl gateway -am
 
+    # Build sem os testes temporario
     - name: Buildar JAR para seguranca
       run: mvn clean package -pl seguranca -am -DskipTests
 
