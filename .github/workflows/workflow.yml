@@ -16,6 +16,22 @@ jobs:
         image: rodr1gocosta/controlefinanceiro-config-server:latest
         ports:
           - 8888:8888
+      gateway:
+        image: rodr1gocosta/controlefinanceiro-gateway:latest
+        ports:
+          - 8080:8080
+      logstash:
+        image: docker.elastic.co/logstash/logstash:8.12.0
+        ports:
+          - 5000:5000
+      seguranca-db:
+        image: postgres:14
+        env:
+          POSTGRES_DB: seguranca-db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: root
+        ports:
+          - 5432:5432
 
     steps:
     - name: Pegar o código no repositório
