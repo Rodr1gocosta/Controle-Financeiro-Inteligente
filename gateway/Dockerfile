@@ -1,4 +1,4 @@
-FROM openjdk:21
+FROM alpine/java:21
 WORKDIR /app
 ARG JAR_FILE=gateway/target/*.jar
 COPY ${JAR_FILE} /app/gateway.jar
