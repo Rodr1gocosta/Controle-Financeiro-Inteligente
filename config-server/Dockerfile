@@ -1,6 +1,10 @@
+FROM alpine/java:21-jdk AS build
+WORKDIR /app
+COPY ./config-server /app
+RUN ./mvnw clean package -DskipTests
+
 FROM alpine/java:21
 WORKDIR /app
-ARG JAR_FILE=config-server/target/*.jar
-COPY ${JAR_FILE} /app/config-server.jar
-ENTRYPOINT ["java", "-jar", "/app/config-server.jar"]
+COPY --from=build /app/target/*.jar /app/config-server.jar
 EXPOSE 8888
+ENTRYPOINT ["java", "-jar", "/app/config-server.jar"]
