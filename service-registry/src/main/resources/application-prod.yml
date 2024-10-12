@@ -1,0 +1,16 @@
+server:
+  port: ${PORT}
+
+authConfig:
+  serviceRegistry:
+    username: ${EUREKA_USERNAME}
+    password: ${EUREKA_PASSWORD}
+
+eureka:
+  instance:
+    hostname: ${EUREKA_HOSTNAME}
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+    serviceUrl:
+      defaultZone: ${EUREKA_URI}
