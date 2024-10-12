@@ -1,60 +1,34 @@
-version: '3.8'
-
-networks:
-  elastic:
-    driver: bridge
-
 services:
   postgresql-financeiro:
     extends:
       file: financeiro/src/main/docker/postgresql.yml
       service: financeiro-db
-    container_name: financeiro-db
 
   postgresql-seguranca:
     extends:
       file: seguranca/src/main/docker/postgresql.yml
       service: seguranca-db
-    container_name: seguranca-db
 
   rabbitMQ:
     extends:
       file: docker/rabbitmq.yml
       service: rabbitmq
-    container_name: rabbitmq
 
   elasticsearch:
     extends:
       file: docker/elasticStack/elastic-stack.yml
       service: elasticsearch
-    container_name: elasticsearch
-    networks:
-      - elastic
 
   kibana:
     extends:
       file: docker/elasticStack/elastic-stack.yml
       service: kibana
-    container_name: kibana
-    networks:
-      - elastic
 
   logstash:
     extends:
       file: docker/elasticStack/elastic-stack.yml
       service: logstash
-    container_name: logstash
-    networks:
-      - elastic
-  
-  service-registry:
-    extends:
-      file: docker/microsservice.yml
-      service: service-registry
-    container_name: service-registry
 
-  config-server:
-    extends:
-      file: docker/microsservice.yml
-      service: config-server
-    container_name: config-server
+networks:
+  elastic:
+    driver: bridge
