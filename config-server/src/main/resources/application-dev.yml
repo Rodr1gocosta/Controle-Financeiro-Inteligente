@@ -1,0 +1,24 @@
+server:
+  port: 8888
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/Rodr1gocosta/Controle-Financeiro-Inteligente_config-server
+          default-label: main
+
+authConfig:
+  configServer:
+    username: configserver
+    password: '12345678c'
+  serviceRegistry:
+    username: serviceregistry
+    password: '12345678'
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    serviceUrl:
+      defaultZone: http://${authConfig.serviceRegistry.username}:${authConfig.serviceRegistry.password}@${eureka.instance.hostname}:8761/eureka/
