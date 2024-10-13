@@ -1,0 +1,37 @@
+server:
+  port: 8080
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: seguranca
+          uri: lb://seguranca
+          predicates:
+            - Path=/api/security/**
+          filters:
+            - TokenValidationFilter
+
+        - id: financeiro
+          uri: lb://financeiro
+          predicates:
+            - Path=/api/financas/**
+          filters:
+            - TokenValidationFilter
+
+api:
+  securty:
+    token:
+      secret: 123456
+
+authConfig:
+  serviceRegistry:
+    username: serviceregistry
+    password: '12345678'
+
+
+eureka:
+    instance:
+      hostname: localhost
+    client:
+      serviceUrl:
+        defaultZone: http://${authConfig.serviceRegistry.username}:${authConfig.serviceRegistry.password}@${eureka.instance.hostname}:8761/eureka/

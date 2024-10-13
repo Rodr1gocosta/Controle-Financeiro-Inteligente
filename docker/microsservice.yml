@@ -1,15 +1,87 @@
-version: '3.8'
 services:
   service-registry:
     image: rodr1gocosta/controlefinanceiro-service-registry:latest
     container_name: service-registry
     ports:
       - "8761:8761"
-      
-  config-server:
-    image: rodr1gocosta/controlefinanceiro-config-server:latest
-    container_name: config-server
+    networks:
+      - app-network
+
+  gateway:
+    image: rodr1gocosta/controlefinanceiro-gateway:latest
+    container_name: gateway
     ports:
-      - "8888:8888"
+      - "8080:8080"
     depends_on:
+      - config-server
       - service-registry
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+    networks:
+      - app-network
+
+  seguranca-db:
+    image: postgres:14
+    container_name: seguranca-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB_SEGURANCA}
+      POSTGRES_USER: ${POSTGRES_USER_SEGURANCA}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_SEGURANCA}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ~/.volume/postgresql/seguranca:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  seguranca:
+    image: rodr1gocosta/controlefinanceiro-seguranca:latest
+    container_name: seguranca
+    ports:
+      - "8081:8081"
+    depends_on:
+      - config-server
+      - service-registry
+      - gateway
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://${POSTGRES_DB_SEGURANCA}:5432/${POSTGRES_DB_SEGURANCA}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER_SEGURANCA}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD_SEGURANCA}
+    networks:
+      - app-network
+
+  financeiro-db:
+    image: postgres:14
+    container_name: financeiro-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB_FINANCEIRO}
+      POSTGRES_USER: ${POSTGRES_USER_FINANCEIRO}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_FINANCEIRO}
+    ports:
+      - "5433:5432"
+    volumes:
+      - ~/.volume/postgresql/financeiro:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  financeiro:
+    image: rodr1gocosta/controlefinanceiro-financeiro:latest
+    container_name: financeiro
+    ports:
+      - "8082:8082"
+    depends_on:
+      - config-server
+      - service-registry
+      - gateway
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://${POSTGRES_DB_FINANCEIRO}:5432/${POSTGRES_DB_FINANCEIRO}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER_FINANCEIRO}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD_FINANCEIRO}
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
