@@ -1,0 +1,39 @@
+server:
+    port: 8081
+spring:
+    datasource:
+        url: jdbc:postgresql://localhost:5432/seguranca-db
+        username: postgres
+        password: root
+    jpa:
+        hibernate:
+            ddl-auto: none
+    liquibase:
+        change-log: liquibase/master.xml
+    rabbitmq:
+        host: localhost
+        port: 5672
+        username: admin
+        password: admin
+    cloud:
+        stream:
+            bindings:
+                userEventSupplier-out-0:
+                    destination: seguranca.event.newUser
+                userNewPasswordEventSupplier-out-0:
+                    destination: seguranca.event.newUserPassword
+api:
+    security:
+        token:
+            secret: 123456
+            expiration: 7200000
+authConfig:
+    serviceRegistry:
+        username: serviceregistry
+        password: '12345678'
+eureka:
+    instance:
+        hostname: localhost
+    client:
+        serviceUrl:
+            defaultZone: http://${authConfig.serviceRegistry.username}:${authConfig.serviceRegistry.password}@${eureka.instance.hostname}:8761/eureka/

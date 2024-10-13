@@ -7,18 +7,6 @@ services:
     networks:
       - app-network
 
-  config-server:
-    image: rodr1gocosta/controlefinanceiro-config-server:latest
-    container_name: config-server
-    ports:
-      - "8888:8888"
-    depends_on:
-      - service-registry
-    environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
-    networks:
-      - app-network
-
   gateway:
     image: rodr1gocosta/controlefinanceiro-gateway:latest
     container_name: gateway
@@ -28,7 +16,6 @@ services:
       - config-server
       - service-registry
     environment:
-      - SPRING_CLOUD_CONFIG_URI=${SPRING_CLOUD_CONFIG_URI}
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
     networks:
       - app-network
@@ -57,7 +44,6 @@ services:
       - service-registry
       - gateway
     environment:
-      - SPRING_CLOUD_CONFIG_URI=${SPRING_CLOUD_CONFIG_URI}
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
       - SPRING_DATASOURCE_URL=jdbc:postgresql://${POSTGRES_DB_SEGURANCA}:5432/${POSTGRES_DB_SEGURANCA}
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER_SEGURANCA}
@@ -89,7 +75,6 @@ services:
       - service-registry
       - gateway
     environment:
-      - SPRING_CLOUD_CONFIG_URI=${SPRING_CLOUD_CONFIG_URI}
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
       - SPRING_DATASOURCE_URL=jdbc:postgresql://${POSTGRES_DB_FINANCEIRO}:5432/${POSTGRES_DB_FINANCEIRO}
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER_FINANCEIRO}

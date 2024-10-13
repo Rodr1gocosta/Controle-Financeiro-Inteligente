@@ -13,11 +13,6 @@ jobs:
         ports:
           - 8761:8761
 
-      config-server:
-        image: rodr1gocosta/controlefinanceiro-config-server:v45
-        ports:
-          - 8888:8888
-
       gateway:
         image: rodr1gocosta/controlefinanceiro-gateway:latest
         ports:
@@ -68,9 +63,6 @@ jobs:
     - name: Buildar JAR para service-registry
       run: mvn clean package -pl service-registry -am
 
-    - name: Buildar JAR para config-server
-      run: mvn clean package -pl config-server -am
-
     - name: Buildar JAR para gateway
       run: mvn clean package -pl gateway -am
 
@@ -89,7 +81,6 @@ jobs:
         name: built-jars
         path: |
           service-registry/target/*.jar
-          config-server/target/*.jar
           gateway/target/*.jar
           seguranca/target/*.jar
           financeiro/target/*.jar
@@ -123,16 +114,6 @@ jobs:
         tags: | 
           rodr1gocosta/controlefinanceiro-service-registry:v${{github.run_number}}
           rodr1gocosta/controlefinanceiro-service-registry:latest
-
-    - name: Buildar e enviar para Docker a image config-server
-      uses: docker/build-push-action@v5.3.0
-      with:
-        context: .
-        file: config-server/Dockerfile
-        push: true
-        tags: | 
-            rodr1gocosta/controlefinanceiro-config-server:v${{github.run_number}}
-            rodr1gocosta/controlefinanceiro-config-server:latest
 
     - name: Buildar e enviar para Docker a image gateway
       uses: docker/build-push-action@v5.3.0
