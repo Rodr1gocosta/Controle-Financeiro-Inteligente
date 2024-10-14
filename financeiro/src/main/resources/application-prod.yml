@@ -1,0 +1,42 @@
+server:
+    port: ${PORT}
+spring:
+    datasource:
+        url: ${JDBC_DATABASE_URL}
+        username: ${JDBC_DATABASE_USERNAME}
+        password: ${JDBC_DATABASE_PASSWORD}
+    jpa:
+        hibernate:
+            ddl-auto: none
+    liquibase:
+        change-log: liquibase/master.xml
+    rabbitmq:
+        addresses: ${CLOUDAMQP_URL}
+    cloud:
+        stream:
+            bindings:
+                userEventConsumer-in-0:
+                    destination: seguranca.event.newUser
+                    group: financeiro
+            rabbit:
+                bindings:
+                    userEventConsumer-in-0:
+                        consumer:
+                            auto-bind-dlq: true
+        function:
+            definition: userEventConsumer;
+
+api:
+    security:
+        token:
+            secret: ${SECRET}
+authConfig:
+    serviceRegistry:
+        username: ${EUREKA_USERNAME}
+        password: ${EUREKA_PASSWORD}
+eureka:
+    instance:
+        hostname: ${EUREKA_HOSTNAME}
+    client:
+        serviceUrl:
+            defaultZone: ${EUREKA_URI}
