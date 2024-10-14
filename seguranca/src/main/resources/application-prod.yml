@@ -23,7 +23,7 @@ api:
     security:
         token:
             secret: ${SECRET}
-            expiration: ${EXPIRATION}
+            expiration: 7200000
 authConfig:
     serviceRegistry:
         username: ${EUREKA_USERNAME}
