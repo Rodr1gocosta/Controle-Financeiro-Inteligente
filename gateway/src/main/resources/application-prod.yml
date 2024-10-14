@@ -34,4 +34,4 @@ eureka:
         hostname: ${EUREKA_HOSTNAME}
     client:
         serviceUrl:
-            defaultZone: http://${authConfig.serviceRegistry.username}:${authConfig.serviceRegistry.password}@${eureka.instance.hostname}:8761/eureka/
+            defaultZone: ${EUREKA_URI}
