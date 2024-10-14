@@ -1,5 +1,5 @@
 server:
-    port: 8080
+    port: ${PORT}
 spring:
     cloud:
         gateway:
@@ -21,17 +21,17 @@ spring:
 api:
     securty:
         token:
-            secret: 123456
+            secret: ${SECRET}
 
 authConfig:
     serviceRegistry:
-        username: serviceregistry
-        password: '12345678'
+        username: ${EUREKA_USERNAME}
+        password: ${EUREKA_PASSWORD}
 
 
 eureka:
-      instance:
-          hostname: localhost
-      client:
-          serviceUrl:
-              defaultZone: http://${authConfig.serviceRegistry.username}:${authConfig.serviceRegistry.password}@${eureka.instance.hostname}:8761/eureka/
+    instance:
+        hostname: ${EUREKA_HOSTNAME}
+    client:
+        serviceUrl:
+            defaultZone: http://${authConfig.serviceRegistry.username}:${authConfig.serviceRegistry.password}@${eureka.instance.hostname}:8761/eureka/
