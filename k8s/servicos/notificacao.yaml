@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notificacao
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: notificacao
+  template:
+    metadata:
+      labels:
+        app: notificacao
+    spec:
+      containers:
+      - name: notificacao
+        image: rodr1gocosta/controlefinanceiro-notificacao:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - name: http
+          containerPort: 8083
+          protocol: TCP
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: prod
+        - name: PORT
+          value: "8083"
+        - name: EMAIL_HOST
+          value: smtp.gmail.com
+        - name: EMAIL_PORT
+          value: "587"
+        - name: EMAIL_USERNAME
+          value: if.inteligenciafinanceira2023@gmail.com
+        - name: EMAIL_PASSWORD
+          value: msnf trfw vebz jiah
+        - name: CLOUDAMQP_URL
+          value: amqps://kdrqhwmo:qSkTMo99E8zv0HFNXN62xbAUqKnlujpf@woodpecker.rmq.cloudamqp.com/kdrqhwmo
+        - name: SECRET
+          value: "123secret"
+        - name: EUREKA_USERNAME
+          value: service-registry-prod
+        - name: EUREKA_PASSWORD
+          value: "1020304050s"
+        - name: EUREKA_HOSTNAME
+          value: notificacao
+        - name: EUREKA_URI
+          value: http://${authConfig.serviceRegistry.username}:${authConfig.serviceRegistry.password}@serviceregistry:8761/eureka/
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notificacao
+spec:
+  selector:
+    app: notificacao
+  ports:
+  - name: http
+    port: 8083
+    targetPort: 8083
+    protocol: TCP

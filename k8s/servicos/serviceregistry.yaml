@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: serviceregistry
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: serviceregistry
+  template:
+    metadata:
+      labels:
+        app: serviceregistry
+    spec:
+      containers:
+        - name: serviceregistry
+          image: rodr1gocosta/controlefinanceiro-service-registry:latest
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+          - name: http
+            containerPort: 8761
+            protocol: TCP
+          env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: prod
+          - name: PORT
+            value: "8761"
+          - name: EUREKA_USERNAME
+            value: service-registry-prod
+          - name: EUREKA_PASSWORD
+            value: "1020304050s"
+          - name: EUREKA_HOSTNAME
+            value: serviceregistry
+          - name: EUREKA_URI
+            value: http://${authConfig.serviceRegistry.username}:${authConfig.serviceRegistry.password}@${eureka.instance.hostname}:${server.port}/eureka/
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: serviceregistry
+spec:
+  selector:
+    app: serviceregistry
+  type: NodePort
+  ports:
+  - name: http
+    port: 8761
+    targetPort: 8761
+    protocol: TCP
+    nodePort: 30000
+
