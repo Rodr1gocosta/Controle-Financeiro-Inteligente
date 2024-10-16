@@ -1,0 +1,65 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-financeiro
+  labels:
+    app: postgres-financeiro
+spec:
+  ports:
+    - port: 5432
+  selector:
+    app: postgres-financeiro
+  clusterIP: None # Serviço sem IP fixo, ideal para StatefulSet
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-financeiro
+spec:
+  serviceName: "postgres-financeiro"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-financeiro
+  template:
+    metadata:
+      labels:
+        app: postgres-financeiro
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15.0 # Versão do PostgreSQL
+          ports:
+            - containerPort: 5432
+              name: postgres
+          env:
+            - name: POSTGRES_USER
+              value: "financeiro-db" # Usuário do banco de dados
+            - name: POSTGRES_PASSWORD
+              value: "1020304050db"   # Senha do banco de dados
+            - name: POSTGRES_DB
+              value: "financeiro-db" # Nome do banco de dados
+          volumeMounts:
+            - name: postgres-financeiro-storage
+              mountPath: /var/lib/postgresql/data # Diretório de dados
+              subPath: postgres-financeiro-data
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-financeiro-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 5Gi # Espaço de armazenamento alocado
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-financeiro-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
