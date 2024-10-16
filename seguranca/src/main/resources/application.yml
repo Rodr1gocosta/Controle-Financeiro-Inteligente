@@ -3,3 +3,12 @@ spring:
         name: seguranca
     profiles:
         active: dev
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: health
+    endpoint:
+        health:
+            show-details: always
