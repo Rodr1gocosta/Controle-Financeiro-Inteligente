@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: seguranca
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: seguranca
+  template:
+    metadata:
+      labels:
+        app: seguranca
+    spec:
+      containers:
+      - name: seguranca
+        image: rodr1gocosta/controlefinanceiro-seguranca:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+          - name: http
+            containerPort: 8081
+            protocol: TCP
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: prod
+        - name: PORT
+          value: "8081"
+        - name: JDBC_DATABASE_URL
+          value: "jdbc:postgresql://postgres-seguranca:5432/seguranca-db"
+        - name: JDBC_DATABASE_USERNAME
+          value: "seguranca-db"
+        - name: JDBC_DATABASE_PASSWORD
+          value: "1020304050db"
+        - name: CLOUDAMQP_URL
+          value: amqps://kdrqhwmo:qSkTMo99E8zv0HFNXN62xbAUqKnlujpf@woodpecker.rmq.cloudamqp.com/kdrqhwmo
+        - name: SECRET
+          value: "123secret"
+        - name: EUREKA_USERNAME
+          value: service-registry-prod
+        - name: EUREKA_PASSWORD
+          value: "1020304050s"
+        - name: EUREKA_HOSTNAME
+          value: seguranca
+        - name: EUREKA_URI
+          value: http://${authConfig.serviceRegistry.username}:${authConfig.serviceRegistry.password}@serviceregistry:8761/eureka/
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: seguranca
+spec:
+  selector:
+    app: seguranca
+  ports:
+  - name: http
+    port: 8081
+    targetPort: 8081
+    protocol: TCP

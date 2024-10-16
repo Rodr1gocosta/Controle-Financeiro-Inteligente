@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: financeiro
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: financeiro
+  template:
+    metadata:
+      labels:
+        app: financeiro
+    spec:
+      containers:
+      - name: financeiro
+        image: rodr1gocosta/controlefinanceiro-financeiro:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - name: http
+          containerPort: 8082
+          protocol: TCP
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: prod
+        - name: PORT
+          value: "8082"
+        - name: JDBC_DATABASE_URL
+          value: "jdbc:postgresql://postgres-financeiro:5432/financeiro-db"
+        - name: JDBC_DATABASE_USERNAME
+          value: "financeiro-db"
+        - name: JDBC_DATABASE_PASSWORD
+          value: "1020304050db"
+        - name: CLOUDAMQP_URL
+          value: amqps://kdrqhwmo:qSkTMo99E8zv0HFNXN62xbAUqKnlujpf@woodpecker.rmq.cloudamqp.com/kdrqhwmo
+        - name: SECRET
+          value: "123secret"
+        - name: EUREKA_USERNAME
+          value: service-registry-prod
+        - name: EUREKA_PASSWORD
+          value: "1020304050s"
+        - name: EUREKA_HOSTNAME
+          value: financeiro
+        - name: EUREKA_URI
+          value: http://${authConfig.serviceRegistry.username}:${authConfig.serviceRegistry.password}@serviceregistry:8761/eureka/
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: financeiro
+spec:
+  selector:
+    app: financeiro
+  ports:
+  - name: http
+    port: 8082
+    targetPort: 8082
+    protocol: TCP
+
