@@ -1,0 +1,46 @@
+server:
+    port: ${PORT}
+spring:
+    mail:
+        host: ${EMAIL_HOST}
+        port: ${EMAIL_PORT}
+        username: ${EMAIL_USERNAME}
+        password: ${EMAIL_PASSWORD}
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    starttls:
+                        enable: true
+    rabbitmq:
+        addresses: ${CLOUDAMQP_URL}
+    cloud:
+        stream:
+            bindings:
+                userNewPasswordConsumer-in-0:
+                    destination: seguranca.event.newUserPassword
+                    group: notificacao
+            rabbit:
+                bindings:
+                    userNewPasswordConsumer-in-0:
+                        consumer:
+                            auto-bind-dlq: true
+        function:
+          definition: userNewPasswordConsumer;
+
+api:
+    security:
+        token:
+            secret: ${SECRET}
+
+authConfig:
+    serviceRegistry:
+        username: ${EUREKA_USERNAME}
+        password: ${EUREKA_PASSWORD}
+
+eureka:
+    instance:
+        hostname: ${EUREKA_HOSTNAME}
+    client:
+        serviceUrl:
+            defaultZone: ${EUREKA_URI}

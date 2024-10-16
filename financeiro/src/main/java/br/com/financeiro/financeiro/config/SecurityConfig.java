@@ -60,6 +60,7 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> {
                     request.dispatcherTypeMatchers(DispatcherType.ERROR).permitAll();
+                    request.requestMatchers("/actuator/health").permitAll();
                     request.anyRequest().authenticated();
                 })
                 .csrf(AbstractHttpConfigurer::disable)

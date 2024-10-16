@@ -33,7 +33,8 @@ public class SecurityConfig {
 
     private static final String[] AUTH_WHITELIST = {
             "/api/security/**",
-            "/api/security/authenticate"
+            "/api/security/authenticate",
+            "/actuator/health"
     };
 
     @Bean

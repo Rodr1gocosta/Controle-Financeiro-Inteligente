@@ -1,0 +1,36 @@
+server:
+    port: ${PORT}
+spring:
+    datasource:
+        url: ${JDBC_DATABASE_URL}
+        username: ${JDBC_DATABASE_USERNAME}
+        password: ${JDBC_DATABASE_PASSWORD}
+    jpa:
+        hibernate:
+            ddl-auto: none
+    liquibase:
+        change-log: liquibase/master.xml
+    rabbitmq:
+        addresses: ${CLOUDAMQP_URL}
+    cloud:
+        stream:
+            bindings:
+                userEventSupplier-out-0:
+                    destination: seguranca.event.newUser
+                userNewPasswordEventSupplier-out-0:
+                    destination: seguranca.event.newUserPassword
+api:
+    security:
+        token:
+            secret: ${SECRET}
+            expiration: 7200000
+authConfig:
+    serviceRegistry:
+        username: ${EUREKA_USERNAME}
+        password: ${EUREKA_PASSWORD}
+eureka:
+    instance:
+        hostname: ${EUREKA_HOSTNAME}
+    client:
+        serviceUrl:
+            defaultZone: ${EUREKA_URI}

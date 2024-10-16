@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>br.com.financeiro</groupId>
 	<artifactId>service-registry</artifactId>
-	<version>v1.0.2-SNAPSHOT</version>
+	<version>v1.0.3-SNAPSHOT</version>
 	<name>service-registry</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
@@ -34,6 +34,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>
