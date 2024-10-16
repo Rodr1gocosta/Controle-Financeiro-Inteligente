@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>br.com.financeiro</groupId>
 	<artifactId>seguranca</artifactId>
-	<version>v1.0.3-SNAPSHOT</version>
+	<version>v1.0.4-SNAPSHOT</version>
 	<name>seguranca</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
