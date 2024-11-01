@@ -17,8 +17,11 @@ spec:
         image: rodr1gocosta/controlefinanceiro-financeiro:latest
         resources:
           limits:
-            memory: "128Mi"
+            memory: "256Mi"
             cpu: "500m"
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
         ports:
         - name: http
           containerPort: 8082
@@ -46,6 +49,22 @@ spec:
           value: financeiro
         - name: EUREKA_URI
           value: http://${authConfig.serviceRegistry.username}:${authConfig.serviceRegistry.password}@serviceregistry:8761/eureka/
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8082
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          failureThreshold: 3
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8082
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          failureThreshold: 3
+          timeoutSeconds: 10
 ---
 apiVersion: v1
 kind: Service

@@ -19,6 +19,9 @@ spec:
             limits:
               memory: "128Mi"
               cpu: "500m"
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
           ports:
           - name: http
             containerPort: 8761
@@ -36,6 +39,22 @@ spec:
             value: serviceregistry
           - name: EUREKA_URI
             value: http://${authConfig.serviceRegistry.username}:${authConfig.serviceRegistry.password}@${eureka.instance.hostname}:${server.port}/eureka/
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8761
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            failureThreshold: 3
+            timeoutSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8761
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            failureThreshold: 3
+            timeoutSeconds: 10
 ---
 apiVersion: v1
 kind: Service

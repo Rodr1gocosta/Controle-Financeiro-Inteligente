@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: notificacao
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: notificacao
@@ -19,6 +19,9 @@ spec:
           limits:
             memory: "128Mi"
             cpu: "500m"
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
         ports:
         - name: http
           containerPort: 8083
@@ -48,6 +51,22 @@ spec:
           value: notificacao
         - name: EUREKA_URI
           value: http://${authConfig.serviceRegistry.username}:${authConfig.serviceRegistry.password}@serviceregistry:8761/eureka/
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8083
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          failureThreshold: 3
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8083
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          failureThreshold: 3
+          timeoutSeconds: 10
 ---
 apiVersion: v1
 kind: Service
