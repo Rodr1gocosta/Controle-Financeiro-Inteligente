@@ -32,19 +32,40 @@ spec:
         - name: PORT
           value: "8081"
         - name: JDBC_DATABASE_URL
-          value: "jdbc:postgresql://postgres-seguranca:5432/seguranca-db"
+          valueFrom:
+            secretKeyRef:
+              name: seguranca-secret
+              key: DATABASE_URL
         - name: JDBC_DATABASE_USERNAME
-          value: "seguranca-db"
+          valueFrom:
+            secretKeyRef:
+              name: seguranca-secret
+              key: POSTGRES_USER
         - name: JDBC_DATABASE_PASSWORD
-          value: "1020304050db"
+          valueFrom:
+            secretKeyRef:
+              name: seguranca-secret
+              key: POSTGRES_PASSWORD
         - name: CLOUDAMQP_URL
-          value: amqps://kdrqhwmo:qSkTMo99E8zv0HFNXN62xbAUqKnlujpf@woodpecker.rmq.cloudamqp.com/kdrqhwmo
+          valueFrom:
+            secretKeyRef:
+              name: broker-secret
+              key: CLOUDAMQP_URL
         - name: SECRET
-          value: "123secret"
+          valueFrom:
+            secretKeyRef:
+              name: app-secret
+              key: SECRET
         - name: EUREKA_USERNAME
-          value: service-registry-prod
+          valueFrom:
+            secretKeyRef:
+              name: eureka-registry-secret
+              key: EUREKA_USERNAME
         - name: EUREKA_PASSWORD
-          value: "1020304050s"
+          valueFrom:
+            secretKeyRef:
+              name: eureka-registry-secret
+              key: EUREKA_PASSWORD
         - name: EUREKA_HOSTNAME
           value: seguranca
         - name: EUREKA_URI
@@ -71,6 +92,7 @@ kind: Service
 metadata:
   name: seguranca
 spec:
+  type: ClusterIP
   selector:
     app: seguranca
   ports:

@@ -35,9 +35,15 @@ spec:
               name: postgres
           env:
             - name: POSTGRES_USER
-              value: "financeiro-db" # Usuário do banco de dados
+              valueFrom:
+                secretKeyRef:
+                  name: financeiro-secret
+                  key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
-              value: "1020304050db"   # Senha do banco de dados
+              valueFrom:
+                secretKeyRef:
+                  name: financeiro-secret
+                  key: POSTGRES_PASSWORD
             - name: POSTGRES_DB
               value: "financeiro-db" # Nome do banco de dados
           volumeMounts:

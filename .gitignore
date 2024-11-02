@@ -34,3 +34,6 @@ build/
 
 # Log file
 *.log
+
+# Arquivos secrets kubernetes
+/k8s/secrets

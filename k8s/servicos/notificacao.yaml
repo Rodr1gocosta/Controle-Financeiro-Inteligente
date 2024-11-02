@@ -36,17 +36,35 @@ spec:
         - name: EMAIL_PORT
           value: "587"
         - name: EMAIL_USERNAME
-          value: if.inteligenciafinanceira2023@gmail.com
+          valueFrom:
+            secretKeyRef:
+              name: notificacao-secret
+              key: EMAIL_USERNAME
         - name: EMAIL_PASSWORD
-          value: msnf trfw vebz jiah
+          valueFrom:
+            secretKeyRef:
+              name: notificacao-secret
+              key: EMAIL_PASSWORD
         - name: CLOUDAMQP_URL
-          value: amqps://kdrqhwmo:qSkTMo99E8zv0HFNXN62xbAUqKnlujpf@woodpecker.rmq.cloudamqp.com/kdrqhwmo
+          valueFrom:
+            secretKeyRef:
+              name: broker-secret
+              key: CLOUDAMQP_URL
         - name: SECRET
-          value: "123secret"
+          valueFrom:
+            secretKeyRef:
+              name: app-secret
+              key: SECRET
         - name: EUREKA_USERNAME
-          value: service-registry-prod
+          valueFrom:
+            secretKeyRef:
+              name: eureka-registry-secret
+              key: EUREKA_USERNAME
         - name: EUREKA_PASSWORD
-          value: "1020304050s"
+          valueFrom:
+            secretKeyRef:
+              name: eureka-registry-secret
+              key: EUREKA_PASSWORD
         - name: EUREKA_HOSTNAME
           value: notificacao
         - name: EUREKA_URI
@@ -73,6 +91,7 @@ kind: Service
 metadata:
   name: notificacao
 spec:
+  type: ClusterIP
   selector:
     app: notificacao
   ports:
