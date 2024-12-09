@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres-seguranca
+  namespace: homologacao
   labels:
     app: postgres-seguranca
 spec:
@@ -15,6 +16,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: postgres-seguranca
+  namespace: homologacao
 spec:
   serviceName: "postgres-seguranca"
   replicas: 1
@@ -62,6 +64,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: postgres-seguranca-pvc
+  namespace: homologacao
 spec:
   accessModes:
     - ReadWriteOnce

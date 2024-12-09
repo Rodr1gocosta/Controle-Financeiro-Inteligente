@@ -2,8 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: seguranca
+  namespace: homologacao
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: seguranca
@@ -17,10 +18,10 @@ spec:
         image: rodr1gocosta/controlefinanceiro-seguranca:latest
         resources:
           limits:
-            memory: "256Mi"
+            memory: "1024Mi"
             cpu: "500m"
           requests:
-            memory: "128Mi"
+            memory: "512Mi"
             cpu: "250m"
         ports:
           - name: http
@@ -87,10 +88,37 @@ spec:
           failureThreshold: 3
           timeoutSeconds: 10
 ---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: seguranca
+  namespace: homologacao
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: seguranca
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+---
 apiVersion: v1
 kind: Service
 metadata:
   name: seguranca
+  namespace: homologacao
 spec:
   type: ClusterIP
   selector:

@@ -3,6 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres-financeiro
+  namespace: homologacao
   labels:
     app: postgres-financeiro
 spec:
@@ -16,6 +17,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: postgres-financeiro
+  namespace: homologacao
 spec:
   serviceName: "postgres-financeiro"
   replicas: 1
@@ -63,6 +65,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: postgres-financeiro-pvc
+  namespace: homologacao
 spec:
   accessModes:
     - ReadWriteOnce
