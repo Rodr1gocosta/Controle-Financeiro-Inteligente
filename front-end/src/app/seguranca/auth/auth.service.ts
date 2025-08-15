@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { Observable, map } from "rxjs";
+import { Observable, map, of } from "rxjs";
 import { environment } from "src/environments/environments";
 import { jwtDecode } from "jwt-decode";
 import { MessageOperationService } from "src/app/shared/util/message-operation/message-operation.service";
@@ -27,11 +27,22 @@ export class AuthService {
         const url = this.baseUrl + "/api/security/authenticate";
         this.clearToken();
 
-        return this.http.post<any>(url, { username, password }).pipe(
-            map((response: any) => {
-                this.saveToken(response.token);
+        // return this.http.post<any>(url, { username, password }).pipe(
+        //     map((response: any) => {
+        //         this.saveToken(response.token);
+        //     })
+        // );
+        const fakeToken = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzMmY1ZjBkYy04YTk5LTExZWUtYjlkMS0wMjQyYWMxMjAwMDIiLCJyb2xlcyI6IlJPTEVfQURNSU4iLCJpYXQiOjE3NTUyMTg0MzksImV4cCI6MTc1NTIyNTYzOX0.tIxhCULGtEgx0nNMo7f_R8pI1vPstjB7PmJkabrzamlh1BuCRALIC1pgtFWa5prXDkzLzStQM8TTY2JBecqQ4A';
+
+        return of({ token: fakeToken }).pipe(
+        map(response => {
+            // Opcional: você já salvou o token acima, mas pode reforçar aqui
+            this.saveToken(response.token);
+            return response;
             })
         );
+
+
     }
 
     logout() {

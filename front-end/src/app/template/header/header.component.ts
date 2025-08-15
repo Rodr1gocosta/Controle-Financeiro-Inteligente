@@ -19,14 +19,14 @@ export class HeaderComponent {
   ngOnInit() {
     this.isAdmin = this.authService.isUserAdmin();
 
-    this.intervalId = setInterval(() => {
-      this.timeRemaining = this.authService.getTimeUntilTokenExpiration();
+    // this.intervalId = setInterval(() => {
+    //   this.timeRemaining = this.authService.getTimeUntilTokenExpiration();
 
-      if (this.timeRemaining === 0) {
-        this.authService.logout();
-        clearInterval(this.intervalId); 
-      }
-    }, 1000);
+    //   if (this.timeRemaining === 0) {
+    //     this.authService.logout();
+    //     clearInterval(this.intervalId); 
+    //   }
+    // }, 1000);
   }
 
   ngOnDestroy() {
