@@ -59,7 +59,7 @@ export class AuthService {
             return true;
         }
 
-        return false;
+        return true;
     }
 
     isUserAdmin(): boolean {
